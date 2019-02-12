@@ -1,0 +1,84 @@
+{
+  "name": "electron-quick-start",
+  "version": "1.0.0",
+  "author": "sena@soompay.net",
+  "email": "test@test.net",
+  "description": "A minimal Electron application",
+  "main": "app/main.js",
+  "scripts": {
+    "postinstall": "install-app-deps",
+    "start": "gulp start",
+    "build:osx": "build --mac",
+    "build:linux": "npm run build:linux32 && npm run build:linux64",
+    "build:linux32": "build --linux --ia32",
+    "build:linux64": "build --linux --x64",
+    "build:win": "npm run build:win32 && npm run build:win64",
+    "build:win32": "build --win --ia32",
+    "build:win64": "build --win --x64"
+  },
+  "keywords": [
+    "CRP",
+    "wallet",
+    "contract",
+    "demo"
+  ],
+  "build": {
+    "productName": "solar",
+    "appId": "com.electron.solar",
+    "asar": true,
+    "mac": {
+      "target": [
+        "default"
+      ],
+      "icon": "./resources/installer/Icon.icns"
+    },
+    "dmg": {
+      "title": "HelloElectron",
+      "icon": "./resources/installer/Icon.icns"
+    },
+    "win": {
+      "target": [
+        "zip",
+        "nsis"
+      ],
+      "icon": "./resources/installer/Icon.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm",
+        "zip",
+        "tar.gz"
+      ],
+      "icon": "./resources/linuxicon"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "directories": {
+      "buildResources": "resources/installer/",
+      "output": "dist/",
+      "app": "."
+    }
+  },
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-es2016": "^7.0.0-beta.53",
+    "@babel/preset-react": "^7.0.0",
+    "electron": "^4.0.4",
+    "electron-builder": "^20.38.5",
+    "gulp": "^4.0.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-css": "^0.1.0",
+    "gulp-sourcemaps": "^2.6.4"
+  },
+  "dependencies": {
+    "@babel/core": "^7.2.2",
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1"
+  }
+}
