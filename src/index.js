@@ -4,6 +4,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import App from './components/App';
+
 window.onload = () => {
-  ReactDOM.render(<div></div>, document.getElementById('app'));
+  ReactDOM.render(<App />, document.getElementById('app'));
 };

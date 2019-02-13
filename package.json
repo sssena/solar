@@ -6,8 +6,7 @@
   "main": "main.js",
   "scripts": {
     "prod": "webpack --mode production --config webpack.build.config.js && electron --noDevServer .",
-    "dev": "electron --noDevServer .",
-    "pre": "webpack --mode development --config webpack.config.js",
+    "dev": "webpack --mode development --config webpack.config.js && electron --noDevServer .",
     "build": "webpack --config webpack.build.config.js --mode production",
     "package": "npm run build && electron-packager ./ --out=./builds --platform=all",
     "build:osx": "build --mac",
