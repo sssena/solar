@@ -1,5 +1,4 @@
-# -quick-start
-
+# crp-solar 
 ** Started from electron-quick-start.**
 
 ## To Use

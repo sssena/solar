@@ -3,8 +3,7 @@
 // All of the Node.js APIs are available in this process.
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App.js';
 
 window.onload = () => {
-    ReactDOM.render(<App />, document.getElementById('app'));
+  ReactDOM.render(<div></div>, document.getElementById('app'));
 };

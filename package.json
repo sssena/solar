@@ -1,13 +1,15 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
+  "name": "solar",
+  "version": "0.0.1",
   "author": "sena@soompay.net",
-  "email": "test@test.net",
-  "description": "A minimal Electron application",
-  "main": "app/main.js",
+  "description": "A wallet for CRP",
+  "main": "main.js",
   "scripts": {
-    "postinstall": "install-app-deps",
-    "start": "gulp start",
+    "prod": "webpack --mode production --config webpack.build.config.js && electron --noDevServer .",
+    "dev": "electron --noDevServer .",
+    "pre": "webpack --mode development --config webpack.config.js",
+    "build": "webpack --config webpack.build.config.js --mode production",
+    "package": "npm run build && electron-packager ./ --out=./builds --platform=all",
     "build:osx": "build --mac",
     "build:linux": "npm run build:linux32 && npm run build:linux64",
     "build:linux32": "build --linux --ia32",
@@ -20,7 +22,7 @@
     "CRP",
     "wallet",
     "contract",
-    "demo"
+    "app"
   ],
   "build": {
     "productName": "solar",
@@ -66,18 +68,27 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "@babel/preset-env": "^7.3.1",
-    "@babel/preset-es2016": "^7.0.0-beta.53",
     "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.5",
+    "babel-plugin-react-css-modules": "^5.0.0",
+    "bootstrap": "^4.3.0",
+    "css-loader": "^2.1.0",
     "electron": "^4.0.4",
     "electron-builder": "^20.38.5",
-    "gulp": "^4.0.0",
-    "gulp-babel": "^8.0.0",
-    "gulp-concat": "^2.6.1",
-    "gulp-css": "^0.1.0",
-    "gulp-sourcemaps": "^2.6.4"
+    "electron-renderer": "^2.0.4",
+    "electron-webpack": "^2.6.2",
+    "file-loader": "^3.0.1",
+    "html-webpack-plugin": "^3.2.0",
+    "postcss-loader": "^3.0.0",
+    "react-bootstrap": "^1.0.0-beta.5",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.3",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.1.14"
   },
   "dependencies": {
     "@babel/core": "^7.2.2",
+    "acorn": "^6.1.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1"
   }
