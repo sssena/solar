@@ -4,52 +4,36 @@ import classNames from 'classnames';
 
 // material-ui components
 import { withStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
 
 // local components
-import { mainListItems, permissionedListItems } from './NavigationBar/ListItems';
-
-// local define
-const styles = theme => ({
-  drawerPaper: {
-    position: 'relative',
-    whiteSpace: 'nowrap',
-    width: '50em',
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerPaperClose: {
-    overflowX: 'hidden',
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    width: '3.8em'
-  }
-});
+import MainList from './NavigationBar/MainList'
+import PrivateList from './NavigationBar/PrivateList'
 
 /*
  * @author. sena
  * @comment. 'App' defines Frame for application
  */
 class NavigationBar extends Component {
-  render() {
-    const { classes } = this.props; // class id from running application
+  permission = {
+    login: false,
+    create: false
+  }
 
+  handleLoginState( state ) {
+    this.setPermission({ login: state});
+  }
+  handleCreateState( state ) {
+    this.setPermission({ create: state});
+  }
+
+  render() {
     return (
       <div>
-        <List>{mainListItems}</List>
-        <List>{permissionedListItems}</List>
+        <MainList login={this.permission.login}/>
+        <PrivateList showCreate={this.permission.create}/>
       </div>
     );
   }
 }
 
-NavigationBar.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(NavigationBar);
+export default NavigationBar;

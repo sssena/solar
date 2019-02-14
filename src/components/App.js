@@ -10,15 +10,24 @@ import { withStyles } from '@material-ui/core/styles';
 import NavigationBar from './NavigationBar';
 import ContentsView from './ContentsView';
 
+// local styles
 const flex = {
   display: 'flex'
 };
 
 /*
- * @author. sena
- * @comment. 'App' defines Frame for application
+ * @author. sena@soompay.net
+ * @comment. 'App' defines Frame for application.
+ *           HashRouter is a router for single-page-navigation should contains <Router> object.
+ *           <Router> are located in <ContentsView>, 
+ *           <LInk>, linking path for route, are located in <NavigationBar>.
+ *
  */
 class App extends Component {
+  constructor( props ) {
+    super( props );
+  }
+
   render() {
     return (
       <HashRouter>
