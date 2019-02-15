@@ -1,0 +1,18 @@
+.login-form {
+  display: grid;
+  margin: inherit;
+}
+
+.textfield {
+  width: 100%;
+  margin-left: 1em;
+  margin-bottom: 1em;
+}
+
+.login-btn {
+  width: 100%;
+}
+
+.error label{
+  color: red;
+}

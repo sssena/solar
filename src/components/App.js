@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { HashRouter } from 'react-router-dom';
+//import { StickyContainer, Sticky } from 'react-sticky';
 
 // material-ui components
 import { withStyles } from '@material-ui/core/styles';

@@ -1,0 +1,17 @@
+.main-frame {
+  width: 100vw ;
+  overflow: hidden ;
+}
+
+.text-align-right {
+  text-align: right ;
+}
+
+.add-account-btn {
+  width: 30%;
+}
+
+.account-list {
+  height: 70vh ;
+  overflow: auto ;
+}

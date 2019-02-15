@@ -1,23 +1,39 @@
 import React, { Component } from 'react';
-import Identicon from 'react-identicons';
+
+// material-ui
+import Dialog from '@material-ui/core/Dialog';
+import Button from '@material-ui/core/Button';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 // local components
 import { web3 } from '../../../web3';
+import Account from '../../common/Account';
+import LoginForm from '../../common/LoginForm';
 
-const IDENTICON_DEFAULT_SIZE = 15;
+// local styles
+import './Accounts.css';
+
 /*
  * @author. sena
- * @comment. 'Account' is a web-browser
+ * @comment. 'Accounts' shows account list from Station.
+ *           can login, add account here.
  */
-class Account extends Component {
+class Accounts extends Component {
   state = {
+    openLogin: false,
+    activateAddress: '',
     accounts: []
   }
 
-  constructor( props ) {
-    super( props );
+  handleLoginOpen = ( address ) => {
+    this.setState({ openLogin: true, activateAddress: address });
+  }
+  handleLoginClose = () => {
+    this.setState({ openLogin: false, activateAddress: '' });
+  }
 
-    //    this.setState({ accounts: [] });
+  constructor() {
+    super();
   }
 
   // Get list of accounts
@@ -58,24 +74,33 @@ class Account extends Component {
 
   render() {
     return (
-      <div>
-        account
-        <ul>
+      <div className="main-frame">
+        <h1> Accounts </h1>
+        <div className="account-list">
           {
             this.state.accounts.map( (item) => {
               return (
-                <li key={item.address}>
-                  <Identicon string={item.address} size={IDENTICON_DEFAULT_SIZE}/>
-                  {item.address} 
-                  <p>{item.balance}</p>
-                </li>
+                <div key={item.address} onClick={ this.handleLoginOpen.bind(this, item.address) }>
+                  <Account 
+                    address={item.address}
+                    balance={item.balance} />
+                </div>
               );
             })
           }
-        </ul>
         </div>
+        <div className="text-align-right">
+          <Button variant="contained" color="primary" className="add-account-btn" > <PersonAddIcon/> Add account </Button>
+        </div>
+        <Dialog
+          open={this.state.openLogin}
+          onClose={this.handleLoginClose}
+        >
+          <LoginForm address={this.state.activateAddress}/>
+        </Dialog>
+      </div>
     );
   }
 }
 
-export default Account;
+export default Accounts;

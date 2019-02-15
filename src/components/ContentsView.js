@@ -14,9 +14,9 @@ import Debug from './App/Debug/Debug';
 const styles = {
   display: 'flex',
   flexGrow: 1,
-  padding: '0.5em',
-  height: '100%',
-  overflow: 'auto',
+  width: '90vw',
+  height: '95vh',
+  padding: '0.5em'
 };
 
 /*
