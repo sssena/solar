@@ -98,6 +98,7 @@
     "electron-log": "^3.0.1",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
+    "react-identicons": "^1.1.7",
     "react-router-dom": "^4.3.1"
   }
 }

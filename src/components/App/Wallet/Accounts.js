@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import Identicon from 'react-identicons';
 
 // local components
 import { web3 } from '../../../web3';
 
+const IDENTICON_DEFAULT_SIZE = 15;
 /*
  * @author. sena
  * @comment. 'Account' is a web-browser
@@ -46,7 +48,7 @@ class Account extends Component {
     let accounts = [];
     let addresses = await this.getAccountList();
 
-    for await (let address of addresses ) {
+    for await ( let address of addresses ) {
       let balance = await this.getBalance( address );
       accounts.push({ address: address, balance: balance.toString() });
     }
@@ -61,7 +63,13 @@ class Account extends Component {
         <ul>
           {
             this.state.accounts.map( (item) => {
-              return <li key={item.address}>{item.address} <p>{item.balance}</p></li>;
+              return (
+                <li key={item.address}>
+                  <Identicon string={item.address} size={IDENTICON_DEFAULT_SIZE}/>
+                  {item.address} 
+                  <p>{item.balance}</p>
+                </li>
+              );
             })
           }
         </ul>
