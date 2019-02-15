@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -9,7 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 // Icons
 import GradiantIcon from '@material-ui/icons/Gradient';
 import ScreenShareIcon from '@material-ui/icons/ScreenShare';
-//import BugReportIcon from '@material-ui/icons/BugReport';
+import BugReportIcon from '@material-ui/icons/BugReport';
 
 class MainList extends Component {
   render() {
@@ -19,10 +20,10 @@ class MainList extends Component {
           { this.props.login ? 
               <Link to={"/wallet"}> 
                 <ListItemIcon>
-                  <GradiantIcon />
+                  <BugReportIcon />
                 </ListItemIcon>
               </Link>
-            : <Link to={"/account"}> 
+            : <Link to={"/accounts"}> 
                 <ListItemIcon>
                   <GradiantIcon />
                 </ListItemIcon>
@@ -36,17 +37,19 @@ class MainList extends Component {
             </ListItemIcon>
           </Link>
         </ListItem>
+        <ListItem button>
+          <Link to={"/debug"}>
+            <ListItemIcon>
+              <BugReportIcon />
+            </ListItemIcon>
+          </Link>
+        </ListItem>
       </List>
     );
   }
-  // Debug menu is a hidden part 
-  //      <ListItem button>
-  //        <Link to={"/debug"}>
-  //          <ListItemIcon>
-  //            <BugReportIcon />
-  //          </ListItemIcon>
-  //        </Link>
-  //      </ListItem>
 }
 
+MainList.propTypes = {
+  login: PropTypes.bool.isRequired
+};
 export default MainList;

@@ -7,6 +7,10 @@ import React, { Component } from 'react';
  * @comment. 'Browser' is a web-browser
  */
 class Browser extends Component {
+  componentWillMount() {
+    console.log('hi')
+  }
+
   render() {
     return (
         <div>

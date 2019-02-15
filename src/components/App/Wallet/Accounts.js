@@ -3,10 +3,6 @@ import React, { Component } from 'react';
 // local components
 import { web3 } from '../../../web3';
 
-function test() {
-  console.log( this.state.accountlist );
-}
-
 /*
  * @author. sena
  * @comment. 'Account' is a web-browser
@@ -15,10 +11,14 @@ class Account extends Component {
   state = {
     accounts: []
   }
+
   constructor( props ) {
     super( props );
+
+    //    this.setState({ accounts: [] });
   }
 
+  // Get list of accounts
   getAccountList() {
     return new Promise( ( resolve, reject ) => {
       web3.eth.getAccounts( (error, result) => {
@@ -28,6 +28,7 @@ class Account extends Component {
     });
   }
 
+  // Get balance of address
   getBalance( address ) {
     return new Promise ( ( resolve, reject ) => {
       web3.eth.getBalance( address, ( error, result )=>{ 
@@ -47,7 +48,7 @@ class Account extends Component {
 
     for await (let address of addresses ) {
       let balance = await this.getBalance( address );
-      accounts.push({ address: address, balance: balance });
+      accounts.push({ address: address, balance: balance.toString() });
     }
 
     this.setState({ accounts: accounts });
@@ -55,12 +56,15 @@ class Account extends Component {
 
   render() {
     return (
-        <div>
+      <div>
+        account
+        <ul>
           {
             this.state.accounts.map( (item) => {
-            return <p>{item}</p>;
+              return <li key={item.address}>{item.address} <p>{item.balance}</p></li>;
             })
           }
+        </ul>
         </div>
     );
   }
