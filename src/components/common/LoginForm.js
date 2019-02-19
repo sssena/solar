@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
+// local imports
 import './LoginForm.css';
 
 /*
@@ -40,25 +41,31 @@ class LoginForm extends Component {
     let id = this.state.id;
     let password = this.state.password;
 
-    //TODO: add CRP-web Authentification
-    console.log( "TODO: CRP-web Authentificaiton!" );
-    this.validationCheck( id, password );
+    if( this.validationCheck( id, password ) ){
+      //TODO: add CRP-web Authentification
+      console.log( "TODO: CRP-web Authentificaiton!" );
+
+      this.props.loginAction( id, this.props.address );
+      this.props.closeAction();
+    }
   }
 
   validationCheck( id, password ) {
-    if ( id == '') {
+    if ( id == '' ) {
       this.setState({ idError: true });
+      return false;
     }
 
-    if ( password == '') {
+    if ( password == '' ) {
       this.setState({ pwError: true });
+      return false;
     }
+    return true;
   }
 
   render() {
     return (
       <div className="login-form">
-        <form>
           <TextField 
             required
             id="id"
@@ -86,7 +93,6 @@ class LoginForm extends Component {
             margin="normal" />
 
           <Button variant="contained" color="primary" className="login-btn" onClick={this.signIn}> Login </Button>
-        </form>
       </div>
     );
   }

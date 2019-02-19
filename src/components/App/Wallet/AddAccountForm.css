@@ -1,0 +1,38 @@
+.add-account-form {
+  margin: 0.5em;
+  text-align: center;
+}
+
+.chip-div{
+  margin: 0.5em;
+}
+
+.perfection-icon {
+  color: white !important;
+}
+
+.perfect {
+  color: white !important;
+  width: 50% !important;
+  background-color: #4caf50 !important;
+}
+
+.good {
+  color: white !important;
+  width: 50% !important;
+  background-color: #f57c00 !important;
+}
+
+.bad {
+  color: white !important;
+  width: 50% !important;
+  background-color: #bf4343f2 !important;
+}
+
+.none {
+  display: none !important;
+}
+
+.error fieldset{
+  border-color: #bf4343f2 !important;
+}

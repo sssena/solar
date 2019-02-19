@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -28,7 +29,7 @@ class PrivateList extends Component {
             </ListItemIcon>
           </Link>
         </ListItem>
-        { this.props.showCreate ? ( 
+        { this.props.canCreate ? ( 
           <ListItem button >
             <Link to={"/create"}>
               <ListItemIcon>
@@ -41,5 +42,9 @@ class PrivateList extends Component {
     );
   }
 }
+
+PrivateList.propTypes = {
+  canCreate: PropTypes.bool.isRequired
+};
 
 export default PrivateList;

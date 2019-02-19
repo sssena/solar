@@ -1,5 +1,5 @@
 .login-form {
-  display: grid;
+/*  display: grid; */
   margin: inherit;
 }
 
@@ -14,5 +14,5 @@
 }
 
 .error label{
-  color: red;
+  color: #bf4343f2;
 }

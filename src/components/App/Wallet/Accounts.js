@@ -9,6 +9,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { web3 } from '../../../web3';
 import Account from '../../common/Account';
 import LoginForm from '../../common/LoginForm';
+import AddAccountForm from './AddAccountForm';
 
 // local styles
 import './Accounts.css';
@@ -18,89 +19,93 @@ import './Accounts.css';
  * @comment. 'Accounts' shows account list from Station.
  *           can login, add account here.
  */
+
 class Accounts extends Component {
-  state = {
-    openLogin: false,
-    activateAddress: '',
-    accounts: []
-  }
-
-  handleLoginOpen = ( address ) => {
-    this.setState({ openLogin: true, activateAddress: address });
-  }
-  handleLoginClose = () => {
-    this.setState({ openLogin: false, activateAddress: '' });
-  }
-
-  constructor() {
-    super();
-  }
-
-  // Get list of accounts
-  getAccountList() {
-    return new Promise( ( resolve, reject ) => {
-      web3.eth.getAccounts( (error, result) => {
-        if ( error ) { reject( error ); }
-        resolve( result );
-      });
-    });
-  }
-
-  // Get balance of address
-  getBalance( address ) {
-    return new Promise ( ( resolve, reject ) => {
-      web3.eth.getBalance( address, ( error, result )=>{ 
-        if ( error ) { reject( error ); }
-        resolve( result );
-      });
-    });
-  }
-
-  /*
-   * get address and balance from web3 
-   * (!) before render() function called.
-   *    componentWillMount called automatically before mount. */
-  async componentWillMount() {
-    let accounts = [];
-    let addresses = await this.getAccountList();
-
-    for await ( let address of addresses ) {
-      let balance = await this.getBalance( address );
-      accounts.push({ address: address, balance: balance.toString() });
+    state = {
+        openLogin: false, // Dialog open flag
+        openAddAccount: false, // Dialog open flag
+        activateAddress: '',
+        accounts: []
     }
 
-    this.setState({ accounts: accounts });
-  }
+    /* handle function for login dialog */
+    handleLoginOpen = ( address ) => {
+        // Set an activated address for login
+        this.setState({ openLogin: true, activateAddress: address });
+    }
+    handleLoginClose = () => {
+        this.setState({ openLogin: false, activateAddress: '' });
+    }
 
-  render() {
-    return (
-      <div className="main-frame">
-        <h1> Accounts </h1>
-        <div className="account-list">
-          {
-            this.state.accounts.map( (item) => {
-              return (
-                <div key={item.address} onClick={ this.handleLoginOpen.bind(this, item.address) }>
-                  <Account 
-                    address={item.address}
-                    balance={item.balance} />
+    /* handle function for login dialog */
+    handleAddAccountOpen = () => {
+        this.setState({ openAddAccount: true });
+    }
+    handleAddAccountClose = ( shouldBeReload ) => {
+        this.setState({ openAddAccount: false });
+
+        if( shouldBeReload ) {
+            this.loadAccountsInfo();
+        }
+    }
+
+    constructor() {
+        super();
+    }
+
+    async loadAccountsInfo() {
+        let accounts = [];
+        let addresses = await web3.eth_getAccounts();
+
+        for await ( let address of addresses ) {
+            let balance = await web3.eth_getBalance( address );
+            accounts.push({ address: address, balance: balance.toString() });
+        }
+        this.setState({ accounts: accounts });
+    }
+
+    /* componentWillMount() called automatically before mount. */
+    componentWillMount() {
+        this.loadAccountsInfo();
+    }
+
+    render() {
+        return (
+            <div className="main-frame">
+                <h1> Accounts </h1>
+                <div className="account-list">
+                    {
+                        this.state.accounts.map( (item) => {
+                            return (
+                                <div key={item.address} onClick={ this.handleLoginOpen.bind(this, item.address) } >
+                                    <Account 
+                                        address={item.address}
+                                        balance={item.balance} />
+                                </div>
+                            );
+                        })
+                    }
                 </div>
-              );
-            })
-          }
-        </div>
-        <div className="text-align-right">
-          <Button variant="contained" color="primary" className="add-account-btn" > <PersonAddIcon/> Add account </Button>
-        </div>
-        <Dialog
-          open={this.state.openLogin}
-          onClose={this.handleLoginClose}
-        >
-          <LoginForm address={this.state.activateAddress}/>
-        </Dialog>
-      </div>
-    );
-  }
+                <div className="text-align-right">
+                    <Button variant="contained" color="primary" className="add-account-btn" onClick={this.handleAddAccountOpen} > <PersonAddIcon/> Add account </Button>
+                </div>
+                <Dialog
+                    open={this.state.openLogin}
+                    onClose={this.handleLoginClose} >
+                    <LoginForm 
+                        closeAction={this.handleLoginClose} 
+                        loginAction={this.props.login} 
+                        address={this.state.activateAddress} />
+                </Dialog>
+
+                <Dialog
+                    open={this.state.openAddAccount}
+                    onClose={this.handleAddAccountClose} >
+                    <AddAccountForm closeAction={this.handleAddAccountClose}/>
+                </Dialog>
+            </div>
+        );
+    }
 }
 
 export default Accounts;

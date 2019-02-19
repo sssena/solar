@@ -3,6 +3,7 @@ const { app, BrowserWindow } = require('electron')
 const url = require('url')
 const path = require('path')
 const logger = require('electron-log')
+global.logger = logger;
 
 // web3 for CRP
 const Web3 = require('./modules/crp-web3')
@@ -12,6 +13,7 @@ if ( typeof web3 !== 'undefined' ) {
 } else {
   global.web3 = new Web3();
   global.web3.setProvider( new Web3.providers.HttpProvider( 'http://localhost:8545' ));
+  logger.info( 'web3.setProvider( HttpProvider( http://localhost:8545 ))');
 }
 
 // Keep a global reference of the window object, if you don't, the window will

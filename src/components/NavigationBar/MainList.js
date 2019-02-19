@@ -17,10 +17,10 @@ class MainList extends Component {
     return (
       <List>
         <ListItem button>
-          { this.props.login ? 
+          { this.props.hasAuth ? 
               <Link to={"/wallet"}> 
                 <ListItemIcon>
-                  <BugReportIcon />
+                  <GradiantIcon />
                 </ListItemIcon>
               </Link>
             : <Link to={"/accounts"}> 
@@ -50,6 +50,6 @@ class MainList extends Component {
 }
 
 MainList.propTypes = {
-  login: PropTypes.bool.isRequired
+  hasAuth: PropTypes.bool.isRequired
 };
 export default MainList;
