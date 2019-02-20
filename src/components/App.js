@@ -20,7 +20,6 @@ const flex = {
  *           HashRouter is a router for single-page-navigation should contains <Router> object.
  *           <Router> are located in <ContentsView>, 
  *           <LInk>, linking path for route, are located in <NavigationBar>.
- *
  */
 class App extends Component {
   constructor( props ) {

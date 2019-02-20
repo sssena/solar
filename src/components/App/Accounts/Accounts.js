@@ -59,7 +59,7 @@ class Accounts extends Component {
 
         for await ( let address of addresses ) {
             let balance = await web3.eth_getBalance( address );
-            accounts.push({ address: address, balance: balance.toString() });
+            accounts.push({ address: address, balance: balance });
         }
         this.setState({ accounts: accounts });
     }
@@ -71,8 +71,7 @@ class Accounts extends Component {
 
     render() {
         return (
-            <div className="main-frame">
-                <h1> Accounts </h1>
+            <div className="accounts">
                 <div className="account-list">
                     {
                         this.state.accounts.map( (item) => {

@@ -1,0 +1,56 @@
+.add-account-form {
+    display: grid;
+    margin: inherit;
+    text-align: center;
+}
+.add-account-form .textfield {
+    width: 100%;
+}
+
+.add-account-form .add-account-btn{
+    width: 100%;
+}
+
+/*.add-account-form .chip-div{
+    margin: 0.5em;
+}*/
+
+.add-account-form .perfection-icon {
+    color: white !important;
+}
+
+.add-account-form .perfect {
+    color: white !important;
+    width: 80% !important;
+    background-color: #03a9f4 !important;
+    margin-bottom: 0.5em;
+}
+
+.add-account-form .verygood {
+    color: white !important;
+    width: 80% !important;
+    background-color: #4caf50 !important;
+    margin-bottom: 0.5em;
+}
+
+.add-account-form .good {
+    color: white !important;
+    width: 80% !important;
+    background-color: #f57c00 !important;
+    margin-bottom: 0.5em;
+}
+
+.add-account-form .bad {
+    color: white !important;
+    width: 80% !important;
+    background-color: #bf4343f2 !important;
+    margin-bottom: 0.5em;
+}
+
+.none {
+    display: none !important;
+}
+
+.error fieldset{
+    border-color: #bf4343f2 !important;
+}

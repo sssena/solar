@@ -1,0 +1,18 @@
+.accounts {
+    width: 100vw ;
+    overflow: hidden ;
+}
+
+.text-align-right {
+    margin-top: 2.5em;
+    text-align: right ;
+}
+
+.add-account-btn {
+    width: 30%;
+}
+
+.account-list {
+    height: 85vh ;
+    overflow: auto ;
+}

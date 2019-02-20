@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css?family=Anton|Quicksand|Roboto');
+
+.contents-view {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-grow: 1;
+    width: 90vw;
+    height: 95vh;
+    padding: 0.5em;
+}

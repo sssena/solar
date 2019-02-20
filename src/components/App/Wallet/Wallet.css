@@ -1,0 +1,50 @@
+.wallet {
+    width: 100vw ;
+    overflow: hidden ;
+}
+
+.wallet .account-area {
+    display: inline-block;
+    width: 99%;
+}
+
+.wallet .account-area .account-avatar{
+    width: 80px;
+    height: 80px;
+    display: inline-block;
+    vertical-align: middle;
+    background-color: white;
+    margin: 1em 1em 1em 1em;
+}
+
+.wallet .account-area .account-avatar .identicon {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.wallet .account-area .account-info{
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.wallet .account-area .account-info h1 {
+    margin: 0;
+    color: #272727;
+}
+.wallet .account-area .account-info p {
+    margin: 0;
+    color: gray;
+    text-align: right;
+}
+
+.wallet .account-area .account-functions{
+    display: inline-block;
+    margin-left: 1em;
+}
+
+.wallet .function-icon {
+    width: 15px;
+    height: 15px;
+    margin: 0.2em;
+    opacity: 0.5;
+}
