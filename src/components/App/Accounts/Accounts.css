@@ -4,15 +4,16 @@
 }
 
 .text-align-right {
-    margin-top: 2.5em;
     text-align: right ;
 }
 
 .add-account-btn {
+    margin-top: 1.5em;
     width: 30%;
 }
 
 .account-list {
+    margin-bottom: 1em;
     height: 85vh ;
     overflow: auto ;
 }

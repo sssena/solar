@@ -40,6 +40,24 @@ var Web3 = class Web3 {
             });
         });
     }
+    
+    eth_getTransaction( hash ) {
+        return new Promise ( ( resolve, reject ) => {
+            this.web3.eth.getTransaction( hash, ( error, result ) => {
+                if ( error ) { reject({ error: error }); }
+                resolve( result );
+            });
+        });
+    }
+
+    eth_getTransactionReceipt( hash ) {
+        return new Promise ( ( resolve, reject ) => {
+            this.web3.eth.getTransactionReceipt( hash, ( error, result ) => {
+                if ( error ) { reject({ error: error }); }
+                resolve( result );
+            });
+        });
+    }
 
     eth_getAllTransactionList( address ) {
         return new Promise( ( resolve, reject ) => {

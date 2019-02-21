@@ -13,13 +13,6 @@ import Debug from './App/Debug/Debug';
 
 // local styles
 import './ContentsView.css';
-//const styles = {
-//    display: 'flex',
-//    flexGrow: 1,
-//    width: '90vw',
-//    height: '95vh',
-//    padding: '0.5em'
-//};
 
 /*
  * @author. sena@soompay.net

@@ -11,7 +11,7 @@ import Snackbars from '@material-ui/core/Snackbar';
 import './Wallet.css';
 import { web3 } from '../../../web3';
 import Account from '../../common/Account';
-import TransactionTable from './Wallet/TransactionTable';
+import TransactionTable from './TransactionTable';
 
 /*
  * @author. sena
