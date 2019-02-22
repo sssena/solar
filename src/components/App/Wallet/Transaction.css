@@ -1,0 +1,75 @@
+.transaction {
+    display: grid;
+    margin: inherit;
+}
+
+.transaction-divider {
+    margin: 1em !important;
+}
+
+.transaction .transaction-value {
+    text-align: center;
+    background: linear-gradient(141deg, #9fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+    border-radius: 1em;
+    opacity: 0.7;
+}
+
+.transaction .transaction-value > h2 {
+    margin: 1em 0em 1em 1em;
+    display: inline-block;
+    color: white;
+    font-weight: bold;
+}
+
+.transaction .transaction-value > h3 {
+    display: inline-block;
+    color: white;
+}
+
+.transaction .transaction-value > p {
+    color: white;
+}
+
+.transaction-info {
+    width: 90%;
+    margin: auto;
+}
+
+.transaction-info > tbody > tr {
+    height: 2em;
+}
+
+.transaction-info-show {
+    display: table-row;
+}
+.transaction-info-hide {
+    display: none;
+}
+
+.transaction-info-clickable {
+    height: 3em;
+    color: #3091da
+}
+
+.transaction-info-close-div {
+    text-align: right;
+}
+
+.transaction-info-close {
+    width: 5em;
+}
+
+.transaction-info-header {
+    width: 13em;
+    font-weight: bold;
+}
+
+.transaction-info .hash{
+    font-size: small;
+    font-weight: 100;
+    color: #565656;
+}
+
+.transaction-info-value {
+    font-weight: 100;
+}

@@ -1,0 +1,36 @@
+.transactions {
+    width: 99%;
+    font-size: smaller;
+}
+
+/*.transaction-table-icon{
+    width: 15px;
+    height: 15px;
+}*/
+
+.transactions .transaction-table-header{
+    text-align: center;
+    background-color: #f1f1f1;
+}
+
+.transactions .transaction-table-header-number{
+    text-align: center;
+    width: 10em;
+}
+
+.transactions .transaction-table-header-small{
+    text-align: center;
+    width: 3em;
+}
+
+.transactions .transaction-table-column{
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.transactions .transaction-table-btn-base{
+    width: 100%;
+    text-overflow: ellipsis;
+}

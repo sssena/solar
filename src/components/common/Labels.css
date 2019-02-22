@@ -1,0 +1,27 @@
+.label-div {
+    display: inline-block;
+}
+
+.label-icon {
+    width: 13px !important;
+    height: 13px !important;
+}
+
+.label-text-success {
+    font-size: 12px;
+    font-family: 'Anton', sans-serif;
+    color: #28a745;
+    margin-left: 0.3em;
+}
+.label-text-fail {
+    font-size: 12px;
+    font-family: 'Anton', sans-serif;
+    color: #424242;
+    margin-left: 0.3em;
+}
+.label-text-error {
+    font-size: 12px;
+    font-family: 'Anton', sans-serif;
+    color: #c62828;
+    margin-left: 0.3em;
+}

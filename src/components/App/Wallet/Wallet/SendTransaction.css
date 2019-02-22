@@ -1,0 +1,34 @@
+.sendtx-form {
+    margin: inherit;
+    text-align: center;
+}
+
+.sendtx-form .textfield {
+    width: 100%;
+}
+
+.sendtx-form .sendtx-btn {
+    width: 100%;
+}
+
+.sendtx-form .chip-none {
+    display: none;
+}
+
+.sendtx-form .chip-error {
+    color: white !important;
+    width: 80% !important;
+    background-color: #bf4343f2 !important;
+    margin-bottom: 0.5em;
+}
+
+.sendtx-form .chip-done {
+    display: none;
+}
+
+/* .sendtx-form .chip-done {
+    color: white !important;
+    width: 80% !important;
+    background-color: #4caf50 !important;
+    margin-bottom: 0.5em;
+}*/

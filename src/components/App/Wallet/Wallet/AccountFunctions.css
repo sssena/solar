@@ -1,0 +1,11 @@
+.qrcode-view {
+    width: 90%;
+    margin: auto;
+    display: flex;
+}
+
+.qrcode-message {
+    font-size: x-small;
+    color: #525252;
+    margin: auto;
+}
