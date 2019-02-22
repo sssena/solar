@@ -11,7 +11,28 @@ var Web3 = class Web3 {
         return 'pong';
     }
 
+    sleepPing( millisec ){
+        return new Promise( resolve => setTimeout( resolve, millisec ) );
+    }
+
     // TODO: How can I call a function with string( function name )?
+    personal_loginAccount( address, password ) {
+        return new Promise ( ( resolve, reject ) => {
+            this.web3.personal.loginAccount( address, password, ( error, result ) => {
+                if ( error ) { reject({ error: error }); }
+                resolve( result );
+            });
+        });
+    }
+
+    personal_unlockAccount( address, password, duration ) {
+        return new Promise ( ( resolve, reject ) => {
+            this.web3.personal.unlockAccount( address, password, duration, ( error, result ) => {
+                if ( error ) { reject({ error: error }); }
+                resolve( result );
+            });
+        });
+    }
 
     personal_newAccount( password ) {
         return new Promise( ( resolve, reject ) => {
@@ -35,8 +56,16 @@ var Web3 = class Web3 {
         return new Promise ( ( resolve, reject ) => {
             this.web3.eth.getBalance( address, ( error, result ) => {
                 if ( error ) { reject({ error: error }); }
-                // result is BigNumber type.
-                resolve( result.toString() );
+                resolve( result );
+            });
+        });
+    }
+
+    eth_sendTransaction( object ) {
+        return new Promise ( ( resolve, reject ) => {
+            this.web3.eth.sendTransaction( object, ( error, result ) => {
+                if ( error ) { reject({ error: error }); }
+                resolve( result );
             });
         });
     }

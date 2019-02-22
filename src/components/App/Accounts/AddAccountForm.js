@@ -105,7 +105,6 @@ class AddAccountForm extends Component {
     }
 
     confirmValidationCheck( ) {
-        //if( this.state.passwordConfirm.length > 0 && (this.state.password !== this.state.passwordConfirm) ){
         if( (this.state.password !== this.state.passwordConfirm) ){
             this.setState({ 
                 perfection: 'bad',
@@ -123,6 +122,7 @@ class AddAccountForm extends Component {
         } else if( !this.validationCheck() ){
             //TODO
         } else {
+            this.setState({ isProcessing: true });
             await web3.personal_newAccount( this.state.password );
             this.props.closeAction( true );
         }
@@ -133,13 +133,13 @@ class AddAccountForm extends Component {
 
         // setting chip icon
         if( this.state.message == PERFECT_MESSAGE ) {
-            icon = <SentimentVerySatisfiedIcon className="perfection-icon" />;
+            icon = <SentimentVerySatisfiedIcon className="chip-icon" />;
         } else if ( this.state.message == VERYGOOD_MESSAGE ){
-            icon = <SentimentSatisfiedIcon className="perfection-icon" />;
+            icon = <SentimentSatisfiedIcon className="chip-icon" />;
         } else if ( this.state.message == GOOD_MESSAGE ){
-            icon = <SentimentSatisfiedIcon className="perfection-icon" />;
+            icon = <SentimentSatisfiedIcon className="chip-icon" />;
         } else if ( this.state.message == BAD_MESSAGE ){
-            icon = <SentimentDissatisfiedIcon className="perfection-icon" />;
+            icon = <SentimentDissatisfiedIcon className="chip-icon" />;
         }
 
         return (

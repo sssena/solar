@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 // material-ui components
 import { withStyles } from '@material-ui/core/styles';
 
 // local components
-import { AuthConsumer } from './common/AuthContext'
 import MainList from './NavigationBar/MainList'
 import PrivateList from './NavigationBar/PrivateList'
 
@@ -15,16 +15,19 @@ import PrivateList from './NavigationBar/PrivateList'
 class NavigationBar extends Component {
   render() {
     return (
-      <AuthConsumer>
-        {({ hasAuth, canCreate }) => (
           <div>
-            <MainList hasAuth={hasAuth} />
-            { hasAuth ? ( <PrivateList canCreate={canCreate} /> ) : null }
+            <MainList hasAuth={this.props.authentication.loggedIn} />
+            <PrivateList canCreate={this.props.authentication.auth.canCreate} /> 
           </div>
-        )}
-      </AuthConsumer>
     );
   }
 }
 
-export default NavigationBar;
+function mapStateToProps( state ) {
+    const { authentication } = state;
+    return {
+        authentication
+    };
+}
+
+export default connect(mapStateToProps)(NavigationBar);

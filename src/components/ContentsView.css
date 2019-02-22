@@ -1,4 +1,23 @@
 @import url('https://fonts.googleapis.com/css?family=Anton|Quicksand|Roboto|Dosis');
+@import './common/Icon.css';
+
+/* To frmove spinner button of number type inputs. */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.none {
+    display: none !important;
+}
+
+.error fieldset{
+    border-color: #bf4343f2 !important;
+}
 
 .contents-view {
     font-family: 'Roboto', sans-serif;

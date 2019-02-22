@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Route, NavLink, HashRouter } from 'react-router-dom';
 
 // local links
-import { AuthConsumer } from './common/AuthContext'
+//import { AuthConsumer } from './common/AuthContext'
 import Accounts from './App/Accounts/Accounts'; 
 import Wallet from './App/Wallet/Wallet';
 import Browser from './App/Browser/Browser';
@@ -22,20 +22,16 @@ import './ContentsView.css';
 class ContentsView extends Component {
     render() {
         return (
-            <AuthConsumer>
-                {({ hasAuth, walletAddress, login  }) => (
-                    <main className="contents-view">
-                        <Route exact path="/"   render={(props) => <Accounts {...props} login={login} />} />
-                        <Route path="/accounts" render={(props) => <Accounts {...props} login={login} />} />
-                        <Route path="/wallet"   render={(props) => <Wallet {...props} address={walletAddress} />} />
-                        <Route path="/debug"    component={Debug} />
-                        <Route path="/browser"  component={Browser} />
-                        <Route path="/projects" component={ProjectList} />
-                        <Route path="/search"   component={Search} />
-                        <Route path="/create"   component={Create} />
-                    </main>
-                )}
-            </AuthConsumer>
+                <main className="contents-view">
+                    <Route exact path="/"   render={(props) => <Accounts {...props} login={false} />} />
+                    <Route path="/accounts" render={(props) => <Accounts {...props} login={false} />} />
+                    <Route path="/wallet"   render={(props) => <Wallet {...props} />} />
+                    <Route path="/debug"    component={Debug} />
+                    <Route path="/browser"  component={Browser} />
+                    <Route path="/projects" component={ProjectList} />
+                    <Route path="/search"   component={Search} />
+                    <Route path="/create"   component={Create} />
+                </main>
         );
     }
 }

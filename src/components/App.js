@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { HashRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 
 // material-ui components
 import { withStyles } from '@material-ui/core/styles';
 
 // local components
-import { AuthProvider } from './common/AuthContext';
 import NavigationBar from './NavigationBar';
 import ContentsView from './ContentsView';
+import { history } from  '../helpers/history';
 
 // local styles
 const flex = {
-  display: 'flex'
+    display: 'flex'
 };
 
 /*
@@ -22,22 +22,25 @@ const flex = {
  *           <LInk>, linking path for route, are located in <NavigationBar>.
  */
 class App extends Component {
-  constructor( props ) {
-    super( props );
-  }
+    constructor( props ) {
+        super( props );
 
-  render() {
-    return (
-      <HashRouter>
-        <AuthProvider>
-          <div style={ flex }>
-            <NavigationBar />
-            <ContentsView />
-          </div>
-        </AuthProvider>
-      </HashRouter>
-    );
-  }
+        const { dispatch } = this.props;
+        history.push('/');
+        // history.listen( (location, action) => {
+        // });
+    }
+
+    render() {
+        return (
+            <Router history={history}>
+                <div style={ flex }>
+                    <NavigationBar />
+                    <ContentsView />
+                </div>
+            </Router>
+        );
+    }
 }
 
 export default App;

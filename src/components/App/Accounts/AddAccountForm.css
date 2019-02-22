@@ -1,8 +1,9 @@
 .add-account-form {
-    display: grid;
+/*    display: grid; */
     margin: inherit;
     text-align: center;
 }
+
 .add-account-form .textfield {
     width: 100%;
 }
@@ -15,7 +16,7 @@
     margin: 0.5em;
 }*/
 
-.add-account-form .perfection-icon {
+.chip-icon {
     color: white !important;
 }
 
@@ -47,10 +48,11 @@
     margin-bottom: 0.5em;
 }
 
-.none {
+/* moved to common (ContentsView.css)
+none {
     display: none !important;
 }
 
 .error fieldset{
     border-color: #bf4343f2 !important;
-}
+}*/

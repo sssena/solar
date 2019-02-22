@@ -8,7 +8,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 // local components
 import { web3 } from '../../../web3';
 import Account from '../../common/Account';
-import LoginForm from '../../common/LoginForm';
+import Login from './Login';
 import AddAccountForm from './AddAccountForm';
 
 // local styles
@@ -59,8 +59,9 @@ class Accounts extends Component {
 
         for await ( let address of addresses ) {
             let balance = await web3.eth_getBalance( address );
-            accounts.push({ address: address, balance: balance });
+            accounts.push({ address: address, balance: balance.toString() });
         }
+
         this.setState({ accounts: accounts });
     }
 
@@ -86,12 +87,14 @@ class Accounts extends Component {
                     }
                 </div>
                 <div className="text-align-right">
-                    <Button variant="contained" color="primary" className="add-account-btn" onClick={this.handleAddAccountOpen} > <PersonAddIcon/> Add account </Button>
+                    <Button variant="contained" color="primary" className="add-account-btn" onClick={this.handleAddAccountOpen} > 
+                        <PersonAddIcon/> Add account 
+                    </Button>
                 </div>
                 <Dialog
                     open={this.state.openLogin}
                     onClose={this.handleLoginClose} >
-                    <LoginForm 
+                    <Login 
                         closeAction={this.handleLoginClose} 
                         loginAction={this.props.login} 
                         address={this.state.activateAddress} />

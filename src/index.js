@@ -5,8 +5,20 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { remote } from 'electron';
 
+import { createStore, applyMiddleware } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import { Provider } from 'react-redux';
+import rootReducer from './reducers/rootReducer';
+
 import App from './components/App';
 
+const store = createStore( rootReducer, applyMiddleware( thunkMiddleware ) );
+
 window.onload = () => {
-  ReactDOM.render(<App/>, document.getElementById('app'));
+    ReactDOM.render( 
+        <Provider store={store}>
+            <App/>
+        </Provider>, 
+        document.getElementById('app')
+    );
 };
