@@ -75,7 +75,7 @@ class AccountFunctions extends Component {
                     <Collapse in={this.state.qrCodeOpen} timeout="auto" unmountOnExit>
                         <div className="qrcode-view">
                             <QRCode value={this.props.address} level="L" includeMargin={true}/>
-                            <img className="icon-small qrcode-message" src="../icons/qr-code.png"/> 
+                            <img className="icon-xsmall qrcode-message" src="home/sena/ws/solar/public/imgs/qr-code.png"/> 
                             <span className="qrcode-message"> 
                                 Scan this image <br/> with your phone. 
                             </span>

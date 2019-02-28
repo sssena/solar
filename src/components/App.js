@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Router } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 // material-ui components
 import { withStyles } from '@material-ui/core/styles';
@@ -8,6 +9,7 @@ import { withStyles } from '@material-ui/core/styles';
 import NavigationBar from './NavigationBar';
 import ContentsView from './ContentsView';
 import { history } from  '../helpers/history';
+import Progress from './common/Progress'; // loading bar
 
 // local styles
 const flex = {
@@ -27,8 +29,6 @@ class App extends Component {
 
         const { dispatch } = this.props;
         history.push('/');
-        // history.listen( (location, action) => {
-        // });
     }
 
     render() {
@@ -37,10 +37,17 @@ class App extends Component {
                 <div style={ flex }>
                     <NavigationBar />
                     <ContentsView />
+                    { this.props.isProcessing ? <Progress/> : null }
                 </div>
             </Router>
         );
     }
 }
 
-export default App;
+function mapStateToProps( state ) {
+    const { isProcessing } = state;
+    return {
+        isProcessing // get a progress status, and show loading bar.
+    };
+}
+export default connect(mapStateToProps)(App);

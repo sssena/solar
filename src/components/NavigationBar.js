@@ -17,7 +17,11 @@ class NavigationBar extends Component {
     return (
           <div>
             <MainList hasAuth={this.props.authentication.loggedIn} />
-            <PrivateList canCreate={this.props.authentication.auth.canCreate} /> 
+            {
+                this.props.authentication.loggedIn ? 
+                    <PrivateList canCreate={this.props.authentication.auth.canCreate} /> 
+                    : null
+            }
           </div>
     );
   }

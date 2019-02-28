@@ -6,7 +6,7 @@ import { Route, NavLink, HashRouter } from 'react-router-dom';
 import Accounts from './App/Accounts/Accounts'; 
 import Wallet from './App/Wallet/Wallet';
 import Browser from './App/Browser/Browser';
-import ProjectList from './App/ProjectList/ProjectList';
+import Projects from './App/Projects/Projects';
 import Search from './App/Search/Search';
 import Create from './App/Create/Create';
 import Debug from './App/Debug/Debug';
@@ -28,7 +28,7 @@ class ContentsView extends Component {
                     <Route path="/wallet"   render={(props) => <Wallet {...props} />} />
                     <Route path="/debug"    component={Debug} />
                     <Route path="/browser"  component={Browser} />
-                    <Route path="/projects" component={ProjectList} />
+                    <Route path="/projects" component={Projects} />
                     <Route path="/search"   component={Search} />
                     <Route path="/create"   component={Create} />
                 </main>

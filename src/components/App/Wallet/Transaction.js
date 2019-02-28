@@ -10,9 +10,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import DoneIcon from '@material-ui/icons/Done';
 import BlockIcon from '@material-ui/icons/Block';
 
-//import nextimg from './next.png';
-//const nextimg = require('../../../icons/next.png');
-
 // local components
 import './Transaction.css';
 import { web3 } from '../../../web3';
@@ -103,7 +100,7 @@ class Transaction extends Component {
                         <tr>
                             <td className="transaction-info-header">  </td>
                             <td className="transaction-info-value hash"> 
-                                <img className="icon-small" src="next.png" /> {this.state.to} 
+                                <img className="icon-xsmall" src="home/sena/ws/solar/public/imgs/next.png" /> {this.state.to} 
                             </td>
                         </tr>
                         <tr>

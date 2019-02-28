@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 // material-ui components
 import { withStyles } from '@material-ui/core/styles';
@@ -11,8 +12,9 @@ import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
 import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
 
 // local components
-import { web3 } from '../../../web3';
 import './AddAccountForm.css';
+import { web3 } from '../../../web3';
+import { statusActions } from '../../../actions';
 
 // local defines
 const strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
@@ -116,15 +118,22 @@ class AddAccountForm extends Component {
     }
 
     async createAccount(){
+        const { dispatch } = this.props;
+        dispatch( statusActions.start());
         if( this.state.passwordConfirm.length == 0 ){
             this.setState({ confirmRequired: true });
             return;
         } else if( !this.validationCheck() ){
             //TODO
         } else {
-            this.setState({ isProcessing: true });
-            await web3.personal_newAccount( this.state.password );
-            this.props.closeAction( true );
+            let result = await web3.personal_newAccount( this.state.password );
+            dispatch( statusActions.done());
+
+            if( result ) {
+                this.props.closeAction( true );
+            } else {
+                //TODO: fail
+            }
         }
     }
 
@@ -180,4 +189,9 @@ class AddAccountForm extends Component {
     }
 }
 
-export default AddAccountForm;
+function mapStateToProps( state ) {
+    // should do this to using 'dispatch()' method.
+    return state;
+}
+export default connect(mapStateToProps)(AddAccountForm);
+//export default AddAccountForm;

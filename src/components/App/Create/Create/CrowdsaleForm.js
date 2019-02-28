@@ -1,0 +1,456 @@
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
+// for additional supply
+import Slider, { createSliderWithTooltip } from 'rc-slider';
+import 'rc-slider/assets/index.css';
+
+// for date time range 
+import moment from 'moment';
+import DatetimeRangePicker from 'react-bootstrap-datetimerangepicker';
+import { Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-daterangepicker/daterangepicker.css';
+
+// material-ui components
+import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import InputAdornment from '@material-ui/core/InputAdornment';
+
+// local components
+import './CrowdsaleForm.css';
+import { DATE_TIME_FORMAT } from '../../../../helpers/constants';
+import { MOMENT_OPTION_REMOVE_MINUTE_SECOND } from '../../../../helpers/constants';
+
+//local defines
+//const DATE_TIME_FORMAT = "YYYY-MM-DD HH";
+const CRP_RANGE_MIN = 0;
+const CRP_RANGE_MAX = 10000000;
+const ERROR_MESSAGE_DATE_IS_REQUIRED = "Date is required.";
+const ERROR_MESSAGE_SOFTCAP_IS_REQUIRED = "Softcap is required.";
+const ERROR_MESSAGE_HARDCAP_IS_REQUIRED = "Hardcap is required.";
+const ERROR_MESSAGE_FIRSTWITHDRAW_IS_REQUIRED = "Withdrawal is required.";
+const ERROR_MESSAGE_FIRSTWITHDRAW_LIMIT = "Withdrawal amount should be smaller than softcap.";
+const ERROR_MESSAGE_HARDCAP_LIMIT = "Hardcap should be larger than softcap.";
+const ERROR_MESSAGE_EXCHANGERATIO_IS_REQUIRED = "Exchange ratio is required.";
+
+const SliderWithTooltip = createSliderWithTooltip( Slider );
+const Range = createSliderWithTooltip( Slider.Range )
+
+/*
+ * @author. sena
+ * @comment. 'CrowdsaleForm' provides :reate form to create project  
+ */
+class CrowdsaleForm extends Component {
+    state = {
+    };
+
+    constructor( props ){
+        super( props );
+
+        // this.handleFirstWithdrawalClick = this.handleFirstWithdrawalClick.bind(this);
+        // this.handleSoftcapClick = this.handleSoftcapClick.bind(this);
+        // this.handleHardcapClick = this.handleHardcapClick.bind(this);
+        // this.handleExchangeRatioClick = this.handleExchangeRatioClick.bind(this);
+
+        // this.handleDateChange = this.handleDateChange.bind(this);
+        // this.handleFirstWithdrawalChange = this.handleFirstWithdrawalChange.bind(this);
+        // this.handleSoftcapChange = this.handleSoftcapChange.bind(this);
+        // this.handleHardcapChange = this.handleHardcapChange.bind(this);
+        // this.handleAdditionalSupplyChange = this.handleAdditionalSupplyChange.bind(this);
+        // this.handleExchangeRatioChange = this.handleExchangeRatioChange.bind(this);
+        // this.handleCrpRangeChange = this.handleCrpRangeChange.bind(this);
+    }
+
+    checkError(){
+        let flag = true;
+        let crowdsales = this.state.crowdsales;
+
+        for( var i = 0; i < crowdsales.length; i++ ){
+            flag = ( !crowdsales[i].date.dateError 
+                && !crowdsales[i].firstWithdrawalError && !crowdsales[i].softcapError && !crowdsales[i].hardcapError && !crowdsales[i].exchangeRatioError ) // error check
+                && ( crowdsales[i].softcap != 0 && crowdsales[i].hardcap != 0 && crowdsales[i].exchangeRatio != 0 ) // empty value check (except firstWithdrawal)
+                && ( crowdsales[i].firstWithdrawal != '' && crowdsales[i].softcap != '' && crowdsales[i].hardcap != '' && crowdsales[i].exchangeRatio != '' ) // empty value check
+
+            if( !flag ){ return flag; } // return if found error
+            
+        }
+        return flag;
+    }
+
+    sendDataToParent(){
+        let flag = this.checkError();
+
+        this.props.sendData({
+            values: {
+                crowdsales: this.state.crowdsales
+            }, 
+            flag: flag 
+        }); 
+    }
+
+    handleDateChange( index, event, data ){
+        let crowdsales = this.state.crowdsales;
+        let dateError = false;
+        let message = '';
+
+        // check empty
+        if( data.startDate == undefined || data.startDate == '' ){
+            dateError = true;
+            message = ERROR_MESSAGE_DATE_IS_REQUIRED;
+        }
+
+        crowdsales[index].date = {
+            startDate: data.startDate, 
+            endDate: data.endDate,
+            dateError: dateError
+        };
+
+        this.setState({
+            date: { 
+                crowdsales: crowdsales,
+                message: message
+            }
+        }, () => {
+            this.sendDataToParent();
+        });
+    }
+
+    handleFirstWithdrawalClick( index, event ){
+        let crowdsales = this.state.crowdsales;
+        crowdsales[index].firstWithdrawal = '';
+
+        this.setState({ crowdsales: crowdsales }, () => { this.sendDataToParent() });
+    }
+
+    handleSoftcapClick( index, event ){
+        let crowdsales = this.state.crowdsales;
+        crowdsales[index].softcap = '';
+
+        this.setState({ crowdsales: crowdsales }, () => { this.sendDataToParent() });
+    }
+
+    handleHardcapClick( index, event ){
+        let crowdsales = this.state.crowdsales;
+        crowdsales[index].hardcap = '';
+
+        this.setState({ crowdsales: crowdsales }, () => { this.sendDataToParent() });
+    }
+
+    handleExchangeRatioClick( index, event ){
+        let crowdsales = this.state.crowdsales;
+        crowdsales[index].exchangeRatio = '';
+
+        this.setState({ crowdsales: crowdsales }, () => { this.sendDataToParent() });
+    }
+
+
+    handleFirstWithdrawalChange( index, event ){
+        let crowdsales = this.state.crowdsales;
+        let firstWithdrawal = Number(event.target.value);
+        let firstWithdrawalError = false;
+        let message = '';
+
+        if( firstWithdrawal == undefined || firstWithdrawal == 0 ){
+            firstWitdhrawError = true;
+            message = ERROR_MESSAGE_FIRSTWITHDRAW_IS_REQUIRED;
+        } else if( crowdsales[index].softcap < firstWithdrawal ){
+            firstWithdrawalError = true;
+            message = ERROR_MESSAGE_FIRSTWITHDRAW_LIMIT;
+        }
+
+        crowdsales[index].firstWithdrawal = firstWithdrawal;
+        crowdsales[index].firstWithdrawalError = firstWithdrawalError;
+
+        console.log( crowdsales[index] );
+
+        this.setState({
+            crowdsales: crowdsales,
+            message: message
+        }, () => {
+            this.sendDataToParent();
+        });
+    }
+
+    handleSoftcapChange( index, event ){
+        let crowdsales = this.state.crowdsales;
+        let softcap = Number(event.target.value);
+        let firstWithdrawalError = false;
+        let softcapError = false;
+        let hardcapError = false;
+        let message = '';
+
+        if( softcap == undefined || softcap == 0 ){
+            softcapError = true;
+            message = ERROR_MESSAGE_SOFTCAP_IS_REQUIRED;
+
+            /* softcap is a standard. 
+             * Instead of controling every error at every handler*change, 
+             *  make softcap to standard and controll every errors here.
+             */
+        } else if( crowdsales[index].hardcap < softcap && crowdsales[index].hardcap != 0 ){
+            hardcapError = true;
+        } else if( crowdsales[index].hardcap > softcap && crowdsales[index].hardcap != 0 ){
+            hardcapError = false;
+        } else if( crowdsales[index].firstWithdrawal > softcap ){
+            firstWithdrawalError = true;
+        } else if( crowdsales[index].firstWithdrawal < softcap ){
+            firstWithdrawalError = false;
+        }
+
+        crowdsales[index].softcap = softcap;
+        crowdsales[index].softcapError = softcapError;
+        crowdsales[index].firstWithdrawalError = firstWithdrawalError;
+        crowdsales[index].hardcapError = hardcapError;
+
+        this.setState({
+            crowdsales: crowdsales,
+            message: message
+        }, () => {
+            this.sendDataToParent();
+        });
+    }
+
+    handleHardcapChange( index, event ){
+        let crowdsales = this.state.crowdsales;
+        let hardcap = Number(event.target.value);
+        let hardcapError = false;
+        let message = '';
+
+        if( hardcap == undefined || hardcap == 0 ){
+            hardcapError = true;
+            message = ERROR_MESSAGE_SOFTCAP_IS_REQUIRED;
+        } else if( crowdsales[index].softcap > hardcap && crowdsales[index].softcap != 0 ){
+            hardcapError = true;
+            message = ERROR_MESSAGE_HARDCAP_LIMIT;
+        }
+
+        crowdsales[index].hardcap = hardcap;
+        crowdsales[index].hardcapError = hardcapError;
+
+        this.setState({
+            crowdsales: crowdsales,
+            message: message
+        }, () => {
+            this.sendDataToParent();
+        });
+    }
+
+    handleAdditionalSupplyChange( index, value ){
+        let crowdsales = this.state.crowdsales;
+        crowdsales[index].additionalSupply = value;
+
+        this.setState({
+            crowdsales: crowdsales
+        }, () => {
+            this.sendDataToParent();
+        });
+    }
+
+    handleExchangeRatioChange( index, event ){
+        let crowdsales = this.state.crowdsales;
+        let exchangeRatio = Number(event.target.value);
+        let exchangeRatioError = false;
+        let message = '';
+
+        if( exchangeRatio == undefined || exchangeRatio == 0 ){
+            exchangeRatioError = true;
+            message = ERROR_MESSAGE_EXCHANGERATIO_IS_REQUIRED;
+        }
+
+        crowdsales[index].exchangeRatio = exchangeRatio;
+        crowdsales[index].exchangeRatioError = exchangeRatioError;
+
+        this.setState({
+            crowdsales: crowdsales,
+            message: message
+        }, () => {
+            this.sendDataToParent();
+        });
+    }
+
+    handleCrpRangeChange( index, value ){
+        let crowdsales = this.state.crowdsales;
+        crowdsales[index].crpRange = {
+            min: value[0],
+            max: value[1]
+        };
+
+        this.setState({
+            crowdsales: crowdsales
+        }, () => {
+            this.sendDataToParent();
+        });
+    }
+
+    componentWillMount(){
+        let defaultData = this.props.data.crowdsales; //TODO: crowdsale could be more than 1
+        let crowdsales = [{
+            date: {
+                startDate: moment().set( MOMENT_OPTION_REMOVE_MINUTE_SECOND ),
+                endDate: moment().add(30, 'days').set( MOMENT_OPTION_REMOVE_MINUTE_SECOND ),
+                dateError: false
+            },
+            firstWithdrawal: 0,
+            firstWithdrawalError: false,
+            softcap: 0,
+            softcapError: false,
+            hardcap: 0,
+            hardcapError: false,
+            exchangeRatio: 0,
+            exchangeRatioError: false,
+            crpRange: {
+                min: 100000,
+                max: 5000000
+            }
+        }];
+
+        // get data from create page. (back/next)
+        if( defaultData != undefined && defaultData.length != 0 ){
+            crowdsales = defaultData;
+        }
+
+        this.setState({ 
+            crowdsales: crowdsales
+        }, () => {
+            this.sendDataToParent();
+        });
+    }
+
+    render() {
+        const locale = { format: DATE_TIME_FORMAT };
+        const trackStyle = {
+            backgroundColor: '#3f51b5'
+        };
+        const handleStyle = {
+            borderColor: '#3f51b5',
+            backgroundColor: 'white'
+        };
+
+        return (
+            <div className="create-form-crowdsale">
+                <h4 className="create-form-step-header"> Crowdsale </h4>
+                { this.state.crowdsales.map( (item, index) => (
+                    <div key={index}>
+                        <DatetimeRangePicker 
+                            autoApply
+                            timePicker
+                            timePicker24Hour
+                            timePickerIncrement={60}
+                            locale={locale}
+                            startDate={item.date.startDate}
+                            endDate={item.date.endDate}
+                            className="create-form-crowdsale-items"
+                            onApply={this.handleDateChange.bind(this, index)}>
+                            <TextField
+                                id="startDate"
+                                label="Start date"
+                                value={moment(item.date.startDate).format( DATE_TIME_FORMAT )}
+                                className="textfield"
+                                onChange={this.handleDateChange.bind(this, index)}
+                            /> 
+                            <TextField
+                                id="endDate"
+                                label="End date"
+                                value={moment(item.date.endDate).format( DATE_TIME_FORMAT )}
+                                className="textfield"
+                                onChange={this.handleDateChange.bind(this, index)}
+                            />
+                        </DatetimeRangePicker>
+                        <div className="create-form-crowdsale-items">
+                            <TextField
+                                id="fitstWithdrawal"
+                                label="First Withdrawal"
+                                type="number"
+                                value={item.firstWithdrawal}
+                                className="textfield"
+                                error={item.firstWithdrawalError}
+                                onClick={this.handleFirstWithdrawalClick.bind(this, index)}
+                                onChange={this.handleFirstWithdrawalChange.bind(this, index)}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">CRP</InputAdornment>
+                                }}
+                            />
+                            <TextField
+                                id="softcap"
+                                label="Softcap"
+                                type="number"
+                                value={item.softcap}
+                                className="textfield"
+                                error={item.softcapError}
+                                onClick={this.handleSoftcapClick.bind(this, index)}
+                                onChange={this.handleSoftcapChange.bind(this, index)}
+                                helperText="Softcap should be bigger than first withdrawal."
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">CRP</InputAdornment>
+                                }}
+                            />
+                            <TextField
+                                id="hardcap"
+                                label="Hardcap"
+                                type="number"
+                                value={item.hardcap}
+                                className="textfield"
+                                error={item.hardcapError}
+                                onClick={this.handleHardcapClick.bind(this, index)}
+                                onChange={this.handleHardcapChange.bind(this, index)}
+                                helperText="Hardcap should be bigger than softcap."
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">CRP</InputAdornment>
+                                }}
+                            />
+                        </div>
+                        <div className="create-form-crowdsale-additionalsupply">
+                            <Typography variant="caption" gutterBottom align="left">Additional supply</Typography>
+                            <SliderWithTooltip 
+                                min={0} max={100}
+                                step={0.1}
+                                value={item.additionalSupply}
+                                onChange={this.handleAdditionalSupplyChange.bind(this, index)}
+                                trackStyle={trackStyle}
+                                handleStyle={handleStyle}
+                                tipFormatter={(value) => { return `${value} %`; }}
+                            />
+                            <Typography variant="subheading" gutterBottom align="right">{item.additionalSupply}%</Typography>
+                        </div>
+                        <div className="create-form-crowdsale-items">
+                            <TextField
+                                id="exchangeRatio"
+                                label="Exchange ratio"
+                                type="number"
+                                value={item.exchangeRatio}
+                                className="textfield"
+                                error={item.exchangeRatioError}
+                                onClick={this.handleExchangeRatioClick.bind(this, index)}
+                                onChange={this.handleExchangeRatioChange.bind(this, index)}
+                                InputProps={{
+                                    startAdornment: <InputAdornment className="create-form-crowdsale-adornment" position="start"> 1 CRP : </InputAdornment>,
+                                    endAdornment: <InputAdornment position="end">{this.props.data.symbol}</InputAdornment>
+                                }}
+                            />
+                        </div>
+                        <div className="create-form-crowdsale-crprange">
+                            <Typography variant="caption" gutterBottom align="left">CRP Range</Typography>
+                            <Range 
+                                min={CRP_RANGE_MIN} max={CRP_RANGE_MAX}
+                                step={1}
+                                value={[item.crpRange.min, item.crpRange.max]}
+                                onChange={this.handleCrpRangeChange.bind(this, index)}
+                                trackStyle={[trackStyle]}
+                                handleStyle={handleStyle}
+                                tipFormatter={(value) => { return `${value} CRP`; }}
+                            />
+                            <Typography variant="subheading" gutterBottom align="right"> {item.crpRange.min} ~ {item.crpRange.max} CRP</Typography>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+}
+
+function mapStateToProps( state ){
+    return state.authentication;
+}
+export default connect(mapStateToProps)(CrowdsaleForm);

@@ -1,0 +1,9 @@
+.projects {
+    width: 100vw ;
+    overflow: hidden ;
+}
+
+.projects .project-area{
+    display: inline-block;
+    width: 99%;
+}

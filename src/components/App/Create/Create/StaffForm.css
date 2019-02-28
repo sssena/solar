@@ -1,0 +1,31 @@
+.create-form-staff-owner {
+    display: flex;
+}
+
+.create-form-staff-list {
+    overflow: auto;
+    height: 25em;
+}
+
+.create-form-staff-list-item {
+    margin-left: 0.5em;
+    /*display: flex;*/
+}
+
+.create-form-staff-list-item button{
+    margin-top: 1em;
+}
+
+.create-form-staff-owner .address{
+    width: 75%;
+}
+.create-form-staff-owner .ratio{
+    width: 25%;
+}
+
+.create-form-staff .address{
+    width: 60%;
+}
+.create-form-staff .ratio{
+    width: 20%;
+}

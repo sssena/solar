@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 // material-ui components
 import Dialog from '@material-ui/core/Dialog';
@@ -14,11 +15,13 @@ import DoneIcon from '@material-ui/icons/Done';
 // local components
 import './SendTransaction.css';
 import { web3 } from '../../../../web3';
+import { statusActions } from '../../../../actions'
 
 const ERROR_MESSAGE_TO_IS_EMPTY = "To field is required.";
+const ERROR_MESSAGE_IS_NOT_ADDRESS = "To field should be address.";
 const ERROR_MESSAGE_VALUE_IS_EMPTY = "Value field is required.";
 const ERROR_MESSAGE_PASSWORD_IS_EMPTY = "Password field is required.";
-const ERROR_MESSAGE_FAIL_TO_UNLOCK = "Fail to unlock account.";
+const ERROR_MESSAGE_FAIL_TO_UNLOCK_ACCOUNT = "Fail to unlock account. Check your password.";
 
 const DEFAULT_UNLOCK_ACCOUNT_DURATION = 300; // same with ethereum default.
 
@@ -75,6 +78,12 @@ class SendTransaction extends Component {
             this.setState({ toError: true, message: ERROR_MESSAGE_TO_IS_EMPTY });
             return false;
         }
+
+        if( !web3.utils_isAddress( to ) ){
+            this.setState({ toError: true, message: ERROR_MESSAGE_IS_NOT_ADDRESS });
+            return false;
+        }
+
         this.setState({ toError: false, message: '' });
         return true;
     }
@@ -93,25 +102,25 @@ class SendTransaction extends Component {
     async passwordValidationCheck(){
         let password = this.state.password;
 
-        // password could be empty.
-        // if( password == '' ) {
-        //     this.setState({ passwordError: true, message: ERROR_MESSAGE_PASSWORD_IS_EMPTY });
-        //     return false;
-        // }
-
         // unlock account with password
-        //let result = await web3.personal_unlockAccount( this.props.address, password, DEFAULT_UNLOCK_ACCOUNT_DURATION );
-        //if ( !result ) {
-        //    this.setState({ passwordError: true, message: ERROR_MESSAGE_FAIL_TO_UNLOCK_ACCOUNT });
-        //    return false;
-        //}
+        let result = await web3.personal_unlockAccount( this.props.address, password, DEFAULT_UNLOCK_ACCOUNT_DURATION )
+            .catch( (error) => {
+                this.setState({ passwordError: true, message: ERROR_MESSAGE_FAIL_TO_UNLOCK_ACCOUNT });
+                result = false;
+            });
 
-        this.setState({ passwordError: false, message: '' });
-        return true;
+        if( result ){
+            // clear error message
+            this.setState({ passwordError: false, message: '' });
+        }
+        return result;
     }
 
     async sendTransaction() {
+        this.props.dispatch( statusActions.start() );
+
         if ( !this.toValidationCheck() || !this.valueValidationCheck() || ! await this.passwordValidationCheck() ) {
+            this.props.dispatch( statusActions.done() );
             return;
         }
 
@@ -120,11 +129,15 @@ class SendTransaction extends Component {
             to: this.state.to,
             value: this.props.value
         }).catch( (error) => {
-            alert( error );
-            return;
+            result = false;
         });
 
-        this.props.closeAction();
+        if( !result ) {
+            // TODO: processing error
+        }
+
+        this.props.dispatch( statusActions.done() );
+        this.props.closeAction( true );
     }
 
     render() {
@@ -209,4 +222,7 @@ class SendTransaction extends Component {
     }
 }
 
-export default SendTransaction;
+function mapStateToProps( state ){
+    return state;
+}
+export default connect(mapStateToProps)(SendTransaction);

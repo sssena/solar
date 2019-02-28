@@ -15,6 +15,7 @@ function login( id, password, address ){
             console.log( 'User id:', id );
             console.log( 'Wallet address:', address );
 
+            // TODO: cancreate?
             let canCreate = true;
 
             dispatch( success({ id: id, address: address, canCreate: canCreate }) );

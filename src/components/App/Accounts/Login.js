@@ -53,6 +53,7 @@ class Login extends Component {
 
     signIn() {
         const { dispatch } = this.props;
+
         let id = this.state.id;
         let password = this.state.password;
 
@@ -60,7 +61,6 @@ class Login extends Component {
 
         if( this.validationCheck( id, password ) ){
             dispatch( authActions.login( id, password, this.props.address ));
-            //     this.setState({ loginState: 'success', message: LOGIN_SUCCEED_MESSAGE });
         }
         this.setState({ loginState: 'failed', message: LOGIN_FAILED_MESSAGE });
     }
@@ -127,10 +127,10 @@ class Login extends Component {
 }
 
 function mapStateToProps( state ) {
-    const { logginIn } = state.authentication;
+    const { loggingIn } = state.authentication;
     return {
-        logginIn
+        loggingIn
     };
 }
-
 export default connect(mapStateToProps)(Login);
+//export default Login;

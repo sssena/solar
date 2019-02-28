@@ -2,15 +2,21 @@ import React, { Component } from 'react';
 
 // material-ui components 
 import Dialog from '@material-ui/core/Dialog';
+import IconButton from '@material-ui/core/IconButton';
 
 // react-bootstrap-table
 import BootstrapTable from 'react-bootstrap-table-next';
+import ToolkipProvider, { Search } from 'react-bootstrap-table2-toolkit';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 
 // react-bootstrap-table css
 import 'bootstrap/dist/css/bootstrap.min.css'; // react-bootstrap-table needs bootstrap.
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
+
+//icons
+import ClearIcon from '@material-ui/icons/Clear';
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 // local components
 import './TransactionTable.css';
@@ -30,6 +36,8 @@ class TransactionTable extends Component {
 
     constructor(){
         super();
+
+        this.loadTransactions = this.loadTransactions.bind(this);
     }
 
     handleTxInfoOpen = ( hash ) => {
@@ -97,31 +105,72 @@ class TransactionTable extends Component {
             }
         };
 
+        const { SearchBar } = Search;
+
+        const pageButtonCustom = ({
+            page, 
+            active,
+            disable,
+            title,
+            onPageChange
+        }) => {
+            const handleClick = (e) => {
+                e.preventDefault();
+                onPageChange( page );
+            };
+
+            const activeStyle = {};
+            if( active ){
+                activeStyle.backGroundColor = '#579aff';
+                activeStyle.borderColor = '#579aff';l
+            }
+
+            return (
+                <li className="page-item">
+                    <a href="#" onClick={ handleClick } style={ activeStyle }> { page } </a>
+                </li>
+            );
+        };
+
         const pagingOptions = {
-            hideSizePerPage: true
+            sizePerPage: 10,
+            hideSizePerPage: true,
+            pageButtonCustom
         }
 
-        function iconFormatter( cell, row ) { return (<img className="icon-small" src="public/imgs/next.png" />); }
+        function iconFormatter( cell, row ) { return (<img className="icon-xsmall" src="home/sena/ws/solar/public/imgs/next.png" />); }
 
         return (
             <div className="transactions">
-                <BootstrapTable 
+                <ToolkipProvider
                     bordered={false}
                     keyField="hash"
                     data={this.state.transactions}
                     columns={columns}
-                    headerClasses="transaction-table-header"
-                    rowEvents={rowEvents}
-                    pagination={ paginationFactory( pagingOptions ) }
-                />
-
+                    search >
+                    {
+                        props => (
+                            <div>
+                                <SearchBar { ...props.searchProps }
+                                    className="transaction-table-search"
+                                    placeholder="Search"
+                                />
+                                <IconButton onClick={this.loadTransactions} aria-label="reload"> <RefreshIcon/> </IconButton>
+                                <BootstrapTable { ...props.baseProps }
+                                    headerClasses="transaction-table-header"
+                                    rowEvents={rowEvents}
+                                    pagination={ paginationFactory( pagingOptions ) }
+                                />
+                            </div>
+                        )
+                    }
+                </ToolkipProvider>
                 <Dialog
                     maxWidth={false}
                     open={this.state.openTxInfo}
                     onClose={this.handleTxInfoClose} >
                     <Transaction closeAction={this.handleTxInfoClose} hash={this.state.activateHash} />
                 </Dialog>
-
             </div>
         );
     }

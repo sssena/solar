@@ -31,8 +31,7 @@ class Wallet extends Component {
         balance: 0,
         unit: 'CRP',
         anchorElement: null,
-        sendTx: false,
-        isProcessing: false
+        sendTxOpen: false
     };
 
     constructor(){
@@ -53,10 +52,13 @@ class Wallet extends Component {
 
     // Dialog send transaction
     handleSendTxOpen = () => {
-        this.setState({ sendTx: true });
+        this.setState({ sendTxOpen: true });
     }
-    handleSendTxClose = () => {
-        this.setState({ sendTx: false });
+    handleSendTxClose = ( shouldReload ) => {
+        this.setState({ sendTxOpen: false });
+        if( shouldReload ){
+            this.loadAccountInfo();
+        }
     }
 
     async loadAccountInfo(){
@@ -94,7 +96,7 @@ class Wallet extends Component {
 
                     <IconButton onClick={this.handleSendTxOpen} aria-label="functions"> <SendIcon/> </IconButton>
                 </div>
-                <Dialog open={this.state.sendTx} onClose={this.handleSendTxClose}>
+                <Dialog open={this.state.sendTxOpen} onClose={this.handleSendTxClose}>
                     <SendTransaction 
                         address={this.state.address}
                         closeAction={this.handleSendTxClose}

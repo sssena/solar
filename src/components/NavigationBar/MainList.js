@@ -9,6 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 // Icons
 import GradiantIcon from '@material-ui/icons/Gradient';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import ScreenShareIcon from '@material-ui/icons/ScreenShare';
 import BugReportIcon from '@material-ui/icons/BugReport';
 
@@ -20,7 +21,7 @@ class MainList extends Component {
           { this.props.hasAuth ? 
               <Link to={"/wallet"}> 
                 <ListItemIcon>
-                  <GradiantIcon />
+                  <AccountBalanceWalletIcon />
                 </ListItemIcon>
               </Link>
             : <Link to={"/accounts"}> 

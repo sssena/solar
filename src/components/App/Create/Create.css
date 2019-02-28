@@ -1,0 +1,33 @@
+.create {
+    width: 100vw;
+    overflow: hidden;
+}
+
+.create-header {
+    margin: 0.5em;
+}
+
+.create-stepper {
+    width: 100%;
+}
+
+.create-form {
+    /* width: 100%; */
+    height: 75%;
+    margin: 1em 2em 1em 2em;
+}
+.create-form .textfield{
+    width: 100%;
+    margin: 1em;
+}
+
+.create-form-step-header {
+    color: gray;
+    font-weight: bold;
+}
+
+.create-step-controller {
+    position: absolute;
+    left: 50%;
+    top: 90%;
+}

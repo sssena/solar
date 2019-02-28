@@ -1,0 +1,27 @@
+.create-form-roadmap {
+}
+
+.create-form-roadmap-list {
+    overflow: auto;
+    height: 25em;
+}
+
+.create-form-roadmap-list-item {
+    display: flex;
+}
+
+.create-form-roadmap-list-item .datepicker {
+    width: 100%;
+}
+.create-form-roadmap-list-item .datepicker .textfield{
+    width: 45%;
+}
+.create-form-roadmap-list-item .textfield{
+    width: 30%;
+}
+
+
+.create-form-roadmap-list-item button{
+    margin-top: 1em;
+}
+

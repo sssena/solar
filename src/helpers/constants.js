@@ -4,3 +4,11 @@ export const authConstants = {
     LOGIN_FAILURE: 'USERS_LOGIN_FAILURE',
     LOGOUT: 'USERS_LOGOUT'
 }
+
+export const statusConstants = {
+    IS_PROCESSING: 'STATUS_IS_PROCESSING',
+    IS_NOT_PROCESSING: 'STATUS_IS_NOT_PROCESSING',
+}
+
+export const DATE_TIME_FORMAT = "YYYY-MM-DD HH:00";
+export const MOMENT_OPTION_REMOVE_MINUTE_SECOND = { minute: 0, second: 0, millisecond: 0 };

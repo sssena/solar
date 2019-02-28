@@ -1,0 +1,20 @@
+.create-form-crowdsale{
+    display: grid;
+}
+
+.create-form-crowdsale .create-form-crowdsale-items{
+    display: flex;
+}
+
+.create-form-crowdsale .create-form-crowdsale-adornment{
+    width: 4em;
+}
+
+.create-form-crowdsale-additionalsupply{
+    margin: 1em 1em 1em 1em;
+}
+
+.create-form-crowdsale-crprange{
+    margin: 2em 1em 1em 1em;
+}
+
