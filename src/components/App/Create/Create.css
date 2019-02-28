@@ -22,12 +22,21 @@
 }
 
 .create-form-step-header {
+    display: inline-block;
+}
+
+.create-form-step-header h4 {
     color: gray;
     font-weight: bold;
+    display: inline-block;
+}
+.create-form-step-header button {
+    display: inline-block;
+    margin-bottom: 0.5rem;
 }
 
 .create-step-controller {
     position: absolute;
-    left: 50%;
+    left: 45%;
     top: 90%;
 }

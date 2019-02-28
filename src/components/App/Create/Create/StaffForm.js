@@ -188,8 +188,6 @@ class StaffForm extends Component {
             ratio: 100
         }];
 
-        // console.log('get data from parent:', defaultData );
-        
         // default value from parent
         if( defaultData.staff != undefined && defaultData.staff.length != 0 ){
             staff = defaultData.staff;
@@ -198,7 +196,6 @@ class StaffForm extends Component {
         this.setState({ 
             staff: staff
         }, () => {
-            // console.log('this state=', this.state);
             this.sendDataToParent();
         });
     }
@@ -206,8 +203,10 @@ class StaffForm extends Component {
     render() {
         return (
             <div className="create-form-staff">
-                <h4 className="create-form-step-header"> Staff </h4>
-                <IconButton aria-label="add staff" onClick={this.handleAddStaff} disabled={this.state.ratioError} > <PersonAddIcon/> </IconButton>
+                <div className="create-form-step-header">
+                    <h4> Staff </h4>
+                    <IconButton aria-label="add staff" onClick={this.handleAddStaff} disabled={this.state.ratioError} > <PersonAddIcon/> </IconButton>
+                </div>
                 <div className="create-form-staff-list">
                     {
                         this.state.staff.map( (item, index) => (
@@ -249,6 +248,7 @@ class StaffForm extends Component {
                                         type="number"
                                         value={item.ratio}
                                         className="textfield ratio"
+                                        helperText="Summary of all ratio cannot over 100%"
                                         onClick={this.handleRatioClick.bind(this, index)}
                                         onChange={this.handleRatioChange.bind(this, index)}
                                         InputProps={{

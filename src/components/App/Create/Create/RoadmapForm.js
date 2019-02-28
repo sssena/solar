@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+// bootstrap
+import Popover from 'react-bootstrap/Popover';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Alert from 'react-bootstrap/Alert';
+
 // material-ui components
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import Divider from '@material-ui/core/Divider';
 
 // for date time range
 import Moment from 'moment';
@@ -16,6 +22,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 
 // icons
+import InfoIcon from '@material-ui/icons/Info';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import RemoveIcon from '@material-ui/icons/RemoveCircle';
 
@@ -53,9 +60,14 @@ class RoadmapForm extends Component {
     }
 
     sendDataToParent(){
-        let flag = !this.state.totalWithdrawalError;
+        let flag = ((!this.state.totalWithdrawalError) && (this.state.remainAmounts == 0));
         for( var i = 0; i < this.state.roadmaps.length; i++ ){
-            if( this.state.roadmaps[i].withdrawal == 0 ){
+        // TODO allow 0 ?
+        //     if( this.state.roadmaps[i].withdrawal == 0 ){
+        //         flag = false;
+        //         break;
+        //     }
+            if( this.state.roadmaps[i].date.dateError ){
                 flag = false;
                 break;
             }
@@ -178,21 +190,21 @@ class RoadmapForm extends Component {
 
         if( withdrawal < 0 ){ withdrawal = 0; }
         if( withdrawal == '' || withdrawal == undefined ) { withdrawal = 0; }
+
         roadmaps[index].withdrawal = withdrawal;
 
-        let summary = 0;
-        for(var i = 0; i < roadmaps.length; i++ ){
-            summary += roadmaps[i].withdrawal;
+        // calculate total ~ remain amounts
+        let totalWithdrawal = 0;
+        for( var i = 0; i < roadmaps.length; i++ ){
+            totalWithdrawal += roadmaps[i].withdrawal;
         }
-
-        if( summary > this.props.data.crowdsales[0].softcap ){ // fixed: first crowdsales's softcap
-            totalWithdrawalError = true;
-            message = ERROR_MESSAGE_TOTAL_WITHDRAW_LIMIT;
-        }
+        let remainAmounts = (this.props.data.crowdsales[0].softcap - this.props.data.crowdsales[0].firstWithdrawal - totalWithdrawal);
 
         this.setState({
             roadmaps: roadmaps,
-            totalWithdrawalError: totalWithdrawalError,
+            totalWithdrawal: totalWithdrawal,
+            totalWithdrawalError: (remainAmounts < 0 ? true : false),
+            remainAmounts: remainAmounts,
             message: message
         }, () => {
             this.sendDataToParent();
@@ -201,10 +213,12 @@ class RoadmapForm extends Component {
 
     componentWillMount(){
         let defaultData = this.props.data;
+        // it changes global variable of crowdsale. so make new moment.
+        let crowdsaleEndDate = moment(this.props.data.crowdsales[0].date.endDate);
         let roadmaps = [{
             date: {
-                startDate: moment().set( MOMENT_OPTION_REMOVE_MINUTE_SECOND ),
-                endDate: moment().add(100, 'days').set( MOMENT_OPTION_REMOVE_MINUTE_SECOND )
+                startDate: moment(crowdsaleEndDate.add(1, 'days')),
+                endDate: moment(crowdsaleEndDate.add(2, 'days'))
             },
             withdrawal: 0
         }];
@@ -216,7 +230,9 @@ class RoadmapForm extends Component {
 
         this.setState({ 
             roadmaps: roadmaps,
+            totalWithdrawal: 0,
             totalWithdrawalError: false,
+            remainAmounts: (this.props.data.crowdsales[0].softcap - this.props.data.crowdsales[0].firstWithdrawal),
             message: ''
         }, () => {
             this.roadmapDateValidation();
@@ -224,12 +240,34 @@ class RoadmapForm extends Component {
     }
 
     render() {
-        const locale = { format: DATE_TIME_FORMAT };
+        const locale = { 
+            format: DATE_TIME_FORMAT,
+        };
+
+        const remainAmountsPopover = (
+            <Popover title="Remain amounts" className="crowdsale-info-popover">
+                <h5> Crowdsale info </h5>
+                Please Check below datas and create roadmaps.
+                <div  className="crowdsale-info-popover-number">
+                    <p> Softcap : <strong> {this.props.data.crowdsales[0].softcap} </strong> CRP </p>
+                    <p> First Withdraw : <strong> {this.props.data.crowdsales[0].firstWithdrawal} </strong> CRP </p>
+                    <p> Roadmap Total : <strong> {this.state.totalWithdrawal} </strong> CRP </p>
+                    <Divider/>
+                    <p> Remain : <strong> {this.state.remainAmounts} </strong> CRP </p> 
+                    <Alert variant="warning"> <InfoIcon/> Make remain amounts to 0. </Alert>
+                </div>
+            </Popover>
+        );
 
         return (
             <div className="create-form-roadmap">
-                <h4 className="create-form-step-header"> Roadmap </h4>
-                <IconButton aria-label="add roadmap" onClick={this.handleAddRoadmap} > <PlaylistAddIcon/> </IconButton>
+                <div className="create-form-step-header">
+                    <h4> Roadmap </h4>
+                    <IconButton aria-label="add roadmap" onClick={this.handleAddRoadmap} disabled={this.state.remainAmounts <= 0}> <PlaylistAddIcon/> </IconButton>
+                    <OverlayTrigger trigger="click" defaultShow={true} placement="right" overlay={remainAmountsPopover} delay={3000}>
+                        <IconButton aria-label="show remains"> <InfoIcon/> </IconButton>
+                    </OverlayTrigger>
+                </div>
                 <div className="create-form-roadmap-list">
                     {
                         this.state.roadmaps.map( (item, index) => (
@@ -237,6 +275,7 @@ class RoadmapForm extends Component {
                                 {(index == 0 ? null : <IconButton onClick={this.handleRemoveRoadmap.bind(this, index)} aria-label="remove roadmap"> <RemoveIcon/> </IconButton>)}
                                 <DatetimeRangePicker
                                     autoApply
+                                    minDate={this.props.data.crowdsales[0].date.endDate}
                                     timePicker
                                     timePicker24Hour
                                     timePickerIncrement={60}
@@ -269,6 +308,7 @@ class RoadmapForm extends Component {
                                     error={item.withdrawalError||this.state.totalWithdrawalError}
                                     onClick={this.handleWithdrawClick.bind(this, index)}
                                     onChange={this.handleWithdrawChange.bind(this, index)}
+                                    helperText="Cannot exceeds crowdsale's softcap"
                                     InputProps={{
                                         endAdornment: <InputAdornment position="end">CRP</InputAdornment>
                                     }}

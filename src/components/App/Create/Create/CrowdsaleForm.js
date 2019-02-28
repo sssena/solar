@@ -20,6 +20,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 
 // local components
 import './CrowdsaleForm.css';
+import ErrorSnackbar from '../../../common/ErrorSnackbar';
 import { DATE_TIME_FORMAT } from '../../../../helpers/constants';
 import { MOMENT_OPTION_REMOVE_MINUTE_SECOND } from '../../../../helpers/constants';
 
@@ -30,8 +31,8 @@ const CRP_RANGE_MAX = 10000000;
 const ERROR_MESSAGE_DATE_IS_REQUIRED = "Date is required.";
 const ERROR_MESSAGE_SOFTCAP_IS_REQUIRED = "Softcap is required.";
 const ERROR_MESSAGE_HARDCAP_IS_REQUIRED = "Hardcap is required.";
-const ERROR_MESSAGE_FIRSTWITHDRAW_IS_REQUIRED = "Withdrawal is required.";
-const ERROR_MESSAGE_FIRSTWITHDRAW_LIMIT = "Withdrawal amount should be smaller than softcap.";
+const ERROR_MESSAGE_FIRSTWITHDRAWAL_IS_REQUIRED = "Withdrawal is required.";
+const ERROR_MESSAGE_FIRSTWITHDRAWAL_LIMIT = "Withdrawal amount should be smaller than softcap.";
 const ERROR_MESSAGE_HARDCAP_LIMIT = "Hardcap should be larger than softcap.";
 const ERROR_MESSAGE_EXCHANGERATIO_IS_REQUIRED = "Exchange ratio is required.";
 
@@ -49,18 +50,6 @@ class CrowdsaleForm extends Component {
     constructor( props ){
         super( props );
 
-        // this.handleFirstWithdrawalClick = this.handleFirstWithdrawalClick.bind(this);
-        // this.handleSoftcapClick = this.handleSoftcapClick.bind(this);
-        // this.handleHardcapClick = this.handleHardcapClick.bind(this);
-        // this.handleExchangeRatioClick = this.handleExchangeRatioClick.bind(this);
-
-        // this.handleDateChange = this.handleDateChange.bind(this);
-        // this.handleFirstWithdrawalChange = this.handleFirstWithdrawalChange.bind(this);
-        // this.handleSoftcapChange = this.handleSoftcapChange.bind(this);
-        // this.handleHardcapChange = this.handleHardcapChange.bind(this);
-        // this.handleAdditionalSupplyChange = this.handleAdditionalSupplyChange.bind(this);
-        // this.handleExchangeRatioChange = this.handleExchangeRatioChange.bind(this);
-        // this.handleCrpRangeChange = this.handleCrpRangeChange.bind(this);
     }
 
     checkError(){
@@ -154,61 +143,39 @@ class CrowdsaleForm extends Component {
 
         if( firstWithdrawal == undefined || firstWithdrawal == 0 ){
             firstWitdhrawError = true;
-            message = ERROR_MESSAGE_FIRSTWITHDRAW_IS_REQUIRED;
-        } else if( crowdsales[index].softcap < firstWithdrawal ){
-            firstWithdrawalError = true;
-            message = ERROR_MESSAGE_FIRSTWITHDRAW_LIMIT;
+            message = ERROR_MESSAGE_FIRSTWITHDRAWAL_IS_REQUIRED;
         }
 
         crowdsales[index].firstWithdrawal = firstWithdrawal;
         crowdsales[index].firstWithdrawalError = firstWithdrawalError;
 
-        console.log( crowdsales[index] );
-
         this.setState({
             crowdsales: crowdsales,
             message: message
         }, () => {
-            this.sendDataToParent();
+            this.amountsValidationCheck( index );
         });
     }
 
     handleSoftcapChange( index, event ){
         let crowdsales = this.state.crowdsales;
         let softcap = Number(event.target.value);
-        let firstWithdrawalError = false;
         let softcapError = false;
-        let hardcapError = false;
         let message = '';
 
         if( softcap == undefined || softcap == 0 ){
             softcapError = true;
             message = ERROR_MESSAGE_SOFTCAP_IS_REQUIRED;
-
-            /* softcap is a standard. 
-             * Instead of controling every error at every handler*change, 
-             *  make softcap to standard and controll every errors here.
-             */
-        } else if( crowdsales[index].hardcap < softcap && crowdsales[index].hardcap != 0 ){
-            hardcapError = true;
-        } else if( crowdsales[index].hardcap > softcap && crowdsales[index].hardcap != 0 ){
-            hardcapError = false;
-        } else if( crowdsales[index].firstWithdrawal > softcap ){
-            firstWithdrawalError = true;
-        } else if( crowdsales[index].firstWithdrawal < softcap ){
-            firstWithdrawalError = false;
         }
 
         crowdsales[index].softcap = softcap;
         crowdsales[index].softcapError = softcapError;
-        crowdsales[index].firstWithdrawalError = firstWithdrawalError;
-        crowdsales[index].hardcapError = hardcapError;
 
         this.setState({
             crowdsales: crowdsales,
             message: message
         }, () => {
-            this.sendDataToParent();
+            this.amountsValidationCheck( index );
         });
     }
 
@@ -220,13 +187,48 @@ class CrowdsaleForm extends Component {
 
         if( hardcap == undefined || hardcap == 0 ){
             hardcapError = true;
-            message = ERROR_MESSAGE_SOFTCAP_IS_REQUIRED;
-        } else if( crowdsales[index].softcap > hardcap && crowdsales[index].softcap != 0 ){
-            hardcapError = true;
-            message = ERROR_MESSAGE_HARDCAP_LIMIT;
+            message = ERROR_MESSAGE_HARDCAP_IS_REQUIRED;
         }
 
         crowdsales[index].hardcap = hardcap;
+        crowdsales[index].hardcapError = hardcapError;
+
+        this.setState({
+            crowdsales: crowdsales,
+            message: message
+        }, () => {
+            this.amountsValidationCheck( index );
+        });
+    }
+
+    amountsValidationCheck( index ){
+        // get values from state
+        let crowdsales = this.state.crowdsales;
+        let softcap = crowdsales[index].softcap;
+        let hardcap = crowdsales[index].hardcap;
+        let firstWithdrawal = crowdsales[index].firstWithdrawal;
+
+        // initialize
+        let firstWithdrawalError = false;
+        let softcapError = false;
+        let hardcapError = false;
+        let message = '';
+
+        // compare
+        if( hardcap <= softcap ){
+            hardcapError = true;
+            softcapError = true;
+            message = ERROR_MESSAGE_HARDCAP_LIMIT;
+        }
+        
+        if( firstWithdrawal >= softcap ){
+            firstWithdrawalError = true;
+            softcapError = true;
+            message = ERROR_MESSAGE_FIRSTWITHDRAWAL_LIMIT;
+        }
+
+        crowdsales[index].firstWithdrawalError = firstWithdrawalError;
+        crowdsales[index].softcapError = softcapError;
         crowdsales[index].hardcapError = hardcapError;
 
         this.setState({
@@ -298,6 +300,7 @@ class CrowdsaleForm extends Component {
             softcapError: false,
             hardcap: 0,
             hardcapError: false,
+            additionalSupply: 50,
             exchangeRatio: 0,
             exchangeRatioError: false,
             crpRange: {
@@ -312,7 +315,8 @@ class CrowdsaleForm extends Component {
         }
 
         this.setState({ 
-            crowdsales: crowdsales
+            crowdsales: crowdsales,
+            message: ''
         }, () => {
             this.sendDataToParent();
         });
@@ -330,7 +334,9 @@ class CrowdsaleForm extends Component {
 
         return (
             <div className="create-form-crowdsale">
-                <h4 className="create-form-step-header"> Crowdsale </h4>
+                <div className="create-form-step-header">
+                    <h4> Crowdsale </h4>
+                </div>
                 { this.state.crowdsales.map( (item, index) => (
                     <div key={index}>
                         <DatetimeRangePicker 
@@ -341,6 +347,7 @@ class CrowdsaleForm extends Component {
                             locale={locale}
                             startDate={item.date.startDate}
                             endDate={item.date.endDate}
+                            minDate={moment().add(1, 'days')}
                             className="create-form-crowdsale-items"
                             onApply={this.handleDateChange.bind(this, index)}>
                             <TextField
@@ -368,6 +375,7 @@ class CrowdsaleForm extends Component {
                                 error={item.firstWithdrawalError}
                                 onClick={this.handleFirstWithdrawalClick.bind(this, index)}
                                 onChange={this.handleFirstWithdrawalChange.bind(this, index)}
+                                helperText="Withdrawal amount should be smaller than softcap."
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end">CRP</InputAdornment>
                                 }}

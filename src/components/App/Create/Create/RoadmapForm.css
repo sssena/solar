@@ -5,23 +5,32 @@
     overflow: auto;
     height: 25em;
 }
-
 .create-form-roadmap-list-item {
     display: flex;
+}
+
+.crowdsale-info-popover {
+    margin: 0.5em;
+    display: inline-block;
+    width: 50em;
+}
+.crowdsale-info-popover-number {
+    text-align: right;
 }
 
 .create-form-roadmap-list-item .datepicker {
     width: 100%;
 }
+
 .create-form-roadmap-list-item .datepicker .textfield{
     width: 45%;
 }
+
 .create-form-roadmap-list-item .textfield{
     width: 30%;
 }
 
-
 .create-form-roadmap-list-item button{
-    margin-top: 1em;
+    height: 10%;
 }
 

@@ -60,7 +60,6 @@ class SummaryForm extends Component {
         let defaultData = this.props.data;
         let title = '';
 
-        console.log( defaultData );
         if( defaultData != undefined && defaultData.title != undefined && defaultData.title.length != 0 ){
             title = defaultData.title;
         }
@@ -73,7 +72,9 @@ class SummaryForm extends Component {
     render() {
         return (
             <div className="create-form-summary">
-                <h4 className="create-form-step-header"> Summary </h4>
+                <div className="create-form-step-header">
+                    <h4> Summary </h4>
+                </div>
                 <TextField
                     error={this.state.titleError}
                     id="title"

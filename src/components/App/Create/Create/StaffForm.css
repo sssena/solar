@@ -1,3 +1,6 @@
+.create-form-staff {
+    display: grid;
+}
 .create-form-staff-owner {
     display: flex;
 }

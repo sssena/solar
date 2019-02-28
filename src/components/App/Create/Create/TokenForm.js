@@ -110,7 +110,9 @@ class TokenForm extends Component {
     render() {
         return (
             <div className="create-form-token">
-                <h4 className="create-form-step-header"> Token </h4>
+                <div className="create-form-step-header">
+                    <h4> Token </h4>
+                </div>
                 <TextField
                     id="name"
                     label="Token name"

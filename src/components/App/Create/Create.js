@@ -52,7 +52,7 @@ class Create extends Component {
     }
 
     getValidationData( data ) {
-        console.log('data from child:', data);
+        console.log( data );
         switch( this.state.activeStep ){
             case 0:
                 this.setState({ 
