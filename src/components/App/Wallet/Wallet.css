@@ -35,10 +35,12 @@
     margin: 0;
     color: gray;
     text-align: right;
+    font-size: 1.5em;
 }
 
 .wallet .account-area .account-functions{
     display: inline-block;
+    vertical-align: text-bottom;
 }
 
 .wallet .function-icon {

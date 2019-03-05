@@ -25,6 +25,13 @@
     display: inline-block;
 }
 
+.create-form-step-header p {
+    color: #f44336;
+    display: inline-block;
+    font-family: 'Dosis', sans-serif;
+    margin: 0em 0em 0em 3em;
+}
+
 .create-form-step-header h4 {
     color: gray;
     font-weight: bold;

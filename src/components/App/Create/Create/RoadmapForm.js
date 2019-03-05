@@ -85,8 +85,8 @@ class RoadmapForm extends Component {
             },
             withdrawal: 0
         });
-        this.setState({ roadmaps: newRoadmap }, () => {
-            this.roadmapDateValidation();
+        this.setState({ roadmaps: newRoadmap }, async () => {
+            await this.roadmapDateValidation();
             this.calculateRemainAmount();
         });
     }
@@ -95,8 +95,8 @@ class RoadmapForm extends Component {
         if( index < 0 ){ return; }
 
         this.state.roadmaps.splice( index, 1 );
-        this.setState({ roadmaps: this.state.roadmaps }, () => {
-            this.roadmapDateValidation();
+        this.setState({ roadmaps: this.state.roadmaps }, async () => {
+            await this.roadmapDateValidation();
             this.calculateRemainAmount();
         });
     }
@@ -194,7 +194,7 @@ class RoadmapForm extends Component {
         let roadmaps = this.state.roadmaps;
         let withdrawal = Number(event.target.value);
         let totalWithdrawalError = false;
-        let message = '';
+        let message = this.state.message;
 
         if( withdrawal < 0 ){ withdrawal = 0; }
         if( withdrawal == '' || withdrawal == undefined ) { withdrawal = 0; }
@@ -212,17 +212,26 @@ class RoadmapForm extends Component {
     calculateRemainAmount(){
         // calculate total ~ remain amounts
         let roadmaps = this.state.roadmaps;
-        let message = '';
+        let totalWithdrawalError = false;
+        let message = this.state.message;
         let totalWithdrawal = 0;
+
         for( var i = 0; i < roadmaps.length; i++ ){
             totalWithdrawal += roadmaps[i].withdrawal;
         }
 
         let remainAmounts = (this.props.data.crowdsales[0].softcap - this.props.data.crowdsales[0].firstWithdrawal - totalWithdrawal);
+        if( remainAmounts < 0 ){
+            totalWithdrawalError = true;
+            message = ERROR_MESSAGE_TOTAL_WITHDRAW_LIMIT;
+        }
+
+        console.log(message)
+        console.log(this.state.message)
 
         this.setState({
             totalWithdrawal: totalWithdrawal,
-            totalWithdrawalError: (remainAmounts < 0 ? true : false),
+            totalWithdrawalError: totalWithdrawalError,
             remainAmounts: remainAmounts,
             message: message
         }, () => {
@@ -296,6 +305,7 @@ class RoadmapForm extends Component {
                     <OverlayTrigger trigger="click" defaultShow={true} placement="right" overlay={remainAmountsPopover} delay={3000}>
                         <IconButton aria-label="show remains"> <InfoIcon/> </IconButton>
                     </OverlayTrigger>
+                    <p> {this.state.message} </p>
                 </div>
                 <div className="create-form-roadmap-list">
                     {

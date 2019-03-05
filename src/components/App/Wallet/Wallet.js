@@ -63,7 +63,7 @@ class Wallet extends Component {
 
     async loadAccountInfo(){
         let balance = await web3.eth_getBalance( this.props.auth.address );
-        this.setState({ address: this.props.auth.address, balance: balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") });
+        this.setState({ address: this.props.auth.address, balance: balance.toFixed() });
     }
 
     componentWillMount(){
@@ -94,11 +94,12 @@ class Wallet extends Component {
                             closeAction={this.handleFunctionsClose}
                         />
 
-                    <IconButton onClick={this.handleSendTxOpen} aria-label="functions"> <SendIcon/> </IconButton>
+                    <IconButton disabled={this.state.balance <= 0} onClick={this.handleSendTxOpen} aria-label="functions"> <SendIcon/> </IconButton>
                 </div>
                 <Dialog open={this.state.sendTxOpen} onClose={this.handleSendTxClose}>
                     <SendTransaction 
                         address={this.state.address}
+                        balance={this.state.balance}
                         closeAction={this.handleSendTxClose}
                     />
                 </Dialog>

@@ -22,6 +22,8 @@ const ERROR_MESSAGE_IS_NOT_ADDRESS = "To field should be address.";
 const ERROR_MESSAGE_VALUE_IS_EMPTY = "Value field is required.";
 const ERROR_MESSAGE_PASSWORD_IS_EMPTY = "Password field is required.";
 const ERROR_MESSAGE_FAIL_TO_UNLOCK_ACCOUNT = "Fail to unlock account. Check your password.";
+const ERROR_MESSAGE_NOT_ENOUGH_VALUE = "There is not enough balance.";
+const ERROR_MESSAGE_FAIL_TO_GET_BALANCE = "Fail to get balance. Try again.";
 
 const DEFAULT_UNLOCK_ACCOUNT_DURATION = 300; // same with ethereum default.
 
@@ -61,7 +63,7 @@ class SendTransaction extends Component {
     }
 
     handleValueChange = ( event ) => {
-        let value = event.target.value;
+        let value = Number(event.target.value);
         this.setState({ value: value });
     }
 
@@ -88,13 +90,19 @@ class SendTransaction extends Component {
         return true;
     }
 
-    valueValidationCheck(){
+    async valueValidationCheck(){
         let value = this.state.value;
 
-        if( value == '' ) {
+        if( isNaN(value) ) {
             this.setState({ valueError: true, message: ERROR_MESSAGE_VALUE_IS_EMPTY });
             return false;
         }
+
+        if( value >= this.props.balance ){
+            this.setState({ valueError: true, message: ERROR_MESSAGE_NOT_ENOUGH_VALUE });
+            return false;
+        }
+
         this.setState({ valueError: false, message: '' });
         return true;
     }
@@ -119,7 +127,7 @@ class SendTransaction extends Component {
     async sendTransaction() {
         this.props.dispatch( statusActions.start() );
 
-        if ( !this.toValidationCheck() || !this.valueValidationCheck() || ! await this.passwordValidationCheck() ) {
+        if ( !this.toValidationCheck() || ! await this.valueValidationCheck() || ! await this.passwordValidationCheck() ) {
             this.props.dispatch( statusActions.done() );
             return;
         }

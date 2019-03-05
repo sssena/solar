@@ -28,13 +28,14 @@ import { MOMENT_OPTION_REMOVE_MINUTE_SECOND } from '../../../../helpers/constant
 //const DATE_TIME_FORMAT = "YYYY-MM-DD HH";
 const CRP_RANGE_MIN = 0;
 const CRP_RANGE_MAX = 10000000;
+const INPUT_NUMBER_MAX = 1000000000; // one billion
 const ERROR_MESSAGE_DATE_IS_REQUIRED = "Date is required.";
 const ERROR_MESSAGE_SOFTCAP_IS_REQUIRED = "Softcap is required.";
 const ERROR_MESSAGE_HARDCAP_IS_REQUIRED = "Hardcap is required.";
 const ERROR_MESSAGE_FIRSTWITHDRAWAL_IS_REQUIRED = "Withdrawal is required.";
 const ERROR_MESSAGE_FIRSTWITHDRAWAL_LIMIT = "Withdrawal amount should be smaller than softcap.";
 const ERROR_MESSAGE_HARDCAP_LIMIT = "Hardcap should be larger than softcap.";
-const ERROR_MESSAGE_EXCHANGERATIO_IS_REQUIRED = "Exchange ratio is required.";
+const ERROR_MESSAGE_INPUT_NUMBER_MAX = "Cannot exceed " + INPUT_NUMBER_MAX;
 
 const SliderWithTooltip = createSliderWithTooltip( Slider );
 const Range = createSliderWithTooltip( Slider.Range )
@@ -65,6 +66,8 @@ class CrowdsaleForm extends Component {
             if( !flag ){ return flag; } // return if found error
             
         }
+        //if( flag ){ this.setState({ message: '' }); }
+
         return flag;
     }
 
@@ -139,13 +142,13 @@ class CrowdsaleForm extends Component {
         let crowdsales = this.state.crowdsales;
         let firstWithdrawal = Number(event.target.value);
         let firstWithdrawalError = false;
+        //let message = this.state.message;
         let message = '';
 
         if( firstWithdrawal == undefined || firstWithdrawal == 0 ){
-            firstWithdrawError = true;
+            firstWithdrawalError = true;
             message = ERROR_MESSAGE_FIRSTWITHDRAWAL_IS_REQUIRED;
         }
-
         crowdsales[index].firstWithdrawal = firstWithdrawal;
         crowdsales[index].firstWithdrawalError = firstWithdrawalError;
 
@@ -161,6 +164,7 @@ class CrowdsaleForm extends Component {
         let crowdsales = this.state.crowdsales;
         let softcap = Number(event.target.value);
         let softcapError = false;
+        //let message = this.state.message;
         let message = '';
 
         if( softcap == undefined || softcap == 0 ){
@@ -183,6 +187,7 @@ class CrowdsaleForm extends Component {
         let crowdsales = this.state.crowdsales;
         let hardcap = Number(event.target.value);
         let hardcapError = false;
+        //let message = this.state.message;
         let message = '';
 
         if( hardcap == undefined || hardcap == 0 ){
@@ -212,7 +217,22 @@ class CrowdsaleForm extends Component {
         let firstWithdrawalError = false;
         let softcapError = false;
         let hardcapError = false;
+        // let message = this.state.message;
         let message = '';
+
+        // integer max value check
+        if( firstWithdrawal > INPUT_NUMBER_MAX ){
+            firstWithdrawalError = true;
+            message = ERROR_MESSAGE_INPUT_NUMBER_MAX;
+        }
+        if( softcap > INPUT_NUMBER_MAX ){
+            softcapError = true;
+            message = ERROR_MESSAGE_INPUT_NUMBER_MAX;
+        }
+        if( hardcap > INPUT_NUMBER_MAX ){
+            hardcapError = true;
+            message = ERROR_MESSAGE_INPUT_NUMBER_MAX;
+        }
 
         // compare
         if( hardcap <= softcap ){
@@ -254,6 +274,7 @@ class CrowdsaleForm extends Component {
         let crowdsales = this.state.crowdsales;
         let exchangeRatio = Number(event.target.value);
         let exchangeRatioError = false;
+        // let message = this.state.message;
         let message = '';
 
         if( exchangeRatio == undefined || exchangeRatio == 0 ){
@@ -336,6 +357,7 @@ class CrowdsaleForm extends Component {
             <div className="create-form-crowdsale">
                 <div className="create-form-step-header">
                     <h4> Crowdsale </h4>
+                    <p> {this.state.message} </p>
                 </div>
                 { this.state.crowdsales.map( (item, index) => (
                     <div key={index}>

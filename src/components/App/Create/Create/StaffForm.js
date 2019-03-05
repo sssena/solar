@@ -206,6 +206,7 @@ class StaffForm extends Component {
                 <div className="create-form-step-header">
                     <h4> Staff </h4>
                     <IconButton aria-label="add staff" onClick={this.handleAddStaff} disabled={this.state.ratioError} > <PersonAddIcon/> </IconButton>
+                    <p> {this.state.message} </p>
                 </div>
                 <div className="create-form-staff-list">
                     {

@@ -77,7 +77,8 @@ class TransactionTable extends Component {
             dataField: 'blockNumber',
             text: 'Block',
             classes: 'transaction-table-column',
-            headerClasses: 'transaction-table-header-number'
+            headerClasses: 'transaction-table-header-number',
+            sort: true
         },{
             dataField: 'from',
             text: 'From',
@@ -96,7 +97,8 @@ class TransactionTable extends Component {
             dataField: 'value',
             text: 'Value',
             classes: 'transaction-table-column',
-            headerClasses: 'transaction-table-header-number'
+            headerClasses: 'transaction-table-header-number',
+            sort: true
         }];
 
         const rowEvents = {
@@ -143,7 +145,6 @@ class TransactionTable extends Component {
         return (
             <div className="transactions">
                 <ToolkipProvider
-                    bordered={false}
                     keyField="hash"
                     data={this.state.transactions}
                     columns={columns}
@@ -157,7 +158,10 @@ class TransactionTable extends Component {
                                 />
                                 <IconButton onClick={this.loadTransactions} aria-label="reload"> <RefreshIcon/> </IconButton>
                                 <BootstrapTable { ...props.baseProps }
+                                    bordered={false}
+                                    hover={true}
                                     headerClasses="transaction-table-header"
+                                    noDataIndication="No Transaction"
                                     rowEvents={rowEvents}
                                     pagination={ paginationFactory( pagingOptions ) }
                                 />

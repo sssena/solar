@@ -74,6 +74,7 @@ class SummaryForm extends Component {
             <div className="create-form-summary">
                 <div className="create-form-step-header">
                     <h4> Summary </h4>
+                    <p> {this.state.message} </p>
                 </div>
                 <TextField
                     error={this.state.titleError}

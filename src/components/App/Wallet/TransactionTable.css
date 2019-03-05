@@ -3,11 +3,6 @@
     font-size: smaller;
 }
 
-/*.transaction-table-icon{
-    width: 15px;
-    height: 15px;
-}*/
-
 .transactions .transaction-table-search{
     display: inline-block;
     margin: 1em 0 0.5em 0.3em;
@@ -16,7 +11,7 @@
 
 .transactions .transaction-table-header{
     text-align: center;
-    background-color: #f1f1f1;
+    /* background-color: #f1f1f1;*/
 }
 
 .transactions .transaction-table-header-number{

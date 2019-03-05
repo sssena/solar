@@ -112,6 +112,7 @@ class TokenForm extends Component {
             <div className="create-form-token">
                 <div className="create-form-step-header">
                     <h4> Token </h4>
+                    <p> {this.state.message} </p>
                 </div>
                 <TextField
                     id="name"
