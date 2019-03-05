@@ -15,6 +15,7 @@ import TokenForm from './Create/TokenForm';
 import CrowdsaleForm from './Create/CrowdsaleForm';
 import StaffForm from './Create/StaffForm';
 import RoadmapForm from './Create/RoadmapForm';
+import Receipt from './Create/Receipt';
 
 /*
  * @author. sena
@@ -37,22 +38,25 @@ class Create extends Component {
 
         this.handleNext = this.handleNext.bind(this);
         this.handleBack = this.handleBack.bind(this);
-
         this.getValidationData = this.getValidationData.bind(this);
-
         this.getSteps = this.getSteps.bind(this);
         this.getStepContent = this.getStepContent.bind(this);
     }
 
     handleNext = () => {
-        this.setState({ activeStep: (this.state.activeStep + 1), validationFlag: false });
+        if( this.state.activeStep == this.getSteps().length - 1 ){
+            //TODO: Create
+            console.log("create")
+        } else {
+            this.setState({ activeStep: (this.state.activeStep + 1), validationFlag: false });
+        }
     }
+
     handleBack = () => {
         this.setState({ activeStep: (this.state.activeStep - 1), validationFlag: true });
     }
 
     getValidationData( data ) {
-        console.log( data );
         switch( this.state.activeStep ){
             case 0:
                 this.setState({ 
@@ -86,6 +90,8 @@ class Create extends Component {
             case 4:
                 this.setState({
                     roadmaps: data.values.roadmaps,
+                    remainAmounts: data.values.remainAmounts,
+                    totalWithdrawal: data.values.totalWithdrawal,
                     validationFlag: data.flag
                 });
                 break;
@@ -93,7 +99,7 @@ class Create extends Component {
     }
 
     getSteps(){
-        return ["Title", "Token", "Crowdsale", "Staff", "Roadmap"];
+        return ["Title", "Token", "Crowdsale", "Staff", "Roadmap", "Confirm"];
     }
 
     getStepContent( step ){
@@ -114,9 +120,10 @@ class Create extends Component {
                 return ( <RoadmapForm sendData={this.getValidationData} data={this.state} /> );
                 break;
             case 5:
+                return ( <Receipt projectInfo={this.state}/> );
+                break;
             default:
-                return "confirm create";
-                //return (<ConfirmCreateForm />);
+                return ;// TODO: Error
         }
     }
 
@@ -151,12 +158,12 @@ class Create extends Component {
                         Back
                     </Button>
                     <Button
-                        disabled={this.state.validationFlag ? false : true}
+                        disabled={(this.state.validationFlag || this.state.activeStep == steps.length -1) ? false : true}
                         className="create-step-controller-btn"
                         variant="contained"
                         color="primary"
                         onClick={this.handleNext} >
-                        { this.state.activeStep == steps.length -1 ? 'Finish' : 'Next' }
+                        { this.state.activeStep == steps.length -1 ? 'Create' : 'Next' }
                     </Button>
                 </div>
             </div>

@@ -63,7 +63,7 @@ class Wallet extends Component {
 
     async loadAccountInfo(){
         let balance = await web3.eth_getBalance( this.props.auth.address );
-        this.setState({ address: this.props.auth.address, balance: balance.toString() });
+        this.setState({ address: this.props.auth.address, balance: balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") });
     }
 
     componentWillMount(){

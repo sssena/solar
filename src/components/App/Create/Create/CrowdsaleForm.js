@@ -142,7 +142,7 @@ class CrowdsaleForm extends Component {
         let message = '';
 
         if( firstWithdrawal == undefined || firstWithdrawal == 0 ){
-            firstWitdhrawError = true;
+            firstWithdrawError = true;
             message = ERROR_MESSAGE_FIRSTWITHDRAWAL_IS_REQUIRED;
         }
 

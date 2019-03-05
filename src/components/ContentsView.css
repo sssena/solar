@@ -11,6 +11,10 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
+.v-middle{
+    vertical-align: middle;
+}
+
 .none {
     display: none !important;
 }

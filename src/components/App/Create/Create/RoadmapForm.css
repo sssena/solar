@@ -10,9 +10,13 @@
 }
 
 .crowdsale-info-popover {
+    top: 100px !important;
     margin: 0.5em;
     display: inline-block;
     width: 50em;
+}
+.crowdsale-info-popover .arrow{
+    top: 61px !important;
 }
 .crowdsale-info-popover-number {
     text-align: right;

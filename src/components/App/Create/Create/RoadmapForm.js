@@ -30,12 +30,11 @@ import RemoveIcon from '@material-ui/icons/RemoveCircle';
 import './RoadmapForm.css';
 import { DATE_TIME_FORMAT } from '../../../../helpers/constants';
 import { MOMENT_OPTION_REMOVE_MINUTE_SECOND } from '../../../../helpers/constants';
-//import { web3 } from '../../../../web3';
 
 //local defines
-const moment = extendMoment(Moment);
-//const DATE_TIME_FORMAT = "YYYY-MM-DD HH";
-const ERROR_MESSAGE_DATE_IS_REQUIRED = "Address is required.";
+const moment = extendMoment( Moment );
+const ERROR_MESSAGE_DATE_IS_REQUIRED = "Date is required.";
+const ERROR_MESSAGE_DATE_SHOULD_LARGER_THEN_BEFORE = "Date must be after the previous roadmap.";
 const ERROR_MESSAGE_DUPLICATED_WITH_CROWDSALE = "Date is overlaped by crowdsale.";
 const ERROR_MESSAGE_DUPLICATED_WITH_OTHERS = "Date is overlapped.";
 const ERROR_MESSAGE_WITHDRAW_IS_REQUIRED = "Address is required.";
@@ -62,11 +61,6 @@ class RoadmapForm extends Component {
     sendDataToParent(){
         let flag = ((!this.state.totalWithdrawalError) && (this.state.remainAmounts == 0));
         for( var i = 0; i < this.state.roadmaps.length; i++ ){
-        // TODO allow 0 ?
-        //     if( this.state.roadmaps[i].withdrawal == 0 ){
-        //         flag = false;
-        //         break;
-        //     }
             if( this.state.roadmaps[i].date.dateError ){
                 flag = false;
                 break;
@@ -75,7 +69,9 @@ class RoadmapForm extends Component {
 
         this.props.sendData({
             values: {
-                roadmaps: this.state.roadmaps
+                roadmaps: this.state.roadmaps,
+                remainAmounts: this.state.remainAmounts,
+                totalWithdrawal: this.state.totalWithdrawal
             }, 
             flag: flag 
         }); 
@@ -91,6 +87,7 @@ class RoadmapForm extends Component {
         });
         this.setState({ roadmaps: newRoadmap }, () => {
             this.roadmapDateValidation();
+            this.calculateRemainAmount();
         });
     }
 
@@ -100,6 +97,7 @@ class RoadmapForm extends Component {
         this.state.roadmaps.splice( index, 1 );
         this.setState({ roadmaps: this.state.roadmaps }, () => {
             this.roadmapDateValidation();
+            this.calculateRemainAmount();
         });
     }
 
@@ -165,6 +163,16 @@ class RoadmapForm extends Component {
             }
         }
 
+        // check start date is before than previous roadmap.
+        for( var i = 0; i < roadmaps.length; i++ ){
+            if( i > 0 ){
+                if( (roadmaps[i].date.startDate).isBefore( roadmaps[i-1].date.startDate ) ){
+                    roadmaps[i].date.dateError = true;
+                    message = ERROR_MESSAGE_DATE_SHOULD_LARGER_THEN_BEFORE;
+                }
+            }
+        }
+
         this.setState({
             roadmap: roadmaps,
             message: message
@@ -193,15 +201,26 @@ class RoadmapForm extends Component {
 
         roadmaps[index].withdrawal = withdrawal;
 
+        this.setState({
+            roadmaps: roadmaps,
+            message: message
+        }, () => {
+            this.calculateRemainAmount();
+        });
+    }
+
+    calculateRemainAmount(){
         // calculate total ~ remain amounts
+        let roadmaps = this.state.roadmaps;
+        let message = '';
         let totalWithdrawal = 0;
         for( var i = 0; i < roadmaps.length; i++ ){
             totalWithdrawal += roadmaps[i].withdrawal;
         }
+
         let remainAmounts = (this.props.data.crowdsales[0].softcap - this.props.data.crowdsales[0].firstWithdrawal - totalWithdrawal);
 
         this.setState({
-            roadmaps: roadmaps,
             totalWithdrawal: totalWithdrawal,
             totalWithdrawalError: (remainAmounts < 0 ? true : false),
             remainAmounts: remainAmounts,
@@ -222,17 +241,27 @@ class RoadmapForm extends Component {
             },
             withdrawal: 0
         }];
+        let remainAmounts = (this.props.data.crowdsales[0].softcap - this.props.data.crowdsales[0].firstWithdrawal);
+        let totalWithdrawal = 0;
         
         // default value from parent
         if( defaultData.roadmaps != undefined && defaultData.roadmaps.length != 0 ){
             roadmaps = defaultData.roadmaps;
         }
 
+        if( defaultData.remainAmounts != undefined ){
+            remainAmounts = defaultData.remainAmounts;
+        }
+
+        if( defaultData.totalWithdrawal != undefined ){
+            totalWithdrawal = defaultData.totalWithdrawal;
+        }
+
         this.setState({ 
             roadmaps: roadmaps,
-            totalWithdrawal: 0,
+            totalWithdrawal: totalWithdrawal,
             totalWithdrawalError: false,
-            remainAmounts: (this.props.data.crowdsales[0].softcap - this.props.data.crowdsales[0].firstWithdrawal),
+            remainAmounts: remainAmounts,
             message: ''
         }, () => {
             this.roadmapDateValidation();
@@ -254,7 +283,7 @@ class RoadmapForm extends Component {
                     <p> Roadmap Total : <strong> {this.state.totalWithdrawal} </strong> CRP </p>
                     <Divider/>
                     <p> Remain : <strong> {this.state.remainAmounts} </strong> CRP </p> 
-                    <Alert variant="warning"> <InfoIcon/> Make remain amounts to 0. </Alert>
+                    <Alert variant="warning"> <InfoIcon className="v-middle"/> <span className="v-middle">Make remain amounts to 0.</span> </Alert>
                 </div>
             </Popover>
         );
