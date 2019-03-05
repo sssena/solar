@@ -1,0 +1,9 @@
+.error-snackbar-icon{
+    color: #d44c4c;
+    margin-right: 0.5em;
+}
+
+.error-snackbar{
+    display: flex;
+    align-items: center;
+}

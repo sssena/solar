@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<html>
+    <head></head>
+    <!--link href="https://fonts.googleapis.com/css?family=Roboto|Shadows+Into+Light" rel="stylesheet"-->
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC" rel="stylesheet">
+    <style>
+        body{
+            font-family: 'Amatic SC', cursive;
+            font-size: 30px;
+        }
+
+        .image-background {
+            margin-top: 10%;
+            text-align: center;
+            width: 490px;
+            height: 300px;
+        } 
+
+        img{
+            -webkit-animation: mover 1s infinite alternate;
+            animation: mover 1s infinite  alternate;
+        }
+
+        img{
+            -webkit-animation: mover 1s infinite  alternate;
+            animation: mover 1s infinite  alternate;
+        }
+
+        @-webkit-keyframes mover {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+
+        @keyframes mover {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+    </style>
+    <body>
+        <div class="image-background">
+            <img src='../public/imgs/astronaut.png' width='200' height='200'></img>
+        </div>
+        <center>
+            <span id='status'> Waiting alien signals </span>
+            <span id='fix-str'><span>
+        </center>
+    </body>
+    <script>
+        // Listen for data from browser process and update splashscreen
+        require('electron').ipcRenderer.on('update', ( event, status ) => {
+            document.getElementById('status').innerText = status;
+        });
+    </script>
+</html>

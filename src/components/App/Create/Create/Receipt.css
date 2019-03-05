@@ -1,0 +1,10 @@
+.create-receipt{
+    padding: 0.5em;
+    height: 28em;
+    overflow: auto;
+}
+
+.create-receipt p {
+    text-align: right;
+    color: gray;
+}
