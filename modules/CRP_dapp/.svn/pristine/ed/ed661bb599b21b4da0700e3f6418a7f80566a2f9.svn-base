@@ -1,0 +1,45 @@
+** coding guide
+1. contract 이름 생성
+- 파스칼표기법 (첫글자를 대문자로, 구분마디마다 대문자)
+contract Token
+contract SaleMain
+contract PollWithdraw
+
+2. 구조체 이름 생성
+- 파스칼표기법
+struct SaleInfo
+struct AccoutInfo
+
+3. 함수 이름 생성
+- 카멜 표기법 (첫글자를 소문자로, 구분마디마다 대문자)
+func transferFrom
+func setValidData
+func setDefaultValue
+
+4. 변수 이름 생성
+- 스네이크 표기법 (구분마디마다 언더바_)
+address public master_addr
+uint public time_start
+uint public time_end
+--> 가능하면 구분마디가 없게 변수 선언 하라
+	ex. uint amount; 
+                 bool exist;
+
+5. enum 상수 생성
+- 전체 대문자
+enum SALESTAGE {
+	DEPLOYED,
+	SETUP,
+	STARTED,
+	ENDED
+}
+
+6. 이벤트 이름 생성
+- 파스칼 표기법
+event SaleStarted(uint _ceiling, uint _duration); // 세일 시작 이벤트 (v2)
+event SaleEnded(uint _ceiling, uint _elapsed); // 세일 만료 이벤트 (v2)
+event SaleHalted(uint _elapsed); // 세일 종료 이벤트 (v2)
+event FundSaled(address _purchaser, uint _amount, uint _rests, uint _elapsed, uint _ratio); // 펀드 전송 완료 이벤트
+
+7. function parameters
+- 첫글자를 언더바로, 이후 표기법은 변수 이름 생성(4)과 동일

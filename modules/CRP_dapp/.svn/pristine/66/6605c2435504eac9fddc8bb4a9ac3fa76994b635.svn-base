@@ -1,0 +1,16 @@
+** 실행 방법
+1. truffle 설치가 안되었을 경우, truffle부터 설치한다.
+--> npm install -g truffle@4.1.13
+- 다른 버전이 설치되었을 경우 아래와 같이 uninstall 후 다시 install 한다.
+--> npm uninstall -g truffle
+--> npm install -g truffle@4.1.13
+
+2. svn에서 최신 소스 다운로드 받는다.
+- https://192.168.0.202/svn/CRP_dapp
+
+3. npm install
+
+4. 상황에 맞게 하기 command들을 실행한다. 
+- 컴파일 시 : truffle compile
+- 디플로이 시 : truffle deploy
+- 테스트 시: truffle test --network test

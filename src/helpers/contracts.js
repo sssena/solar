@@ -65,12 +65,13 @@ async function runCommands( params ){
     let estimatedGas = await web3.eth_estimateGas({ data: bytedataWithParams });
     logger.debug( 'estimatedGas', estimatedGas );
 
-    // let contract = await MainContract.new( params.title, {
-    //     from: params.owner,
-    //     data: data,
-    //     gas: estimatedGas
-    // }); 
+    let contract = await MainContract.new( params.title, {
+        from: params.owner,
+        data: data,
+        gas: estimatedGas
+    }); 
     // logger.debug('Create Tx to create contract. [tx hash=', contract.transactionHash, ']');
+    return{ result: true, error: undefined };
 
     // let receipt = undefined;
     // do {
