@@ -2,6 +2,7 @@
 ** Started from electron-quick-start.**
 
 ## To Use
+cp -rfp ./index.js ./node_modules/react-bootstrap-datetimerangepicker/lib/index.js
 
 ## License
 
