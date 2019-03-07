@@ -226,9 +226,6 @@ class RoadmapForm extends Component {
             message = ERROR_MESSAGE_TOTAL_WITHDRAW_LIMIT;
         }
 
-        console.log(message)
-        console.log(this.state.message)
-
         this.setState({
             totalWithdrawal: totalWithdrawal,
             totalWithdrawalError: totalWithdrawalError,

@@ -6,16 +6,19 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
 
 // local components
 import './Create.css';
-import { web3 } from '../../../web3';
+import createMainContract from '../../../helpers/contracts';
+import ConfirmPassword from '../../common/ConfirmPassword';
 import SummaryForm from './Create/SummaryForm';
 import TokenForm from './Create/TokenForm';
 import CrowdsaleForm from './Create/CrowdsaleForm';
 import StaffForm from './Create/StaffForm';
 import RoadmapForm from './Create/RoadmapForm';
 import Receipt from './Create/Receipt';
+import { statusActions } from '../../../actions'
 
 /*
  * @author. sena
@@ -30,7 +33,9 @@ class Create extends Component {
         crowdsales: [],
         staff: [],
         roadmaps:[],
-        validationFlag: false
+        validationFlag: false,
+        openConfirmPassword: false,
+        authorized: false
     };
 
     constructor(){
@@ -38,6 +43,9 @@ class Create extends Component {
 
         this.handleNext = this.handleNext.bind(this);
         this.handleBack = this.handleBack.bind(this);
+        this.handleConfirmPasswordOpen = this.handleConfirmPasswordOpen.bind(this);
+        this.handleConfirmPasswordClose = this.handleConfirmPasswordClose.bind(this);
+        this.createProject = this.createProject.bind(this);
         this.getValidationData = this.getValidationData.bind(this);
         this.getSteps = this.getSteps.bind(this);
         this.getStepContent = this.getStepContent.bind(this);
@@ -45,8 +53,7 @@ class Create extends Component {
 
     handleNext = () => {
         if( this.state.activeStep == this.getSteps().length - 1 ){
-            //TODO: Create
-            console.log("create")
+            this.setState({ openConfirmPassword: true });
         } else {
             this.setState({ activeStep: (this.state.activeStep + 1), validationFlag: false });
         }
@@ -54,6 +61,38 @@ class Create extends Component {
 
     handleBack = () => {
         this.setState({ activeStep: (this.state.activeStep - 1), validationFlag: true });
+    }
+
+    handleConfirmPasswordOpen = () => {
+        this.setState({ openConfirmPassword: true });
+    }
+
+    handleConfirmPasswordClose = ( result ) => {
+        this.setState({ openConfirmPassword: false, authorized: result }, () => {
+            if( this.state.authorized ){
+                this.createProject();
+            }
+        });
+    }
+
+    async createProject(){
+        this.props.dispatch( statusActions.start() );
+        if( this.state.authorized ){
+            let result = await createMainContract({
+                owner: this.props.authentication.auth.address,
+                title: this.state.title,
+                token: {
+                    name: this.state.name,
+                    symbol: this.state.symbol
+                },
+                crowdsale: this.state.crowdsales[0], //TODO
+                staff: this.state.staff,
+                roadmaps: this.state.roadmaps
+
+            });
+            console.log( result.result, result.error );
+            this.props.dispatch( statusActions.done() );
+        }
     }
 
     getValidationData( data ) {
@@ -129,7 +168,6 @@ class Create extends Component {
 
     render() {
         const steps = this.getSteps();
-
         return (
             <div className="create">
                 <h2 className="create-header"> Create your project </h2>
@@ -166,12 +204,20 @@ class Create extends Component {
                         { this.state.activeStep == steps.length -1 ? 'Create' : 'Next' }
                     </Button>
                 </div>
+                <Dialog
+                    open={this.state.openConfirmPassword}
+                    onClose={this.handleConfirmPasswordClose} >
+                    <ConfirmPassword 
+                        useUnlock={true}
+                        closeAction={this.handleConfirmPasswordClose} />
+                </Dialog>
+
             </div>
         );
     }
 }
 
 function mapStateToProps( state ){
-    return state.authentication;
+    return state;
 }
 export default connect(mapStateToProps)(Create);

@@ -6,7 +6,8 @@ import Button from '@material-ui/core/Button';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 // local components
-import { web3 } from '../../../web3';
+//import web3  from '../../../web3';
+import { web3 }  from '../../../web3';
 import Account from '../../common/Account';
 import Login from './Login';
 import AddAccountForm from './AddAccountForm';
@@ -51,11 +52,16 @@ class Accounts extends Component {
 
     constructor() {
         super();
+
+        // const Web3 = require('../../../../modules/crp-web3');
+        // this.web3 = new Web3();
+        // this.web3.setProvider( new Web3.providers.HttpProvider( 'http://localhost:8545' ));
     }
 
     async loadAccountsInfo() {
         let accounts = [];
         let addresses = await web3.eth_getAccounts();
+        //let addresses = await web3.eth.getAccounts();
 
         for await ( let address of addresses ) {
             let balance = await web3.eth_getBalance( address );

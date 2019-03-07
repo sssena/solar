@@ -15,6 +15,8 @@ import DoneIcon from '@material-ui/icons/Done';
 // local components
 import './SendTransaction.css';
 import { web3 } from '../../../../web3';
+//import web3 from '../../../../web3';
+import utils from '../../../../helpers/utils';
 import { statusActions } from '../../../../actions'
 
 const ERROR_MESSAGE_TO_IS_EMPTY = "To field is required.";
@@ -81,7 +83,7 @@ class SendTransaction extends Component {
             return false;
         }
 
-        if( !web3.utils_isAddress( to ) ){
+        if( !utils.isAddress( to ) ){
             this.setState({ toError: true, message: ERROR_MESSAGE_IS_NOT_ADDRESS });
             return false;
         }

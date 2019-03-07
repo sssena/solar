@@ -15,7 +15,8 @@ import SendIcon from '@material-ui/icons/Send';
 
 // local components
 import './Projects.css';
-import { web3 } from '../../../web3';
+//import web3 from '../../../web3';
+//import { web3 } from '../../../web3';
 
 /*
  * @author. sena
@@ -39,32 +40,32 @@ class Projects extends Component {
     //     });
     // }
 
-    async loadOwnProject(){
-        let mainContract = await web3.eth_getMainContractAddress( this.props.auth.address );
-        this.setState({ mainContract: mainContract });
-    }
+    // async loadOwnProject(){
+    //     let mainContract = await web3.eth.getMainContractAddress( this.props.auth.address );
+    //     this.setState({ mainContract: mainContract });
+    // }
 
-    componentWillMount(){
-        this.loadOwnProject();
-        //this.loadMarkedProject();
-    }
+    // componentWillMount(){
+    //     this.loadOwnProject();
+    //     //this.loadMarkedProject();
+    // }
 
-    render() {
-        return (
-            <div className="projects">
-                <Card className="project-area">
-                    <CardHeader
-                        title="My project"
-                        subheader="Manage your project."
-                    >
-                    </CardHeader>
-                    <CardContent>
+    // render() {
+    //     return (
+    //         <div className="projects">
+    //             <Card className="project-area">
+    //                 <CardHeader
+    //                     title="My project"
+    //                     subheader="Manage your project."
+    //                 >
+    //                 </CardHeader>
+    //                 <CardContent>
 
-                    </CardContent>
-                </Card>
-            </div>
-        );
-    }
+    //                 </CardContent>
+    //             </Card>
+    //         </div>
+    //     );
+    // }
 }
 
 function mapStateToProps( state ) {

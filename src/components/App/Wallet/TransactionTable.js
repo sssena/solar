@@ -20,6 +20,7 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 
 // local components
 import './TransactionTable.css';
+//import web3 from '../../../web3';
 import { web3 } from '../../../web3';
 import Transaction from './Transaction';
 

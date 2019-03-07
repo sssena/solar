@@ -12,6 +12,7 @@ import BlockIcon from '@material-ui/icons/Block';
 
 // local components
 import './Transaction.css';
+//import web3 from '../../../web3';
 import { web3 } from '../../../web3';
 import { SuccessLabel, FailLabel } from '../../common/Labels';
 

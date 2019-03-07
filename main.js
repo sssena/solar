@@ -34,7 +34,7 @@ async function initialize() {
         windows.splashScreen.webContents.send('update', 'Building a space station...');
     });
 
-    //await contractInitialize();
+    await contractInitialize();
     windows.splashScreen.webContents.send('update', 'Sprinkling star powder...');
 
     // load the index.html of the app after initializing.

@@ -13,7 +13,7 @@ import RemoveIcon from '@material-ui/icons/RemoveCircle';
 
 // local components
 import './StaffForm.css';
-import { web3 } from '../../../../web3';
+import utils from '../../../../helpers/utils';
 
 //local defines
 const FLOAT_TYPE_DECIMAL_FIX = 1;
@@ -98,7 +98,7 @@ class StaffForm extends Component {
             // ignore empty row
             if( staff[i].ratio == 0 && staff[i].address.length == 0 ) continue;
 
-            if( !web3.utils_isAddress( staff[i].address ) ){
+            if( !utils.isAddress( staff[i].address ) ){
                 staff[i].addressError = true;
                 message = ERROR_MESSAGE_ADDRESS_FORMAT;
             }

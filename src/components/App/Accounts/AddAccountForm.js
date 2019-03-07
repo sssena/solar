@@ -13,6 +13,7 @@ import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfie
 
 // local components
 import './AddAccountForm.css';
+//import web3 from '../../../web3';
 import { web3 } from '../../../web3';
 import { statusActions } from '../../../actions';
 

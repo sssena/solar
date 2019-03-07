@@ -15,6 +15,7 @@ import SendIcon from '@material-ui/icons/Send';
 
 // local components
 import './Wallet.css';
+//import web3 from '../../../web3';
 import { web3 } from '../../../web3';
 import Account from '../../common/Account';
 import TransactionTable from './TransactionTable';
