@@ -1,6 +1,0 @@
-{
-    "provider": "http://172.17.0.2:7080",
-    "web3": "/opt/hong/crp/web3/srcs/crp-web3",
-    "adminpass": "1",
-    "account": "0x2b4a316cd3d0c06a40f4e07ed30a2ff9422a82a7"
-}

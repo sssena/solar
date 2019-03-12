@@ -75,21 +75,43 @@ class Create extends Component {
         });
     }
 
-    async createProject(){
-        this.props.dispatch( statusActions.start() );
-        if( this.state.authorized ){
-            let result = await createMainContract({
-                owner: this.props.authentication.auth.address,
-                title: this.state.title,
-                token: {
-                    name: this.state.name,
-                    symbol: this.state.symbol
-                },
-                crowdsale: this.state.crowdsales[0], //TODO
-                staff: this.state.staff,
-                roadmaps: this.state.roadmaps
+    makeMomentToUnixTime( params ){
+        // crowdsales
+        for(var i = 0; i < params.crowdsales.length; i++ ){
+            params.crowdsales[i].date.startDate = params.crowdsales[i].date.startDate.clone().unix();
+            params.crowdsales[i].date.endDate = params.crowdsales[i].date.endDate.clone().unix();
+        }
 
+        // roadmaps
+        for(var i = 0; i < params.roadmaps.length; i++ ){
+            params.roadmaps[i].date.startDate = params.roadmaps[i].date.startDate.clone().unix();
+            params.roadmaps[i].date.endDate = params.roadmaps[i].date.endDate.clone().unix();
+        }
+
+        return params;
+    }
+
+    async createProject(){
+        let createParams = { // this.makeMomentToUnixTime({
+            owner: this.props.authentication.auth.address,
+            title: this.state.title,
+            token: {
+                name: this.state.name,
+                symbol: this.state.symbol
+            },
+            crowdsales: this.state.crowdsales[0], //TODO: send array 
+            staff: this.state.staff,
+            roadmaps: this.state.roadmaps
+        }; // );
+
+        this.props.dispatch( statusActions.start() );
+
+        if( this.state.authorized ){
+            let result = await createMainContract( createParams ).catch( (error) => {
+                console.log( error );
+                this.props.dispatch( statusActions.done() );
             });
+
             console.log( result.result, result.error );
             this.props.dispatch( statusActions.done() );
         }

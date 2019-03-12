@@ -1,8 +1,0 @@
-{
-    "provider": "http://172.17.0.2:7080",
-    "web3": "/opt/hong/crp/web3/srcs/crp-web3",
-    "owner": "0x65a8acaf62386e3249cf0d6ab237d8db253be206",
-    "password": "qazbnm123",
-    "name": "test token v0.1",
-    "symbol": "HONG"
-}

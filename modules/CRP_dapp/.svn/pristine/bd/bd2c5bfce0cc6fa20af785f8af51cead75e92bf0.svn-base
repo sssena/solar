@@ -1,4 +1,0 @@
-{
-    "provider": "http://172.17.0.2:7080",
-    "web3": "/opt/hong/crp/web3/srcs/crp-web3"    
-}

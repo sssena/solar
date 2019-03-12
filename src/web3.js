@@ -15,6 +15,17 @@ var Web3 = class Web3 {
         return new Promise( resolve => setTimeout( resolve, millisec ) );
     }
 
+    getBlockNumber(){
+        return new Promise ( ( resolve, reject ) => {
+            resolve( this.web3.blockNumber );
+            // this.web3.blockNumber(( error, result ) => {
+            //     if ( error ) { reject({ error: error }); }
+            //     resolve( result );
+            // });
+        });
+        //return this.web3.eth.blockNumber;
+    }
+
     personal_loginAccount( address, password ) {
         return new Promise ( ( resolve, reject ) => {
             this.web3.personal.loginAccount( address, password, ( error, result ) => {
@@ -51,6 +62,24 @@ var Web3 = class Web3 {
         });
     }
 
+    eth_isAccount( address ) {
+        return new Promise( ( resolve, reject ) => {
+            this.web3.eth.isAccount( address, ( error, result ) => {
+                if ( error ) { reject({ error: error }); }
+                resolve( result );
+            });
+        });
+    }
+
+    eth_getAdminAddress() {
+        return new Promise( ( resolve, reject ) => {
+            this.web3.eth.getAdminAddress( (error, result) => {
+                if ( error ) { reject({ error: error }); }
+                resolve( result );
+            });
+        });
+    }
+
     eth_getBalance( address ) {
         return new Promise ( ( resolve, reject ) => {
             this.web3.eth.getBalance( address, ( error, result ) => {
@@ -63,6 +92,15 @@ var Web3 = class Web3 {
     eth_sendTransaction( object ) {
         return new Promise ( ( resolve, reject ) => {
             this.web3.eth.sendTransaction( object, ( error, result ) => {
+                if ( error ) { reject({ error: error }); }
+                resolve( result );
+            });
+        });
+    }
+
+    eth_sendPermissionTx( admin, target, gas ) {
+        return new Promise ( ( resolve, reject ) => {
+            this.web3.eth.sendPermissionTx( admin, target, gas, ( error, result ) => {
                 if ( error ) { reject({ error: error }); }
                 resolve( result );
             });
@@ -82,9 +120,11 @@ var Web3 = class Web3 {
         return new Promise ( ( resolve, reject ) => {
             this.web3.eth.getTransactionReceipt( hash, ( error, result ) => {
                 if ( error ) { reject(); }
+                console.log('get')
                 resolve( result );
             });
         });
+        //return this.web3.eth.getTransactionReceipt( hash );
     }
 
     eth_getAllTransactionList( address ) {

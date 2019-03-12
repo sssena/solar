@@ -1,7 +1,0 @@
-{
-    "provider": "http://localhost:8546",
-    "web3": "/home/sena/ws/crp-web3/crp-web3",
-    "owner": "0x65a8acaf62386e3249cf0d6ab237d8db253be206",
-    "password": "qazbnm123",
-    "title": "Test Crp Dapp"
-}
