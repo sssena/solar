@@ -7,3 +7,11 @@
     display: inline-block;
     width: 99%;
 }
+
+.projects .project-area-detail div{
+    padding-bottom: 0em;
+}
+
+.t-right {
+    text-align: right;
+}

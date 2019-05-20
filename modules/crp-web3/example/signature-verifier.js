@@ -4,17 +4,17 @@
  * b. Finding the account address using which the message was signed
  */
 var Web3 = require('../index.js');
-var ethURL = ""; 
-var defaultAc = ""; 
-var defaultAcPWD=""; 
-var signatureContractCodeReadable="\n\tcontract SignatureVerifier {\n\t\tfunction verify( bytes32 hash, uint8 v, bytes32 r, bytes32 s) \n"+ 
+var ethURL = "";
+var defaultAc = "";
+var defaultAcPWD="";
+var signatureContractCodeReadable="\n\tcontract SignatureVerifier {\n\t\tfunction verify( bytes32 hash, uint8 v, bytes32 r, bytes32 s) \n"+
     "\t\tconstant returns(address returnAddress) {\n \t\t\treturnAddress = ecrecover(hash, v, r, s);\n\t\t}\n\t}\n\n";
 
 var sigContractInstance = null;
-var sigContractAddress= ""; 
+var sigContractAddress= "";
 var sigContractInstance = null;
 var strAbi='[{"constant":true,"inputs":[{"name":"hash","type":"bytes32"},{"name":"v","type":"uint8"},{"name":"r","type":"bytes32"},{"name":"s","type":"bytes32"}],"name":"verify","outputs":[{"name":"returnAddress","type":"address"}],"payable":false,"type":"function"}]';
-var signMessage=""; 
+var signMessage="";
 
 var ethWeb3 = null;
 
@@ -42,9 +42,9 @@ function initializeEthereumConnection(){
    if(ethWeb3!=null && ethWeb3.isConnected()==true)  {
     return true;
   }
-  
+
   ethWeb3 = new Web3(new Web3.providers.HttpProvider(ethURL));
-  
+
   if(ethWeb3.isConnected()==true){
       if(defaultAc==''){
         defaultAc=ethWeb3.eth.accounts[1];
@@ -61,7 +61,7 @@ function unlockAccount(acAddress){
     return state;
   }
 
-  return false; 
+  return false;
 }
 
 
@@ -69,11 +69,10 @@ function initializeContract(){
     initializeEthereumConnection();
     if(ethWeb3.isConnected()==false){
         return;
-    }  
+    }
     var abi = JSON.parse(strAbi);
     var contract = ethWeb3.eth.contract(abi);
-
-    sigContractInstance =  contract.at(sigContractAddress)  
+    sigContractInstance =  contract.at(sigContractAddress)
 }
 
 function signMessage(message){
@@ -82,9 +81,9 @@ function signMessage(message){
     if(ethWeb3.isConnected()==false){
         return false;
     }
-    
+
     var state=unlockAccount(defaultAc);
-    
+
     const msg = new Buffer(message);
     const sig = ethWeb3.eth.sign(defaultAc, '0x' + msg.toString('hex'));
 
@@ -102,7 +101,7 @@ function verifySignedByAc(message, sig){
     const res = splitSig(sig);
 
     // Unfortunately Geth client adds this line to the message as a prefix while signing
-    // So while finding who signed it we need to prefix this part 
+    // So while finding who signed it we need to prefix this part
     const prefix = new Buffer("\x19Ethereum Signed Message:\n");
     const msg = new Buffer(message);
     const prefixedMsg = ethWeb3.sha3(
@@ -172,7 +171,7 @@ function execute(){
         console.log("Error: Message for signing is not specified");
         return;
     }
-    
+
 
     console.log("Following parameters applied");
     console.log("\ta. Ethereum URL                  :",ethURL);
@@ -203,7 +202,7 @@ function execute(){
 // Value 1- Please provide the ethereum account address which you want to use to perform the operation
 //setAccount('<Provide the account address>');
 
-// Value 2- Please provide the password of the accound to be used 
+// Value 2- Please provide the password of the accound to be used
 //setPassword('<Provide the password>');
 
 // Value 3- Please update the address of the contract after deployment

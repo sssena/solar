@@ -10,16 +10,8 @@ const SplashScreen = require('@trodi/electron-splashscreen');
 const logger = require('electron-log');
 global.logger = logger;
 
-// web3 for CRP
-const Web3 = require('./modules/crp-web3');
-
-if ( typeof web3 !== 'undefined' ) {
-    global.web3 = new Web3( web3.currentProvider );
-} else {
-    global.web3 = new Web3();
-    global.web3.setProvider( new Web3.providers.HttpProvider( 'http://localhost:8545' ));
-    logger.info( 'web3 current provider: ', global.web3.currentProvider );
-}
+// Set application start time -> using at Debug menu.
+global.startTime = Date.now();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -52,7 +44,7 @@ async function initialize() {
 // @comment. run compile.js
 //           need to async-await for handling error comditions.
 async function contractInitialize() {
-    const{ error, stdout, stderr } = await execFile('node', ['modules/contracts/cmds/compile.js'])
+    const{ error, stdout, stderr } = await execFile('node', ['modules/crp-dapp/api/compile.js'])
         .catch(( error ) => {
             logger.error( error );
             app.quit();
@@ -62,17 +54,19 @@ async function contractInitialize() {
 // Create the browser window.
 function createWindow() {
     const mainWindowOptions = {
-        width: 1280,
+        width: 1500,
         height: 800,
         webPreferences: {
             nodeIntegration: true
         },
-        show: false
+        show: false,
+        resizable: false
     };
     const splashWindowOptions = {
         width: 500,
         height: 500,
-        backgroundColor: "white"
+        backgroundColor: "white",
+        resizable: false
     };
 
     // DynamicSplashScreen makes actions between mainWindow-splashWindow automatically.

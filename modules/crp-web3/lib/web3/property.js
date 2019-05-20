@@ -94,7 +94,8 @@ Property.prototype.attachToObject = function (obj) {
     }
 
     Object.defineProperty(obj, name, proto);
-    obj[asyncGetterName(name)] = this.buildAsyncGet();
+    //obj[asyncGetterName(name)] = this.buildAsyncGet();
+    obj[asyncGetterName(name)] = this.buildGet();
 };
 
 var asyncGetterName = function (name) {

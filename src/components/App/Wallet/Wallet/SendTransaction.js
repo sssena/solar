@@ -7,6 +7,7 @@ import Collapse from '@material-ui/core/Collapse';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Chip from '@material-ui/core/Chip';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 // icons
 import ErrorIcon from '@material-ui/icons/Error';
@@ -111,13 +112,14 @@ class SendTransaction extends Component {
 
     async passwordValidationCheck(){
         let password = this.state.password;
-
-        // unlock account with password
-        let result = await web3.personal_unlockAccount( this.props.address, password, DEFAULT_UNLOCK_ACCOUNT_DURATION )
-            .catch( (error) => {
-                this.setState({ passwordError: true, message: ERROR_MESSAGE_FAIL_TO_UNLOCK_ACCOUNT });
-                result = false;
-            });
+        let result = false;
+        try{
+            // unlock account with password
+            result = await web3.personal.unlockAccount( this.props.address, password, DEFAULT_UNLOCK_ACCOUNT_DURATION );
+        } catch ( error ){
+            this.setState({ passwordError: true, message: ERROR_MESSAGE_FAIL_TO_UNLOCK_ACCOUNT });
+            result = false;
+        }
 
         if( result ){
             // clear error message
@@ -134,16 +136,21 @@ class SendTransaction extends Component {
             return;
         }
 
-        let result = await web3.eth_sendTransaction({
-            from: this.props.address,
-            to: this.state.to,
-            value: this.props.value
-        }).catch( (error) => {
+        let value = await web3._extend.utils.toWei( this.state.value );
+        let result = false;
+        try{
+            result = await web3.eth.sendTransaction({
+                from: this.props.address,
+                to: this.state.to,
+                value: value,
+                txType: "Normal"
+            });
+        } catch( error ) {
+            console.error( error );
             result = false;
-        });
+        }
 
-        if( !result ) {
-            // TODO: processing error
+        if( !result ) { // TODO: processing error? 
         }
 
         this.props.dispatch( statusActions.done() );
@@ -197,7 +204,8 @@ class SendTransaction extends Component {
                     className={this.state.valueError ? "textfield error" : "textfield"}
                     onChange={this.handleValueChange}
                     variant="outlined"
-                    margin="normal" />
+                    margin="normal" 
+                    InputProps={{ endAdornment: <InputAdornment position="end">CRP</InputAdornment>}} />
 
                 <TextField required
                     id="password"

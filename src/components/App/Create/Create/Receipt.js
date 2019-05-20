@@ -25,14 +25,8 @@ import { DATE_TIME_FORMAT } from '../../../../helpers/constants';
  * @comment. 'Receipt' provides :reate form to create project  
  */
 class Receipt extends Component {
-    state = {
-    };
-
     constructor( props ){
         super( props );
-    }
-
-    componentWillMount(){
     }
 
     render() {
@@ -54,6 +48,10 @@ class Receipt extends Component {
                             <TableRow hover={true}> 
                                 <TableCell colSpan={2} variant="head"> Token Symbol </TableCell>
                                 <TableCell align="right"> {projectInfo.symbol} </TableCell>
+                            </TableRow>
+                            <TableRow hover={true}> 
+                                <TableCell colSpan={2} variant="head"> Using Sto </TableCell>
+                                <TableCell align="right"> {projectInfo.useSto ? "true" : "false"} </TableCell>
                             </TableRow>
                         </TableBody>
                         {

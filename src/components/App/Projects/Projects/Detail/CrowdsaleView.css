@@ -1,0 +1,103 @@
+.detail-crowdsale {
+    text-align: center;
+}
+
+#alert-dialog-title h2{
+    font-size: 1.7em;
+}
+
+#alert-dialog-title .label{
+    font-size: 0.5em;
+    color: gray;
+}
+
+.crowdsale-list {
+    text-align: center;
+    display: inline-block;
+    height: 70vh;
+    overflow: auto;
+}
+
+.crowdsale-list .substr {
+    color: gray;
+}
+
+.crowdsale-detail-contents {
+    width: 100%;
+    display: block;
+}
+
+.crowdsale-detail-contents .crowdsale-detail-info{
+    margin-top: 3em;
+    /*border-radius: 6px;
+    background-color: #545965;
+    color: white;*/
+}
+
+.crowdsale-detail-contents .token-info{
+    width: 47.3%;
+    height: 7em;
+    display: inline-block;
+    text-align: center;
+}
+
+.crowdsale-detail-contents .token-info h3{
+    font-weight: bold;
+    vertical-align: middle;
+    font-size: 2em;
+}
+.crowdsale-detail-contents .token-info span{
+    color: gray;
+}
+
+.crowdsale-detail-contents .fund-info{
+    width: 47.3%;
+    height: 7em;
+    display: inline-block;
+    text-align: right;
+    position: absolute;
+    font-size: 13px;
+}
+
+.crowdsale-detail-contents .fund-info table{
+    width: 90%;
+    text-align: right;
+}
+
+.crowdsale-detail-contents .fund-info .label{
+    width: 15%;
+    font-weight: bold;
+}
+.crowdsale-detail-contents .fund-info .value{
+}
+
+.crowdsale-detail-contents .goal-info{
+    width: 99.6%;
+    height: fit-content;
+    text-align: right;
+    margin-top: 3em;
+}
+
+.crowdsale-detail-contents .goal-info .goal-text span{
+    margin-right: 0.6em;
+    color: #545965;
+    font-size: 13px;
+}
+
+.crowdsale-detail-contents .goal-info .crowdsale-funding-bar{
+    display: inline-block;
+    /*width: 97%;*/
+    /*background-color: #c9eadc;*/
+}
+
+#softcap-achieve{
+    width: 70%;
+}
+#hardcap-achieve{
+    width: 30%;
+}
+
+/*.crowdsale-detail-contents .goal-info .crowdsale-funding-bar div{
+    background-color: #35c7c7;
+}*/
+

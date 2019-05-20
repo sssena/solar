@@ -1,0 +1,65 @@
+.detail-staffpoll {
+    height: 80vh;
+    text-align: center;
+}
+
+.detail-staffpoll .date-graph{
+    width: 77.4%;
+    margin: 1em 1em 1em 9em;
+}
+
+.detail-staffpoll .vote-img{
+    position: absolute;
+    left: 90%;
+    top: 80%;
+    width: 100px;
+    height: 100px;
+}
+
+.detail-staffpoll .info-alert{
+    width: 60%;
+    margin: auto;
+}
+
+.detail-staffpoll .staff-info {
+    width: 500px !important;
+    display: inline-block;
+}
+
+.detail-staffpoll .staff-poll-result {
+    width: 500px !important;
+    display: inline-block;
+}
+
+.detail-staffpoll .vote-btn{
+    margin: 0.5em;
+}
+
+.detail-staffpoll .btn-group{
+    text-align: center;
+    margin: 0em 19.5%;
+}
+
+.detail-staffpoll .btn-group .agree{
+    background-color: #239c8c; 
+    color: #ffffff;
+    width: 25em;
+}
+
+.detail-staffpoll .btn-group .disagree{
+    background-color: #ffffff; 
+    color: #239c8c; 
+    width: 25em;
+}
+
+.detail-staffpoll .btn-group .revoke{
+    background-color: #bfbfbf; 
+    color: #ffffff; 
+    width: 50em;
+}
+
+.detail-staffpoll .btn-group .confirm{
+    background-color: #a01b1b; 
+    color: #ffffff; 
+    width: 50em;
+}

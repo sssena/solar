@@ -14,7 +14,22 @@
     margin: 1em 1em 1em 1em;
 }
 
-.create-form-crowdsale-crprange{
-    margin: 2em 1em 1em 1em;
+.create-form-crowdsale-additionalsupply .slider-additionalsupply{
+    display: inline-block;
+    width: 93%;
 }
 
+.create-form-crowdsale-crprange{
+    margin: 2em 1em 1em 1em;
+    text-align: right;
+}
+
+.tail{
+    width: 5% !important;
+    margin: 0em 0em 0em 1em !important;
+}
+
+.tail-big{
+    width: 15% !important;
+    margin: 0em 0em 0em 1em !important;
+}

@@ -11,40 +11,44 @@ import ViewListIcon from '@material-ui/icons/ViewList';
 import SearchIcon from '@material-ui/icons/Search';
 import CreateIcon from '@material-ui/icons/Create';
 
+// local imports
+import { history } from '../../helpers/history';
+
 class PrivateList extends Component {
-  render() {
-    return (
-      <List>
-        <ListItem button>
-          <Link to={"/projects"}>
-            <ListItemIcon>
-              <ViewListIcon />
-            </ListItemIcon>
-          </Link>
-        </ListItem>
-        <ListItem button>
-          <Link to={"/search"}>
-            <ListItemIcon>
-              <SearchIcon />
-            </ListItemIcon>
-          </Link>
-        </ListItem>
-        { this.props.canCreate ? ( 
-          <ListItem button >
-            <Link to={"/create"}>
-              <ListItemIcon>
-                <CreateIcon />
-              </ListItemIcon>
-            </Link>
-          </ListItem>
-        ) : null }
-      </List>
-    );
-  }
+    sendLink = ( link ) => {
+        history.push( link );
+    }
+
+    render() {
+        return (
+            <List>
+                <ListItem button onClick={this.sendLink.bind(this, '/projects')}>
+                    <ListItemIcon>
+                        <ViewListIcon />
+                    </ListItemIcon>
+                    <ListItemText>Projects</ListItemText>
+                </ListItem>
+                <ListItem button onClick={this.sendLink.bind(this, '/search')}>
+                    <ListItemIcon>
+                        <SearchIcon />
+                    </ListItemIcon>
+                    <ListItemText>Search</ListItemText>
+                </ListItem>
+                { this.props.canCreate ? ( 
+                    <ListItem button onClick={this.sendLink.bind(this, '/create')}>
+                        <ListItemIcon>
+                            <CreateIcon />
+                        </ListItemIcon>
+                        <ListItemText>Create</ListItemText>
+                    </ListItem>
+                ) : null }
+            </List>
+        );
+    }
 }
 
 PrivateList.propTypes = {
-  canCreate: PropTypes.bool.isRequired
+    canCreate: PropTypes.bool.isRequired
 };
 
 export default PrivateList;

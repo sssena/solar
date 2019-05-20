@@ -1,0 +1,8 @@
+.search {
+    width: 100vw;
+    overflow: hidden;
+}
+
+.search .project-list-area {
+    width: 100%;
+}

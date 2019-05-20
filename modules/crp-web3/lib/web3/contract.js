@@ -93,19 +93,20 @@ var addEventsToContract = function (contract) {
  * @param {Function} callback
  * @returns {Undefined}
  */
-var checkForContractAddress = function(contract, callback){
+var checkForContractAddress = function (contract, callback) {
     var count = 0,
         callbackFired = false;
 
     // wait for receipt
-    var filter = contract._eth.filter('latest', function(e){
+    var filter = contract._eth.filter('latest', function (e) {
         if (!e && !callbackFired) {
             count++;
 
             // stop watching after 50 blocks (timeout)
             if (count > 50) {
 
-                filter.stopWatching(function() {});
+                filter.stopWatching(function () {
+                });
                 callbackFired = true;
 
                 if (callback)
@@ -116,19 +117,20 @@ var checkForContractAddress = function(contract, callback){
 
             } else {
 
-                contract._eth.getTransactionReceipt(contract.transactionHash, function(e, receipt){
-                    if(receipt && receipt.blockHash && !callbackFired) {
+                contract._eth.getTransactionReceipt(contract.transactionHash, function (e, receipt) {
+                    if (receipt && receipt.blockHash && !callbackFired) {
 
-                        contract._eth.getCode(receipt.contractAddress, function(e, code){
+                        contract._eth.getCode(receipt.contractAddress, function (e, code) {
                             /*jshint maxcomplexity: 6 */
 
-                            if(callbackFired || !code)
+                            if (callbackFired || !code)
                                 return;
 
-                            filter.stopWatching(function() {});
+                            filter.stopWatching(function () {
+                            });
                             callbackFired = true;
 
-                            if(code.length > 3) {
+                            if (code.length > 3) {
 
                                 // console.log('Contract code deployed!');
 
@@ -139,11 +141,11 @@ var checkForContractAddress = function(contract, callback){
                                 addEventsToContract(contract);
 
                                 // call callback for the second time
-                                if(callback)
+                                if (callback)
                                     callback(null, contract);
 
                             } else {
-                                if(callback)
+                                if (callback)
                                     callback(new Error('The contract code couldn\'t be stored, please check your gas amount.'));
                                 else
                                     throw new Error('The contract code couldn\'t be stored, please check your gas amount.');
@@ -204,11 +206,10 @@ var ContractFactory = function (eth, abi) {
             }
         }
 
+
         var bytes = encodeConstructorParams(this.abi, args);
         options.data += bytes;
-
         if (callback) {
-
             // wait for the contract address and check if the code was deployed
             this.eth.sendTransaction(options, function (err, hash) {
                 if (err) {
@@ -219,7 +220,6 @@ var ContractFactory = function (eth, abi) {
 
                     // call callback for the first time
                     callback(null, contract);
-
                     checkForContractAddress(contract, callback);
                 }
             });
@@ -233,7 +233,62 @@ var ContractFactory = function (eth, abi) {
         return contract;
     };
 
+    this.crpNew = function () {
+        /*jshint maxcomplexity: 7 */
+        var contract = new Contract(this.eth, this.abi);
+
+        // parse arguments
+        var options = {}; // required!
+        var callback;
+
+        var args = Array.prototype.slice.call(arguments);
+        if (utils.isFunction(args[args.length - 1])) {
+            callback = args.pop();
+        }
+
+        var last = args[args.length - 1];
+        if (utils.isObject(last) && !utils.isArray(last)) {
+            options = args.pop();
+        }
+
+        if (options.value > 0) {
+            var constructorAbi = abi.filter(function (json) {
+                return json.type === 'constructor' && json.inputs.length === args.length;
+            })[0] || {};
+
+            if (!constructorAbi.payable) {
+                throw new Error('Cannot send value to non-payable constructor');
+            }
+        }
+
+        console.log( '**********************************', args )
+        var bytes = encodeConstructorParams(this.abi, args);
+        options.data += bytes;
+        if (callback) {
+            // wait for the contract address and check if the code was deployed
+            this.eth.sendTransaction(options, function (err, hash) {
+                if (err) {
+                    callback(err);
+                } else {
+                    // add the transaction hash
+                    contract.transactionHash = hash;
+
+                    // call callback for the first time
+                    callback(null, contract);
+                    // checkForContractAddress(contract, callback);
+                }
+            });
+        } else {
+            var hash = this.eth.sendTransaction(options);
+            // add the transaction hash
+            contract.transactionHash = hash;
+            // checkForContractAddress(contract, callback);
+        }
+        return contract
+    };
+
     this.new.getData = this.getData.bind(this);
+    this.crpNew.getData = this.getData.bind(this);
 };
 
 /**
@@ -244,9 +299,8 @@ var ContractFactory = function (eth, abi) {
  * @returns {ContractFactory} new contract factory
  */
 //var contract = function (abi) {
-    //return new ContractFactory(abi);
+//return new ContractFactory(abi);
 //};
-
 
 
 /**
@@ -291,7 +345,6 @@ ContractFactory.prototype.getData = function () {
 
     return options.data;
 };
-
 /**
  * Should be called to create new contract instance
  *

@@ -1,0 +1,63 @@
+.detail-roadmap {
+    text-align: center;
+}
+
+.roadmap-list {
+    text-align: center;
+    display: inline-block;
+    height: 70vh;
+    overflow: auto;
+}
+
+.roadmap-detail-contents {
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+.roadmap-detail-contents .withdrawal{
+    font-weight: 500;
+    margin-top: 3em;
+    margin-bottom: 2em;
+}
+.roadmap-detail-contents .withdrawal-amount{
+    font-size: 2em;
+}
+.roadmap-detail-contents .withdrawal-label{
+    font-size: 0.8em;
+    color: #b2b2b2;
+}
+
+.roadmap-detail-contents .vote-btn{
+    margin: 0.5em;
+}
+
+.roadmap-detail-contents .btn-group{
+    text-align: center;
+    margin: 0em 19.5%;
+}
+
+.roadmap-detail-contents .btn-group .agree{
+    background-color: #239c8c;
+    color: #ffffff;
+    width: 8em;
+}
+
+.roadmap-detail-contents .btn-group .disagree{
+    background-color: #ffffff;
+    color: #239c8c;
+    width: 8em;
+}
+
+.roadmap-detail-contents .btn-group .revoke{
+    background-color: #bfbfbf;
+    color: #ffffff;
+    width: 20em;
+}
+
+.roadmap-detail-contents .btn-group .confirm{
+    background-color: #a01b1b;
+    color: #ffffff;
+    width: 20em;
+}
+

@@ -10,10 +10,13 @@ import NavigationBar from './NavigationBar';
 import ContentsView from './ContentsView';
 import { history } from  '../helpers/history';
 import Progress from './common/Progress'; // loading bar
+import Alert from './common/Alert'; // connect status with geth
+import StatusBar from './NavigationBar/StatusBar';
 
 // local styles
 const flex = {
-    display: 'flex'
+    display: 'flex',
+    height: '100vh'
 };
 
 /*
@@ -27,7 +30,6 @@ class App extends Component {
     constructor( props ) {
         super( props );
 
-        const { dispatch } = this.props;
         history.push('/');
     }
 
@@ -36,8 +38,10 @@ class App extends Component {
             <Router history={history}>
                 <div style={ flex }>
                     <NavigationBar />
+                    <StatusBar className="status-bar"/>
                     <ContentsView />
                     { this.props.isProcessing ? <Progress/> : null }
+                    { this.props.isConnected ? null : <Alert/> }
                 </div>
             </Router>
         );
@@ -45,9 +49,11 @@ class App extends Component {
 }
 
 function mapStateToProps( state ) {
-    const { isProcessing } = state;
+    const { isProcessing } = state.isProcessing;
+    const { isConnected } = state;
     return {
-        isProcessing // get a progress status, and show loading bar.
+        isProcessing, // get a progress status, and show loading bar.
+        isConnected // get a geth connected status, and show alert.
     };
 }
 export default connect(mapStateToProps)(App);

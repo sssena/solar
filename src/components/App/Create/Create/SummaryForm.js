@@ -36,8 +36,16 @@ class SummaryForm extends Component {
         });
     }
 
-    handleTitleChange( e ) {
-        this.setState({ title: e.target.value }, () => {
+    handleTitleChange( event ) {
+        let reg = new RegExp( '[^a-zA-Z _\\-0-9]*$', 'g' );
+        let title = event.target.value;
+        title = title.replace( reg, '' );
+
+        if( title.length > 50 ){
+            title = title.slice( 0, 50 );
+        }
+
+        this.setState({ title: title }, () => {
             this.validationCheck();
         });
     }
@@ -73,7 +81,7 @@ class SummaryForm extends Component {
         return (
             <div className="create-form-summary">
                 <div className="create-form-step-header">
-                    <h4> Summary </h4>
+                    <h4> Title </h4>
                     <p> {this.state.message} </p>
                 </div>
                 <TextField

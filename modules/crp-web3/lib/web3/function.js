@@ -183,12 +183,10 @@ SolidityFunction.prototype.estimateGas = function () {
     var callback = this.extractCallback(args);
     var payload = this.toPayload(args);
 
-    console.log( args )
     if (!callback) {
         return this._eth.estimateGas(payload);
     }
 
-    console.log( 'callback' )
     this._eth.estimateGas(payload, callback);
 };
 

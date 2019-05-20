@@ -113,7 +113,7 @@ var inputTransactionFormatter = function (options) {
 };
 
 var inputGasFormatter = function (dec) {
-    if (dec === undefined){
+    if (dec === undefined) {
         return undefined
     }
     return '0x' + (dec).toString(16);
@@ -288,6 +288,20 @@ var inputAddressFormatter = function (address) {
     throw new Error('invalid address');
 };
 
+var inputRpcPortFormatter = function (port) {
+    if ((port === undefined) || (port === null)) {
+        return 8545;
+    }
+    return port
+};
+
+var inputHttpsFormatter = function (isHttps){
+  if (isHttps === undefined || isHttps === null || isHttps !== true){
+      return false
+  }
+  return true
+};
+
 
 var outputSyncingFormatter = function (result) {
     if (!result) {
@@ -305,15 +319,15 @@ var outputSyncingFormatter = function (result) {
     return result;
 };
 
-var inputNotEmptyFormatter = function(result){
-    if (result === undefined || result === ""){
+var inputNotEmptyFormatter = function (result) {
+    if (result === undefined || result === "") {
         throw new Error('parameter is empty!')
     }
     return result;
 };
 
 module.exports = {
-    inputNotEmptyFormatter:inputNotEmptyFormatter,
+    inputNotEmptyFormatter: inputNotEmptyFormatter,
     inputDefaultBlockNumberFormatter: inputDefaultBlockNumberFormatter,
     inputBlockNumberFormatter: inputBlockNumberFormatter,
     inputCallFormatter: inputCallFormatter,
@@ -327,7 +341,9 @@ module.exports = {
     outputLogFormatter: outputLogFormatter,
     outputPostFormatter: outputPostFormatter,
     outputSyncingFormatter: outputSyncingFormatter,
-    inputGasFormatter:inputGasFormatter,
-    inputDataFormatter:inputDataFormatter
+    inputGasFormatter: inputGasFormatter,
+    inputDataFormatter: inputDataFormatter,
+    inputRpcPortFormatter : inputRpcPortFormatter,
+    inputHttpsFormatter : inputHttpsFormatter
 };
 

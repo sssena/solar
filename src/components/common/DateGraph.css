@@ -1,0 +1,49 @@
+.date-graph {
+    border-radius: 4px;
+    text-align: center;
+}
+
+.date-graph .start-date{
+    display: inline-block;
+    width: 15%;
+    height: 3em;
+    vertical-align: middle;
+    background-color: #7f8084;
+    color: #ffffff;
+    border-radius: 4px 0px 0px 4px;
+}
+
+.date-graph .end-date{
+    display: inline-block;
+    width: 15%;
+    height: 3em;
+    vertical-align: middle;
+    background-color: #7f8084;
+    color: #ffffff;
+    /*background-color: #545965;
+    color: white;*/
+    border-radius: 0px 4px 4px 0px;
+}
+
+.date-graph .time{
+    font-size: 0.7em;
+}
+
+.date-graph .date-progress-bar{
+    display: inline-block;
+    width: 70%;
+    height: 3em;
+    vertical-align: middle;
+    padding: 1.2em 1em 1.2em 1em;
+    background-color: #f3f3f3;
+}
+
+.date-graph .date-progress-bar .bar-graph{
+    border-radius: 4px;
+    height: 10px;
+    background-color: #ffffff; 
+}
+
+.date-graph .date-progress-bar .bar-graph div{
+    background-color: #35c79f;
+}

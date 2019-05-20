@@ -30,7 +30,6 @@ class Wallet extends Component {
     state = {
         address: '',
         balance: 0,
-        unit: 'CRP',
         anchorElement: null,
         sendTxOpen: false
     };
@@ -63,8 +62,8 @@ class Wallet extends Component {
     }
 
     async loadAccountInfo(){
-        let balance = await web3.eth_getBalance( this.props.auth.address );
-        this.setState({ address: this.props.auth.address, balance: balance.toFixed() });
+        let balance = await web3.eth.getBalance( this.props.auth.address );
+        this.setState({ address: this.props.auth.address, balance: web3._extend.utils.fromWei( balance.toNumber() ) });
     }
 
     componentWillMount(){
@@ -85,7 +84,7 @@ class Wallet extends Component {
                     </Avatar>
                     <div className="account-info">
                         <h1>{this.state.address}</h1>
-                        <p>{this.state.balance} {this.state.unit}</p>
+                        <p>{this.state.balance} CRP</p>
                     </div>
                     <div className="account-functions">
                         <IconButton onClick={this.handleFunctionsOpen} aria-label="functions"> <MoreVertIcon/> </IconButton>

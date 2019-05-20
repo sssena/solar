@@ -1,0 +1,13 @@
+{
+    "sale" : "0xfe57c8fcd946654707e5965e621d86ab9ba31796",
+    "buyer01": "0x44bb051f0be773cb5c7375bb64a6a7e5031ffa89",
+    "passwd01": "qazbnm123",
+    "amount01": "1",
+    "buyer02": "0xc6aaa1fe8bc22a20039b369e0eb49c6ad8a5f9e7",
+    "passwd02": "qazbnm123",
+    "amount02": "1",
+    "buyer03": "0xea4884208f79f85d2f510d860a8a100782f68d18",
+    "passwd03": "qazbnm123",
+    "amount03": "1"     
+}
+

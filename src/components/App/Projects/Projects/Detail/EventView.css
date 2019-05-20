@@ -1,0 +1,12 @@
+.detail-events .event-functions{
+    text-align: right;
+}
+
+.detail-events .event-functions button{
+    margin-top: 10px;
+}
+
+.detail-events .select-event-type{
+    width: 10em;
+}
+

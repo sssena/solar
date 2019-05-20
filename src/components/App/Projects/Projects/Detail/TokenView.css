@@ -1,0 +1,95 @@
+.detail-token{
+    display: block;
+    margin-top: 0.5em;
+}
+
+/* my balance */
+#sto-badge span{
+    font-size: 0.5em;
+    height: fit-content;
+    top: -2px;
+}
+
+.detail-token .my-balance{
+    width: 80.5em;
+    margin-left: 3em;
+    margin-bottom: 0.3em;
+    padding: 0.1rem 1.25rem !important;
+}
+
+.detail-token .my-balance table .label{
+    margin-top: 2em;
+    width: 60vw;
+}
+.detail-token .my-balance table .amount{
+    width: 20vw;
+    text-align: right;
+    font-size: 1.3em;
+    font-weight: bold;
+}
+.detail-token .my-balance table .unit{
+    width: 7vw;
+    text-align: left;
+}
+
+/* balance/token/fund info table */
+.detail-token-info{
+    position: fixed;
+    width: 50em;
+    height: 34.5em;
+    margin-left: 3em;
+    padding: 2em;
+}
+
+.detail-token-info .border-less-table td{
+    border-color: white
+}
+
+.detail-token-info table .address{
+    color: gray;
+}
+.detail-token-info table .label{
+    margin-top: 2em;
+    width: 40vw;
+}
+.detail-token-info table .amount{
+    width: 10vw;
+    text-align: right;
+    padding: 0.2em;
+}
+.detail-token-info table .unit{
+    width: 5vw;
+    text-align: left;
+}
+
+
+/* graphs */
+.detail-token-graph{
+    position: fixed;
+    left: 56.5em;
+    width: 30em;
+    height: 34.5em;
+    margin-left: 0.5em;
+}
+
+.detail-token-graph .show-detail {
+    margin-top: 0.3em;
+    margin-left: 12em;
+}
+
+.detail-token-graph .show-detail span:nth-child(2){
+    font-size: 0.7em;
+    color: gray;
+}
+
+.detail-token-graph .chart{
+    text-align: right;
+    width: 400px;
+    height: 400px;
+    margin-left: 40px;
+}
+
+.graph-address .textfield{
+    width: 99%;
+    margin-left: 0.2em;
+}

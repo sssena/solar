@@ -1,0 +1,12 @@
+.add-withdraw-poll{
+    display: grid;
+    margin: inherit;
+    text-align: center;
+}
+
+.add-withdraw-poll .status-chip{
+    color: white !important;
+    width: 90% !important;
+    background-color: #bf4343f2 !important;
+    margin-bottom: 0.5em;
+}

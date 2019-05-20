@@ -7,6 +7,11 @@
     height: 13px !important;
 }
 
+.label-big{
+    font-size: 1em !important;
+    margin-left: 1em;
+}
+
 .label-text-success {
     font-size: 12px;
     font-family: 'Anton', sans-serif;
@@ -24,4 +29,8 @@
     font-family: 'Anton', sans-serif;
     color: #c62828;
     margin-left: 0.3em;
+}
+
+.label-ready{
+    color: #ffffff !important;
 }

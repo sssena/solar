@@ -22,6 +22,7 @@ const ERROR_MESSAGE_ADDRESS_FORMAT = "Invalid address.";
 const ERROR_MESSAGE_ADDRESS_IS_DUPLICATED = "Address is duplicated.";
 const ERROR_MESSAGE_TOTAL_RATIO_LIMIT = "Total ratio should not grater than 100%";
 const ERROR_MESSAGE_RATIO_IS_NOT_NUMBER = "Ratio is not a number.";
+const ERROR_MESSAGE_RATIO_MINIMUN = "Ratio should be grater than 0.1%";
 
 /*
  * @author. sena
@@ -43,7 +44,7 @@ class StaffForm extends Component {
     sendDataToParent(){
         let flag = !this.state.ratioError;
         for( var i = 0; i < this.state.staff.length; i++ ){
-            flag = flag && !this.state.staff[i].addressError;
+            flag = flag && !this.state.staff[i].addressError && !this.state.staff[i].ratioError;
         }
 
         this.props.sendData({
@@ -58,6 +59,7 @@ class StaffForm extends Component {
         let newStaff = this.state.staff.concat({ 
             address: '',
             addressError: false,
+            ratioError: true,
             ratio: 0
         });
         this.setState({ staff: newStaff }, () => {
@@ -152,6 +154,13 @@ class StaffForm extends Component {
             staff[index].addressError = true;
             message = ERROR_MESSAGE_ADDRESS_IS_REQUIRED;
         }
+
+        if( ratio == 0 && staff[index].address.length != 0 ){
+            staff[index].ratioError = true;
+            message = ERROR_MESSAGE_RATIO_MINIMUN;
+        }else {
+            staff[index].ratioError = false;
+        }
         this.totalRatioValidationCheck();
     }
 
@@ -166,7 +175,7 @@ class StaffForm extends Component {
         }
         staff[0].ratio = parseFloat( 100 - totalRatio ); // Automatically setting
 
-        if( staff[0].ratio < 0 ){
+        if( staff[0].ratio <= 0 ){
             ratioError = true;
             message = ERROR_MESSAGE_TOTAL_RATIO_LIMIT;
         }
@@ -185,6 +194,7 @@ class StaffForm extends Component {
         let staff = [{
             address: this.props.auth.address,
             addressError: false,
+            ratioError: false,
             ratio: 100
         }];
 
@@ -244,7 +254,7 @@ class StaffForm extends Component {
                                     />
                                     <TextField
                                         id={String(index)}
-                                        error={this.state.ratioError}
+                                        error={this.state.ratioError||item.ratioError}
                                         label="Ratio"
                                         type="number"
                                         value={item.ratio}

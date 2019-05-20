@@ -1,0 +1,16 @@
+.status {
+    margin: 1em;
+}
+
+.status-bar {
+    position: absolute;
+    top: 670px;
+}
+
+.connect > button:first-child {
+    background-color: #009688;
+}
+
+.disconnect > button:first-child {
+    background-color: #d50000;
+}

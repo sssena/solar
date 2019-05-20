@@ -41,7 +41,7 @@ class Login extends Component {
         }
 
         // reset login status
-        this.props.dispatch( authActions.logout() );
+        //this.props.dispatch( authActions.logout() );
     }
 
     handleIdChange( e ) {

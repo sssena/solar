@@ -1,0 +1,8 @@
+.vote-graph td{
+    text-align: right;
+}
+
+.vote-graph .label{
+    text-align: left;
+    font-weight: bold;
+}

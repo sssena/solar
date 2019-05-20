@@ -1,5 +1,4 @@
-//const Web3 = require('../dist/web3.js');
-var Web3 = require('../index');
+const Web3 = require('../../crp-web3');
 const web3 = new Web3();
 
 exports.uWeb3 = function (ip, port) { // 'http://192.168.0.133:8545'
@@ -8,19 +7,31 @@ exports.uWeb3 = function (ip, port) { // 'http://192.168.0.133:8545'
 
     this.EOA = [web3.eth.accounts[0], web3.eth.accounts[1], web3.eth.accounts[2]];
 
-    this.unlock = function (eoa) {
-        web3.personal.unlockAccount(eoa)
+    this.unlock = function (eoa, pwd) {
+        web3.personal.unlockAccount(eoa, pwd)
     };
 
-    this.getTxList = function (eoa, limit) {
-        return web3.eth.getTransactionList(eoa, limit);
-        //return web3.eth.getTransactionList(eoa, limit, function(){
-        //    console.log('done');
-        //});
+    this.pool = function (eoa){
+        return web3.eth.checkTxPool(eoa)
     };
 
-    this.filterContract = function (from, limit) {
-        return web3.eth.getContractAddress(from, limit)
+    this.caTokenDB = function (){
+        return web3.eth.getCaTokenDB(0)
+    };
+
+    this.allBlockStateRoot = function (state) {
+        var lastNumber = web3.eth.blockNumber;
+        for (var i = 0; i <= lastNumber; i++) {
+            var blockinfo = web3.eth.getBlock(i);
+            if (blockinfo.stateRoot === state) {
+                console.log(blockinfo);
+                break;
+            }
+        }
+    };
+
+    this.clearMCA = function (eoa, pwd, gas, duration) {
+        return web3.personal.clearMainContractAddress(eoa, pwd, gas, duration)
     };
 
     this.estimate = function (object) {
@@ -28,7 +39,7 @@ exports.uWeb3 = function (ip, port) { // 'http://192.168.0.133:8545'
     };
 
     // this.sendTx = function (from, to, value, gas, gasprice) {
-        this.sendTx = function (from, to, value, gas) {
+    this.sendTx = function (from, to, value, gas) {
         // console.log(gas-1000000);
         // var gass = gas-10000;
         // console.log(gass);
@@ -43,25 +54,41 @@ exports.uWeb3 = function (ip, port) { // 'http://192.168.0.133:8545'
         return web3.eth.getBalance(eoa)
     };
 
+    this.contract = function (abi){
+        return web3.eth.contract(abi)
+    };
+
     this.reSendTx = function (txHash) {
         return web3.eth.resendTx(txHash)
         // return web3.eth.resend({from:from, to:to, value: web3.toWei(value, "ether"), nonce:nonce})
+    };
+
+    this.tokenInfo = function (account) {
+        return web3.eth.getTokenInfo(account)
     };
 
     this.getTx = function (txID) {
         return web3.eth.getTransaction(txID)
     };
 
-    this.searchCaList = function (url, symbol) {
-        return web3.eth.searchContractList(url, symbol)
+    this.searchCaList = function (symbol, port, protocol) {
+        return web3.eth.searchContractList(symbol, port, protocol)
     };
 
-    this.sendPTx = function (from, account) {
-        return web3.eth.sendPermissionTx(from, account)
+    this.CaBalanceOf = function (ca, eoa, port, protocol) {
+        return web3.eth.getCaBalanceOf(ca, eoa, port, protocol)
     };
 
-    this.getPTx = function (eoa) {
-        return web3.eth.getPermissionTx(eoa)
+    this.gCode = function (account) {
+        return web3.eth.getCode(account)
+    };
+
+    this.sendPTx = function (from, account, gas) {
+        return web3.eth.sendPermissionTx(from, account, gas)
+    };
+
+    this.getPTx = function (from, account, gas) {
+        return web3.eth.getPermissionTx(from, account, gas)
     };
 
     this.getMCA = function (eoa) {
@@ -69,15 +96,11 @@ exports.uWeb3 = function (ip, port) { // 'http://192.168.0.133:8545'
     };
 
     this.isLocalEoa = function (eoa) {
-        return web3.eth.isAccount(account)
+        return web3.eth.isAccount(eoa)
     };
 
     this.getCaTxList = function (ca, eoa, limit) {
-        return web3.eth.getCaTransactionList(ca, eoa, limit)
-    };
-
-    this.getEoaTxList = function (eoa, limit) {
-        return web3.eth.getEoaTransactionList(eoa, limit)
+        return web3.eth.getCaTransactionList(ca, eoa)
     };
 
     this.getAdmin = function () {

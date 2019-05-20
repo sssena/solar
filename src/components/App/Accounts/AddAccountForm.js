@@ -120,20 +120,22 @@ class AddAccountForm extends Component {
 
     async createAccount(){
         const { dispatch } = this.props;
-        dispatch( statusActions.start());
+        dispatch( statusActions.start() );
+
         if( this.state.passwordConfirm.length == 0 ){
             this.setState({ confirmRequired: true });
             return;
         } else if( !this.validationCheck() ){
-            //TODO
+            alert('Invalid values. Check id and password.');
         } else {
-            let result = await web3.personal_newAccount( this.state.password );
+            let result = await web3.personal.newAccount( this.state.password );
             dispatch( statusActions.done());
 
             if( result ) {
                 this.props.closeAction( true );
             } else {
                 //TODO: fail
+                alert('Fail to create new account.');
             }
         }
     }

@@ -1,7 +1,7 @@
 /* jshint ignore:start */
 Package.describe({
   name: 'crp:web3',
-  version: '0.20.6',
+  version: '0.0.1',
   summary: 'CRP JavaScript API',
   git: '',
   // By default, Meteor will default to using README.md for documentation.

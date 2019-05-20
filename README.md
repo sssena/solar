@@ -1,8 +1,9 @@
 # crp-solar 
-** Started from electron-quick-start.**
 
 ## To Use
-cp -rfp ./index.js ./node_modules/react-bootstrap-datetimerangepicker/lib/index.js
+sh install.sh
+
+npm run dev
 
 ## License
 

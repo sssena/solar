@@ -51,6 +51,15 @@ var methods = function () {
         inputFormatter: [formatters.inputAddressFormatter, null, null]
     });
 
+    var clearMainContractAddress = new Method({
+        name: 'clearMainContractAddress',
+        call: 'personal_clearMainContractAddress',
+        params: 4,
+        // inputFormatter: [formatters.inputAddressFormatter, formatters.inputAddressFormatter, formatters.inputGasFormatter]
+        // inputFormatter: [formatters.inputAddressFormatter, formatters.inputAddressFormatter, utils.fromDecimal]
+        inputFormatter: [formatters.inputAddressFormatter, null, formatters.inputGasFormatter, null]
+    });
+
     var newAccount = new Method({
         name: 'newAccount',
         call: 'personal_newAccount',
@@ -100,6 +109,7 @@ var methods = function () {
 
     return [
         loginAccount,
+        clearMainContractAddress,
         newAccount,
         importRawKey,
         unlockAccount,

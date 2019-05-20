@@ -1,0 +1,34 @@
+.common-join-crowdsale{
+    margin: inherit;
+    text-align: center;
+}
+
+.common-join-crowdsale .textfield {
+    width: 100%;
+}
+
+.common-join-crowdsale .chip-icon{
+    color: white !important;
+}
+
+.common-join-crowdsale .status-chip{
+    color: white !important;
+    width: 80% !important;
+    background-color: #bf4343f2 !important;
+    margin-bottom: 0.5em;
+}
+
+.common-join-crowdsale .status-chip .success{
+    color: white !important;
+    width: 80% !important;
+    background-color: #4caf50 !important;
+    margin-bottom: 0.5em;
+}
+
+.common-join-crowdsale .confirm-password-state-icon {
+    color: white !important;
+}
+
+.common-join-crowdsale .purchase-btn {
+    width: 100%;
+}

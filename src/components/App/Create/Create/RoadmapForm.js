@@ -33,6 +33,7 @@ import { MOMENT_OPTION_REMOVE_MINUTE_SECOND } from '../../../../helpers/constant
 
 //local defines
 const moment = extendMoment( Moment );
+const ERROR_MESSAGE_DATE_LIMIT = "End date should be later than start date."; 
 const ERROR_MESSAGE_DATE_IS_REQUIRED = "Date is required.";
 const ERROR_MESSAGE_DATE_SHOULD_LARGER_THEN_BEFORE = "Date must be after the previous roadmap.";
 const ERROR_MESSAGE_DUPLICATED_WITH_CROWDSALE = "Date is overlaped by crowdsale.";
@@ -110,6 +111,11 @@ class RoadmapForm extends Component {
         if( data.startDate == undefined || data.startDate == '' ){
             dateError = true;
             message = ERROR_MESSAGE_DATE_IS_REQUIRED;
+        }
+
+        if( data.startDate.isSame( data.endDate, 'second') ){
+            dateError = true;
+            message = ERROR_MESSAGE_DATE_LIMIT;
         }
 
         roadmaps[index].date = {
@@ -255,13 +261,10 @@ class RoadmapForm extends Component {
             roadmaps = defaultData.roadmaps;
         }
 
-        if( defaultData.remainAmounts != undefined ){
-            remainAmounts = defaultData.remainAmounts;
+        for( var i = 0; i < defaultData.roadmaps.length; i++ ){
+            totalWithdrawal += roadmaps[i].withdrawal;
         }
-
-        if( defaultData.totalWithdrawal != undefined ){
-            totalWithdrawal = defaultData.totalWithdrawal;
-        }
+        remainAmounts -= totalWithdrawal;
 
         this.setState({ 
             roadmaps: roadmaps,
@@ -310,11 +313,10 @@ class RoadmapForm extends Component {
                             <div className="create-form-roadmap-list-item" key={index}>
                                 {(index == 0 ? null : <IconButton onClick={this.handleRemoveRoadmap.bind(this, index)} aria-label="remove roadmap"> <RemoveIcon/> </IconButton>)}
                                 <DatetimeRangePicker
-                                    autoApply
                                     minDate={this.props.data.crowdsales[0].date.endDate}
                                     timePicker
                                     timePicker24Hour
-                                    timePickerIncrement={60}
+                                    timePickerIncrement={5}
                                     locale={locale}
                                     startDate={item.date.startDate}
                                     endDate={item.date.endDate}

@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 // material-ui components
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 // local components
 import './TokenForm.css';
@@ -21,6 +23,7 @@ class TokenForm extends Component {
     state = {
         name: '',
         symbol: '',
+        useSto: false,
         nameError: false,
         symbolError: false
     };
@@ -30,13 +33,15 @@ class TokenForm extends Component {
 
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleSymbolChange = this.handleSymbolChange.bind(this);
+        this.handleUseStoChange = this.handleUseStoChange.bind(this);
     }
 
     sendDataToParent(){
         this.props.sendData({
             values: {
                 name: this.state.name,
-                symbol: this.state.symbol
+                symbol: this.state.symbol,
+                useSto: this.state.useSto
             }, 
             flag: ( !this.state.nameError && !this.state.symbolError ) && ( this.state.name.length > 0 && this.state.symbol.length > 0 )
         });
@@ -47,7 +52,14 @@ class TokenForm extends Component {
         let nameError = false;
         let message = '';
 
-        if( this.state.name.length == 0 ){
+        let reg = new RegExp( '[^a-zA-Z _-]*$', 'g' );
+        name = name.replace( reg, '' );
+
+        if( name.length > 50 ){
+            name = name.slice( 0, 50 );
+        }
+
+        if( name.length == 0 ){
             nameError = true;
             message = ERROR_MESSAGE_NAME_IS_REQUIRED;
         }
@@ -89,19 +101,30 @@ class TokenForm extends Component {
         });
     }
 
+    handleUseStoChange( event ){
+        this.setState({ 
+            useSto: event.target.checked
+        }, () => {
+            this.sendDataToParent();
+        });
+    }
+
     componentDidMount(){
         let defaultData = this.props.data;
         let name = '';
         let symbol = '';
+        let useSto = false;
 
         if( defaultData.name != undefined && defaultData.name.length > 0 && defaultData.symbol != undefined && defaultData.symbol.length > 0 ){
             name = defaultData.name;
             symbol = defaultData.symbol;
+            useSto = defaultData.useSto;
         }
 
         this.setState({ 
             name: name, 
-            symbol: symbol
+            symbol: symbol,
+            useSto: useSto
         }, () => {
             this.sendDataToParent();
         });
@@ -135,6 +158,20 @@ class TokenForm extends Component {
                     margin="normal"
                     helperText="Symbols can only contain uppercase letters of 3~4 digits."
                 />
+                <div className="toggle-sto">
+                    <span className="sto-label">Use STO</span>
+                    <FormControlLabel
+                        className="sto-btn"
+                        control={
+                            <Switch
+                                checked={this.state.useSto}
+                                onChange={this.handleUseStoChange}
+                                value={this.state.useSto}
+                                color="primary"
+                            />
+                        }
+                    />
+                </div>
             </div>
         );
     }

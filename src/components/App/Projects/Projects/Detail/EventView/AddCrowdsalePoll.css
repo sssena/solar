@@ -1,0 +1,51 @@
+.add-crowdsale-poll{
+    display: grid;
+    margin: 1em;
+    text-align: center;
+}
+
+.add-crowdsale-poll .date-slider{
+    z-index: 1;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    margin-left: 5.5em;
+    width: 60%
+}
+
+.add-crowdsale-poll .date-slider-background{
+    z-index: 0;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    width: 100%
+}
+.add-crowdsale-poll .date-slider-background button{
+    display: none;
+}
+
+.add-crowdsale-poll .date{
+    margin-top: 16px;
+    margin-bottom: 8px;
+    width: 50%;
+}
+
+.add-crowdsale-poll .premium-date{
+    width: 100%;
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+.add-crowdsale-poll .min{
+    width: 48%;
+    margin-right: 1.2em;
+}
+.add-crowdsale-poll .max{
+    width: 48%;
+}
+
+.add-crowdsale-poll .status-chip{
+    color: white !important;
+    width: 100% !important;
+    background-color: #bf4343f2 !important;
+    margin-bottom: 0.5em;
+}
+

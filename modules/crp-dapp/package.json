@@ -1,0 +1,30 @@
+{
+  "name": "crp-dapp",
+  "version": "0.0.1",
+  "description": "crp-smart contracts implementation",
+  "main": "app.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "dependencies": {
+    "chai": "^4.2.0",
+    "chai-bignumber": "^3.0.0"
+  },
+  "devDependencies": {
+    "solc": "^0.4.24",
+    "web3": "^0.20.6"
+  },
+  "scripts": {
+    "test": "crp-dapp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "crp"
+  ],
+  "author": "jhhong@soompay.net",
+  "license": "ISC"
+}

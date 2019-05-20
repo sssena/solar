@@ -36,7 +36,7 @@ class Account extends Component {
             </Avatar>
           }
           title={this.props.address}
-          subheader={this.props.balance}
+          subheader={this.props.balance + " CRP"}
         />
       </Card>
     );

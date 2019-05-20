@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 // material-ui components
 import Stepper from '@material-ui/core/Stepper';
@@ -10,7 +11,7 @@ import Dialog from '@material-ui/core/Dialog';
 
 // local components
 import './Create.css';
-import createMainContract from '../../../helpers/contracts';
+import { contractHandlers } from '../../../helpers/contracts';
 import ConfirmPassword from '../../common/ConfirmPassword';
 import SummaryForm from './Create/SummaryForm';
 import TokenForm from './Create/TokenForm';
@@ -18,7 +19,9 @@ import CrowdsaleForm from './Create/CrowdsaleForm';
 import StaffForm from './Create/StaffForm';
 import RoadmapForm from './Create/RoadmapForm';
 import Receipt from './Create/Receipt';
-import { statusActions } from '../../../actions'
+import { statusActions } from '../../../actions';
+import { web3 } from '../../../web3';
+import { history } from '../../../helpers/history';
 
 /*
  * @author. sena
@@ -30,6 +33,7 @@ class Create extends Component {
         title: '',
         name: '',
         symbol: '',
+        useSto: false,
         crowdsales: [],
         staff: [],
         roadmaps:[],
@@ -67,53 +71,87 @@ class Create extends Component {
         this.setState({ openConfirmPassword: true });
     }
 
-    handleConfirmPasswordClose = ( result ) => {
-        this.setState({ openConfirmPassword: false, authorized: result }, () => {
+    handleConfirmPasswordClose = ( data ) => {
+        this.setState({ openConfirmPassword: false, authorized: data.result, passcode: data.passcode }, () => {
             if( this.state.authorized ){
                 this.createProject();
             }
         });
     }
 
-    makeMomentToUnixTime( params ){
-        // crowdsales
-        for(var i = 0; i < params.crowdsales.length; i++ ){
-            params.crowdsales[i].date.startDate = params.crowdsales[i].date.startDate.clone().unix();
-            params.crowdsales[i].date.endDate = params.crowdsales[i].date.endDate.clone().unix();
-        }
-
-        // roadmaps
-        for(var i = 0; i < params.roadmaps.length; i++ ){
-            params.roadmaps[i].date.startDate = params.roadmaps[i].date.startDate.clone().unix();
-            params.roadmaps[i].date.endDate = params.roadmaps[i].date.endDate.clone().unix();
-        }
-
-        return params;
-    }
-
-    async createProject(){
-        let createParams = { // this.makeMomentToUnixTime({
-            owner: this.props.authentication.auth.address,
+    async getParams(){
+        let createParams = {
+            owner: {
+                account: this.props.authentication.auth.address,
+                password: this.state.passcode
+            },
+            passcode: this.state.passcode,
             title: this.state.title,
             token: {
                 name: this.state.name,
-                symbol: this.state.symbol
+                symbol: this.state.symbol,
+                useSto: (this.state.useSto ? 1 : 0 )
             },
-            crowdsales: this.state.crowdsales[0], //TODO: send array 
+            crowdsales: [],
             staff: this.state.staff,
-            roadmaps: this.state.roadmaps
-        }; // );
+            roadmaps: []
+        };
+
+        // Moment has mutability. so need to clone before make it unix time
+        for( var i = 0; i < this.state.crowdsales.length; i++ ){
+            createParams.crowdsales.push({
+                date: {
+                    startDate: this.state.crowdsales[i].date.startDate.clone().unix(),
+                    endDate: this.state.crowdsales[i].date.endDate.clone().unix()
+                },
+                softcap: await web3._extend.utils.toWei( this.state.crowdsales[i].softcap ),
+                hardcap: await web3._extend.utils.toWei( this.state.crowdsales[i].hardcap ),
+                additionalSupply: this.state.crowdsales[i].additionalSupply,
+                crpRange: {
+                    min: await web3._extend.utils.toWei( this.state.crowdsales[i].crpRange.min ),
+                    max: await web3._extend.utils.toWei( this.state.crowdsales[i].crpRange.max ),
+                },
+                exchangeRatio: this.state.crowdsales[i].exchangeRatio,
+                firstWithdrawal: await web3._extend.utils.toWei( this.state.crowdsales[i].firstWithdrawal ),
+            });
+        }
+
+        for( var i = 0; i < this.state.roadmaps.length; i++ ){
+            createParams.roadmaps.push({
+                date: {
+                    startDate: this.state.roadmaps[i].date.startDate.clone().unix(),
+                    endDate: this.state.roadmaps[i].date.endDate.clone().unix()
+                },
+                withdrawal: await web3._extend.utils.toWei( this.state.roadmaps[i].withdrawal ),
+            });
+        }
+
+        return createParams;
+    }
+
+    async createProject(){
+        let error = null;
+        let createParams = await this.getParams();
 
         this.props.dispatch( statusActions.start() );
+        this.props.dispatch( statusActions.sendMessage('Create new project...') );
 
         if( this.state.authorized ){
-            let result = await createMainContract( createParams ).catch( (error) => {
-                console.log( error );
-                this.props.dispatch( statusActions.done() );
-            });
+            let result = await contractHandlers.createProject( createParams )
+                .catch( (error) => {
+                    console.error( error );
+                    result = false;
+                });
 
-            console.log( result.result, result.error );
+            // failed.
+            if( !result ){
+                this.props.dispatch( statusActions.done() );
+                alert('Fail to create project. Try again.\n If the problem persists, restart the application.');
+                return;
+            }
+
             this.props.dispatch( statusActions.done() );
+            history.push( '/projects' );
         }
     }
 
@@ -130,6 +168,7 @@ class Create extends Component {
                 this.setState({ 
                     name: data.values.name, 
                     symbol: data.values.symbol, 
+                    useSto: data.values.useSto, 
                     validationFlag: data.flag 
                 });
                 break;
@@ -184,7 +223,7 @@ class Create extends Component {
                 return ( <Receipt projectInfo={this.state}/> );
                 break;
             default:
-                return ;// TODO: Error
+                return null;// TODO: Error
         }
     }
 

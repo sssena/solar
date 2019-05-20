@@ -1,0 +1,17 @@
+.navi {
+    flex-shrink: 0;
+    white-space: nowrap;
+    height: fit-contents;
+}
+
+.navi-opened {
+    width: 10em;
+    transition: width 225ms cubic-bezier(0.4, 0, 0.6, 1) 0ms;
+    overflow-x: hidden;
+}
+
+.navi-closed {
+    width: 3em;
+    transition: width 195ms cubic-bezier(0.4, 0, 0.6, 1) 0ms;
+    overflow: hidden;
+}

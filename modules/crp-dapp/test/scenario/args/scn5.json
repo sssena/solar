@@ -1,0 +1,15 @@
+{
+    "mainsale" : "0x2e07383a601B7829DEe80d639335a791f62E4899",
+    "buyer01": "0x65a8acaf62386e3249cf0d6ab237d8db253be206",
+    "passwd01": "qazbnm123",
+    "amount01": "3",
+    "buyer02": "0xbbd3c0cd83faf503cf08f969dc68b14cd07ce503",
+    "passwd02": "qazbnm123",
+    "amount02": "5",
+    "buyer03": "0xf1998aa9bffe30b45dc554039fa4b1fdcc2012f3",
+    "passwd03": "qazbnm123",
+    "amount03": "5",
+    "buyer04": "0x5686e9c14810461f04fab20c1e7453deeb36d63f",
+    "passwd04": "qazbnm123",
+    "amount04": "5"    
+}

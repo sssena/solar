@@ -1,0 +1,22 @@
+[{"ca": "0x07378e4013ff313bb3d5b249fbadf0485cb76278"},    
+    {
+        "holder": "0xbbd3c0cd83faf503cf08f969dc68b14cd07ce503",
+        "passwd": "qazbnm123",
+        "vote": "1"
+    },
+    {
+        "holder": "0xf1998aa9bffe30b45dc554039fa4b1fdcc2012f3",
+        "passwd": "qazbnm123",
+        "vote": "1"
+    },
+    {
+        "holder": "0x65a8acaf62386e3249cf0d6ab237d8db253be206",
+        "passwd": "qazbnm123",
+        "vote": "1"
+    },
+    {
+        "holder": "0x5686e9c14810461f04fab20c1e7453deeb36d63f",
+        "passwd": "qazbnm123",
+        "vote": "1"
+    }
+]

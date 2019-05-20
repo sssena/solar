@@ -12,7 +12,6 @@ import ErrorIcon from '@material-ui/icons/Error';
 // local import
 import './ConfirmPassword.css';
 import { web3 } from '../../web3';
-//import web3 from '../../web3';
 
 /*
  * @author. sena@soompay.net
@@ -41,11 +40,11 @@ class ConfirmPassword extends Component {
 
         try {
             if( this.props.useUnlock ){
-                result = await web3.personal_unlockAccount( this.props.auth.address, this.state.password, 1000 );
+                result = await web3.personal.unlockAccount( this.props.auth.address, this.state.password, 300 );
             } else {
-                result = await web3.personal_loginAccount( this.props.auth.address, this.state.password );
+                result = await web3.personal.loginAccount( this.props.auth.address, this.state.password );
             }
-        } catch( error ){
+        } catch( error ) {
             error = error;
             result = false;
         }
@@ -57,12 +56,16 @@ class ConfirmPassword extends Component {
             });
             return;
         }
-        this.props.closeAction( true );
+
+        let passcode = this.state.password;
+        if( this.state.password == undefined ){ passcode = ''; }
+        this.props.closeAction({ result: true, passcode: passcode });
     }
 
     render() {
         return (
             <div className="confirm-password-form">
+
                 <TextField disabled
                     defaultValue={this.props.auth.address}
                     className="textfield"
@@ -70,6 +73,7 @@ class ConfirmPassword extends Component {
                     margin="normal" />
 
                 <TextField
+                    error={this.state.result}
                     label="Password"
                     type="password"
                     className="textfield"

@@ -27,10 +27,14 @@ function login( id, password, address ){
         }
     };
 
-    function success( auth ) { return { type: authConstants.LOGIN_SUCCESS, auth } }
-    function failure( error ) { return { type: authConstants.LOGIN_FAILURE, error } }
+    function success( auth ) { return { type: authConstants.LOGIN_SUCCESS, auth }; }
+    function failure( error ) { return { type: authConstants.LOGIN_FAILURE, error }; }
 }
 
 function logout() {
-    return { type: authConstants.LOGOUT };
+    return dispatch => {
+        dispatch( clear({ id: '', address: '', canCreate: false }) );
+        history.push('/accounts');
+    }
+    function clear( auth ) { return { type: authConstants.LOGOUT, auth }; }
 }

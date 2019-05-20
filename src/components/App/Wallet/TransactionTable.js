@@ -1,28 +1,25 @@
 import React, { Component } from 'react';
+import path from 'path';
+import axios from 'axios';
 
 // material-ui components 
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
-
-// react-bootstrap-table
-import BootstrapTable from 'react-bootstrap-table-next';
-import ToolkipProvider, { Search } from 'react-bootstrap-table2-toolkit';
-import paginationFactory from 'react-bootstrap-table2-paginator';
-
-// react-bootstrap-table css
-import 'bootstrap/dist/css/bootstrap.min.css'; // react-bootstrap-table needs bootstrap.
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
-import 'react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import TableFooter from '@material-ui/core/TableFooter';
+import TablePagination from '@material-ui/core/TablePagination';
 
 //icons
-import ClearIcon from '@material-ui/icons/Clear';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
 // local components
 import './TransactionTable.css';
-//import web3 from '../../../web3';
 import { web3 } from '../../../web3';
-import Transaction from './Transaction';
+import Transaction from '../../common/Transaction';
 
 /*
  * @author. sena
@@ -32,7 +29,8 @@ class TransactionTable extends Component {
     state = {
         transactions : [],
         openTxInfo: false,
-        activateHash: ''
+        activateHash: '',
+        page: 1
     };
 
     constructor(){
@@ -48,128 +46,95 @@ class TransactionTable extends Component {
         this.setState({ openTxInfo: false, activatehash: '' })
     }
 
+    handleChangePage = ( event, page ) => {
+        this.setState({ page });
+    }
+
     async loadTransactions(){
         let transactions = [];
-        let hashs = await web3.eth_getAllTransactionList( this.props.address );
+        let response = await axios({
+            method: 'POST',
+            dataType: 'json',
+            url: 'http://localhost:3000/addr/crp',
+            data: {
+                addr: this.props.address
+            }
+        }).catch( (error) => { 
+            console.error(error);
+            response.data = {
+                data: []
+            }
+        });
 
-        for await ( let hash of hashs ) {
-            let info = await web3.eth_getTransaction( hash );
-            transactions.push({ 
-                hash: info.hash,
-                blockNumber: info.blockNumber,
-                from: info.from,
-                to: info.to,
-                value: info.value.toString()
+        for( var data of response.data.data ){
+            let transaction = await web3.eth.getTransaction( data[0] );
+            if( transaction == null ) continue;
+            transactions.push({
+                id: transaction.hash,
+                hash: transaction.hash,
+                blockNumber: transaction.blockNumber,
+                from: transaction.from,
+                to: transaction.to,
+                value: web3._extend.utils.fromWei(transaction.value.toString())
             });
         }
         this.setState({ transactions: transactions });
     }
 
-    componentWillMount(){
-        this.loadTransactions();
+    async componentWillMount(){
+        await this.loadTransactions();
     }
 
     render() {
-        const columns = [{
-            dataField: 'hash',
-            text: 'Transaction Hash',
-            classes: 'transaction-table-column'
-        },{
-            dataField: 'blockNumber',
-            text: 'Block',
-            classes: 'transaction-table-column',
-            headerClasses: 'transaction-table-header-number',
-            sort: true
-        },{
-            dataField: 'from',
-            text: 'From',
-            classes: 'transaction-table-column'
-        },{
-            text: '', // To write '->' between from and to columns
-            formatter: iconFormatter,
-            dataField: '',
-            classes: 'transaction-table-column',
-            headerClasses: 'transaction-table-header-small'
-        },{
-            dataField: 'to',
-            text: 'To',
-            classes: 'transaction-table-column'
-        },{
-            dataField: 'value',
-            text: 'Value',
-            classes: 'transaction-table-column',
-            headerClasses: 'transaction-table-header-number',
-            sort: true
-        }];
-
-        const rowEvents = {
-            onClick: (e, row, rowIndex ) => {
-                this.handleTxInfoOpen( row.hash );
-            }
-        };
-
-        const { SearchBar } = Search;
-
-        const pageButtonCustom = ({
-            page, 
-            active,
-            disable,
-            title,
-            onPageChange
-        }) => {
-            const handleClick = (e) => {
-                e.preventDefault();
-                onPageChange( page );
-            };
-
-            const activeStyle = {};
-            if( active ){
-                activeStyle.backGroundColor = '#579aff';
-                activeStyle.borderColor = '#579aff';l
-            }
-
-            return (
-                <li className="page-item">
-                    <a href="#" onClick={ handleClick } style={ activeStyle }> { page } </a>
-                </li>
-            );
-        };
-
-        const pagingOptions = {
-            sizePerPage: 10,
-            hideSizePerPage: true,
-            pageButtonCustom
-        }
-
-        function iconFormatter( cell, row ) { return (<img className="icon-xsmall" src="home/sena/ws/solar/public/imgs/next.png" />); }
-
         return (
             <div className="transactions">
-                <ToolkipProvider
-                    keyField="hash"
-                    data={this.state.transactions}
-                    columns={columns}
-                    search >
+                <Table className="transaction-table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell className="table-cell-medium"> Transaction Hash </TableCell>
+                            <TableCell className="table-cell-small"> Block </TableCell>
+                            <TableCell className="table-cell-medium"> From </TableCell>
+                            <TableCell>  </TableCell>
+                            <TableCell className="table-cell-medium"> To </TableCell>
+                            <TableCell className="table-cell-small"> Value </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
                     {
-                        props => (
-                            <div>
-                                <SearchBar { ...props.searchProps }
-                                    className="transaction-table-search"
-                                    placeholder="Search"
-                                />
-                                <IconButton onClick={this.loadTransactions} aria-label="reload"> <RefreshIcon/> </IconButton>
-                                <BootstrapTable { ...props.baseProps }
-                                    bordered={false}
-                                    hover={true}
-                                    headerClasses="transaction-table-header"
-                                    noDataIndication="No Transaction"
-                                    rowEvents={rowEvents}
-                                    pagination={ paginationFactory( pagingOptions ) }
-                                />
-                            </div>
-                        )
+                        this.state.transactions.slice( this.state.page * 10, this.state.page * 10 + 10 ).map((item, index) => {
+                            return (
+                                <TableRow key={index}>
+                                    <TableCell className="transaction-table-td" align="center">
+                                        <a href="#" onClick={this.handleTxInfoOpen.bind(this, item.hash)}>{item.hash}</a>
+                                    </TableCell>
+                                    <TableCell className="transaction-table-td">{item.blockNumber}</TableCell>
+                                    <TableCell className="transaction-table-td">{item.from}</TableCell>
+                                    <TableCell className="transaction-table-td" align="center">
+                                        <img className="icon-xsmall" src={path.join(__dirname, '../public/imgs/next.png')}/>
+                                    </TableCell>
+                                    <TableCell className="transaction-table-td">{item.to}</TableCell>
+                                    <TableCell className="transaction-table-td" align="right">{item.value} CRP</TableCell>
+                                </TableRow>
+                            );
+                        })
                     }
-                </ToolkipProvider>
+                    </TableBody>
+                    <TableFooter>
+                        <TableRow>
+                            <TablePagination
+                                rowsPerPageOptions={[10]}
+                                colSpan={3}
+                                count={this.state.transactions.length}
+                                rowsPerPage={10}
+                                page={this.state.page}
+                                onChangePage={this.handleChangePage}
+                            />
+                            <TableCell>
+                                <IconButton onClick={this.loadTransactions} aria-label="reload"> <RefreshIcon fontSize="small"/> </IconButton>
+                            </TableCell>
+                        </TableRow>
+                    </TableFooter>
+                </Table>
                 <Dialog
                     maxWidth={false}
                     open={this.state.openTxInfo}

@@ -98,18 +98,11 @@ Object.defineProperty(Eth.prototype, 'defaultAccount', {
 
 var methods = function () {
 
-    var getTransactionList = new Method({
-        name: 'getTransactionList',
-        call: 'eth_getTransactionList',
-        params: 2,
-        inputFormatter: [formatters.inputAddressFormatter, null]
-    });
-
-    var getContractAddress = new Method({
-        name: 'getContractAddress',
-        call: 'eth_getContractAddress',
-        params: 2,
-        inputFormatter: [formatters.inputAddressFormatter, null]
+    var checkTxPool = new Method({
+        name: 'checkTxPool',
+        call: 'txpool_checkTxPool',
+        params: 1,
+        inputFormatter: [formatters.inputAddressFormatter]
     });
 
     var getPermissionTx = new Method({
@@ -126,14 +119,6 @@ var methods = function () {
         inputFormatter: [formatters.inputAddressFormatter]
     });
 
-    var clearMainContractAddress = new Method({
-        name: 'clearMainContractAddress',
-        call: 'eth_clearMainContractAddress',
-        params: 3,
-        // inputFormatter: [formatters.inputAddressFormatter, formatters.inputAddressFormatter, formatters.inputGasFormatter]
-        inputFormatter: [formatters.inputAddressFormatter, formatters.inputAddressFormatter, utils.fromDecimal]
-    });
-
     var sendPermissionTx = new Method({
         name: 'sendPermissionTx',
         call: 'eth_sendPermissionTx',
@@ -144,6 +129,20 @@ var methods = function () {
     var getAdminAddress = new Method({
         name: 'getAdminAddress',
         call: 'eth_getAdminAddress'
+    });
+
+    var getCaTokenDB = new Method({
+        name: 'getCaTokenDB',
+        call: 'eth_getCaTokenDB',
+        params: 1
+        // inputFormatter: []
+    });
+
+    var getCaStepDB = new Method({
+        name: 'getCaStepDB',
+        call: 'eth_getCaStepDB',
+        params: 1
+        // inputFormatter: []
     });
 
     var isCA = new Method({
@@ -160,20 +159,6 @@ var methods = function () {
         inputFormatter: [formatters.inputAddressFormatter]
     });
 
-    var getCaTransactionList = new Method({
-        name: 'getCaTransactionList',
-        call: 'eth_getCaTransactionList',
-        params: 3,
-        inputFormatter: [formatters.inputAddressFormatter, formatters.inputAddressFormatter, null]
-    });
-
-    var getEoaTransactionList = new Method({
-        name: 'getEoaTransactionList',
-        call: 'eth_getEoaTransactionList',
-        params: 2,
-        inputFormatter: [formatters.inputAddressFormatter, null]
-    });
-
     var resendTx = new Method({
         name: 'resendTx',
         call: 'eth_resendTx',
@@ -181,11 +166,19 @@ var methods = function () {
         // inputFormatter: [formatters.inputTransactionFormatter, utils.fromDecimal, utils.fromDecimal]
     });
 
-    var searchContractList = new Method({
-        name: 'searchContractList',
-        call: 'eth_searchContractList',
-        params: 2,
-        inputFormatter: [formatters.inputNotEmptyFormatter, formatters.inputNotEmptyFormatter]
+    var getTokenInfo = new Method({
+        name: 'getTokenInfo',
+        call: 'eth_getTokenInfo',
+        params: 1,
+        inputFormatter: [formatters.inputAddressFormatter]
+    });
+
+    var getCaBalanceOf = new Method({
+        name: 'getCaBalanceOf',
+        call: 'eth_getCaBalanceOf',
+        params: 4,
+        inputFormatter: [formatters.inputAddressFormatter, formatters.inputAddressFormatter,
+            formatters.inputRpcPortFormatter, formatters.inputHttpsFormatter]
     });
 
     var getBalance = new Method({
@@ -354,19 +347,18 @@ var methods = function () {
     });
 
     return [
+        checkTxPool,
         getPermissionTx,
-        getTransactionList,
-        getContractAddress,
         getMainContractAddress,
-        clearMainContractAddress,
         sendPermissionTx,
         getAdminAddress,
+        getCaTokenDB,
+        getCaStepDB,
+        getTokenInfo,
         isCA,
         isAccount,
-        getCaTransactionList,
-        getEoaTransactionList,
         resendTx,
-        searchContractList,
+        getCaBalanceOf,
         getBalance,
         getStorageAt,
         getCode,

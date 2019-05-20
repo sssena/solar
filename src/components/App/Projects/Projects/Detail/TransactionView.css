@@ -1,0 +1,12 @@
+.transaction-table{
+    table-layout: fixed;
+}
+
+.transaction-table .tx-list {
+    overflow: hidden;
+    text-overflow: ellipsis;
+} 
+
+.transaction-table .timestamp{
+    width: 15em;
+} 

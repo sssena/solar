@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import path from 'path';
 
 // material-ui
 import Dialog from '@material-ui/core/Dialog';
@@ -6,7 +7,6 @@ import Button from '@material-ui/core/Button';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 // local components
-//import web3  from '../../../web3';
 import { web3 }  from '../../../web3';
 import Account from '../../common/Account';
 import Login from './Login';
@@ -52,20 +52,16 @@ class Accounts extends Component {
 
     constructor() {
         super();
-
-        // const Web3 = require('../../../../modules/crp-web3');
-        // this.web3 = new Web3();
-        // this.web3.setProvider( new Web3.providers.HttpProvider( 'http://localhost:8545' ));
     }
 
     async loadAccountsInfo() {
         let accounts = [];
-        let addresses = await web3.eth_getAccounts();
+        let addresses = await web3.eth.getAccounts();
         //let addresses = await web3.eth.getAccounts();
 
         for await ( let address of addresses ) {
-            let balance = await web3.eth_getBalance( address );
-            accounts.push({ address: address, balance: balance.toString() });
+            let balance = await web3.eth.getBalance( address );
+            accounts.push({ address: address, balance: await web3._extend.utils.fromWei( balance.toNumber() ) });
         }
 
         this.setState({ accounts: accounts });
@@ -77,11 +73,12 @@ class Accounts extends Component {
     }
 
     render() {
+        const imgPath = path.join( __dirname, '../public/imgs/barrier.png' );
         return (
             <div className="accounts">
                 <div className="account-list">
                     {
-                        this.state.accounts.map( (item) => {
+                        this.state.accounts.map((item) => {
                             return (
                                 <div key={item.address} onClick={ this.handleLoginOpen.bind(this, item.address) } >
                                     <Account 
@@ -90,6 +87,13 @@ class Accounts extends Component {
                                 </div>
                             );
                         })
+                    }
+                    {
+                        this.state.accounts.length == 0 ? ( 
+                            <center className="margin-top-15">
+                                <img src={imgPath} width="100" height="100"/>
+                                <p className="noti">There is no accounts in local wallet.</p>
+                            </center> ) : null
                     }
                 </div>
                 <div className="text-align-right">

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Anton|Quicksand|Roboto|Dosis');
+@import url('https://fonts.googleapis.com/css?family=Anton|Roboto|Dosis|Russo+One');
 @import './common/Icon.css';
 
 /* To frmove spinner button of number type inputs. */
@@ -9,6 +9,10 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 input[type="number"] {
     -moz-appearance: textfield;
+}
+
+body {
+    overflow-x: hidden;
 }
 
 .v-middle{

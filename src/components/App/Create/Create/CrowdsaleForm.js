@@ -23,12 +23,15 @@ import './CrowdsaleForm.css';
 import ErrorSnackbar from '../../../common/ErrorSnackbar';
 import { DATE_TIME_FORMAT } from '../../../../helpers/constants';
 import { MOMENT_OPTION_REMOVE_MINUTE_SECOND } from '../../../../helpers/constants';
+import { CRP_RANGE_MIN, CRP_RANGE_MAX } from '../../../../helpers/constants';
+import { INPUT_NUMBER_MAX } from '../../../../helpers/constants';
 
 //local defines
 //const DATE_TIME_FORMAT = "YYYY-MM-DD HH";
-const CRP_RANGE_MIN = 0;
-const CRP_RANGE_MAX = 10000000;
-const INPUT_NUMBER_MAX = 1000000000; // one billion
+//const CRP_RANGE_MIN = 0;
+//const CRP_RANGE_MAX = 10000000;
+//const INPUT_NUMBER_MAX = 1000000000; // one billion
+const ERROR_MESSAGE_DATE_LIMIT = "End date should be later than start date.";
 const ERROR_MESSAGE_DATE_IS_REQUIRED = "Date is required.";
 const ERROR_MESSAGE_SOFTCAP_IS_REQUIRED = "Softcap is required.";
 const ERROR_MESSAGE_HARDCAP_IS_REQUIRED = "Hardcap is required.";
@@ -36,6 +39,7 @@ const ERROR_MESSAGE_FIRSTWITHDRAWAL_IS_REQUIRED = "Withdrawal is required.";
 const ERROR_MESSAGE_FIRSTWITHDRAWAL_LIMIT = "Withdrawal amount should be smaller than softcap.";
 const ERROR_MESSAGE_HARDCAP_LIMIT = "Hardcap should be larger than softcap.";
 const ERROR_MESSAGE_INPUT_NUMBER_MAX = "Cannot exceed " + INPUT_NUMBER_MAX;
+const ERROR_MESSAGE_EXCHANGERATIO_IS_REQUIRED = "Exchange ratio is required";
 
 const SliderWithTooltip = createSliderWithTooltip( Slider );
 const Range = createSliderWithTooltip( Slider.Range )
@@ -45,12 +49,8 @@ const Range = createSliderWithTooltip( Slider.Range )
  * @comment. 'CrowdsaleForm' provides :reate form to create project  
  */
 class CrowdsaleForm extends Component {
-    state = {
-    };
-
     constructor( props ){
         super( props );
-
     }
 
     checkError(){
@@ -66,8 +66,6 @@ class CrowdsaleForm extends Component {
             if( !flag ){ return flag; } // return if found error
             
         }
-        //if( flag ){ this.setState({ message: '' }); }
-
         return flag;
     }
 
@@ -93,6 +91,11 @@ class CrowdsaleForm extends Component {
             message = ERROR_MESSAGE_DATE_IS_REQUIRED;
         }
 
+        if( data.startDate.isSame( data.endDate, 'second') ){
+            dateError = true;
+            message = ERROR_MESSAGE_DATE_LIMIT;
+        }
+
         crowdsales[index].date = {
             startDate: data.startDate, 
             endDate: data.endDate,
@@ -102,8 +105,8 @@ class CrowdsaleForm extends Component {
         this.setState({
             date: { 
                 crowdsales: crowdsales,
-                message: message
-            }
+            },
+            message: message
         }, () => {
             this.sendDataToParent();
         });
@@ -142,7 +145,6 @@ class CrowdsaleForm extends Component {
         let crowdsales = this.state.crowdsales;
         let firstWithdrawal = Number(event.target.value);
         let firstWithdrawalError = false;
-        //let message = this.state.message;
         let message = '';
 
         if( firstWithdrawal == undefined || firstWithdrawal == 0 ){
@@ -164,7 +166,6 @@ class CrowdsaleForm extends Component {
         let crowdsales = this.state.crowdsales;
         let softcap = Number(event.target.value);
         let softcapError = false;
-        //let message = this.state.message;
         let message = '';
 
         if( softcap == undefined || softcap == 0 ){
@@ -187,7 +188,6 @@ class CrowdsaleForm extends Component {
         let crowdsales = this.state.crowdsales;
         let hardcap = Number(event.target.value);
         let hardcapError = false;
-        //let message = this.state.message;
         let message = '';
 
         if( hardcap == undefined || hardcap == 0 ){
@@ -217,7 +217,6 @@ class CrowdsaleForm extends Component {
         let firstWithdrawalError = false;
         let softcapError = false;
         let hardcapError = false;
-        // let message = this.state.message;
         let message = '';
 
         // integer max value check
@@ -261,6 +260,10 @@ class CrowdsaleForm extends Component {
 
     handleAdditionalSupplyChange( index, value ){
         let crowdsales = this.state.crowdsales;
+
+        if( typeof(value) == "object" ){ value = Number( value.target.value ); }
+        if( value > 500 ) value = 500;
+
         crowdsales[index].additionalSupply = value;
 
         this.setState({
@@ -274,7 +277,6 @@ class CrowdsaleForm extends Component {
         let crowdsales = this.state.crowdsales;
         let exchangeRatio = Number(event.target.value);
         let exchangeRatioError = false;
-        // let message = this.state.message;
         let message = '';
 
         if( exchangeRatio == undefined || exchangeRatio == 0 ){
@@ -307,11 +309,40 @@ class CrowdsaleForm extends Component {
         });
     }
 
+    handleCrpRangeInputChange( index, type, event ){
+        let crowdsale = this.state.crowdsales[index];
+        let value = Number( event.target.value );
+
+        if( value < CRP_RANGE_MIN ){ value = CRP_RANGE_MIN; }
+        else if( value > CRP_RANGE_MAX ){ value = CRP_RANGE_MAX; }
+
+        if( type == 'min' ){
+            crowdsale.crpRange.min = value;
+        } else if( type == 'max' ){
+            crowdsale.crpRange.max = value;
+        }
+
+        if( crowdsale.crpRange.min > crowdsale.crpRange.max ){  // sort
+            let temp = crowdsale.crpRange.min;
+            crowdsale.crpRange.min = crowdsale.crpRange.max;
+            crowdsale.crpRange.max = temp;
+        }
+
+        let crowdsales = this.state.crowdsales;
+        crowdsales[index] = crowdsale;
+
+        this.setState({
+            crowdsales: crowdsales
+        }, () => {
+            this.sendDataToParent();
+        });
+    }
+
     componentWillMount(){
         let defaultData = this.props.data.crowdsales; //TODO: crowdsale could be more than 1
         let crowdsales = [{
             date: {
-                startDate: moment().set( MOMENT_OPTION_REMOVE_MINUTE_SECOND ),
+                startDate: moment().add(1, 'days').set( MOMENT_OPTION_REMOVE_MINUTE_SECOND ),
                 endDate: moment().add(30, 'days').set( MOMENT_OPTION_REMOVE_MINUTE_SECOND ),
                 dateError: false
             },
@@ -325,7 +356,7 @@ class CrowdsaleForm extends Component {
             exchangeRatio: 0,
             exchangeRatioError: false,
             crpRange: {
-                min: 100000,
+                min: 1,
                 max: 5000000
             }
         }];
@@ -362,17 +393,17 @@ class CrowdsaleForm extends Component {
                 { this.state.crowdsales.map( (item, index) => (
                     <div key={index}>
                         <DatetimeRangePicker 
-                            autoApply
                             timePicker
                             timePicker24Hour
-                            timePickerIncrement={60}
+                            timePickerIncrement={5}
                             locale={locale}
                             startDate={item.date.startDate}
                             endDate={item.date.endDate}
-                            minDate={moment().add(1, 'days')}
+                            //minDate={moment().add(1, 'days')}
                             className="create-form-crowdsale-items"
                             onApply={this.handleDateChange.bind(this, index)}>
                             <TextField
+                                error={item.date.dateError}
                                 id="startDate"
                                 label="Start date"
                                 value={moment(item.date.startDate).format( DATE_TIME_FORMAT )}
@@ -380,6 +411,7 @@ class CrowdsaleForm extends Component {
                                 onChange={this.handleDateChange.bind(this, index)}
                             /> 
                             <TextField
+                                error={item.date.dateError}
                                 id="endDate"
                                 label="End date"
                                 value={moment(item.date.endDate).format( DATE_TIME_FORMAT )}
@@ -434,15 +466,25 @@ class CrowdsaleForm extends Component {
                         <div className="create-form-crowdsale-additionalsupply">
                             <Typography variant="caption" gutterBottom align="left">Additional supply</Typography>
                             <SliderWithTooltip 
-                                min={0} max={100}
-                                step={0.1}
+                                className="slider-additionalsupply"
+                                min={0} max={500}
+                                step={10}
                                 value={item.additionalSupply}
                                 onChange={this.handleAdditionalSupplyChange.bind(this, index)}
                                 trackStyle={trackStyle}
                                 handleStyle={handleStyle}
                                 tipFormatter={(value) => { return `${value} %`; }}
                             />
-                            <Typography variant="subheading" gutterBottom align="right">{item.additionalSupply}%</Typography>
+                            <TextField
+                                id="additionalSupply"
+                                type="number"
+                                value={item.additionalSupply}
+                                className="textfield tail"
+                                onChange={this.handleAdditionalSupplyChange.bind(this, index)}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">%</InputAdornment>
+                                }}
+                            />
                         </div>
                         <div className="create-form-crowdsale-items">
                             <TextField
@@ -461,7 +503,7 @@ class CrowdsaleForm extends Component {
                             />
                         </div>
                         <div className="create-form-crowdsale-crprange">
-                            <Typography variant="caption" gutterBottom align="left">CRP Range</Typography>
+                            <Typography variant="caption" gutterBottom align="left">CRP Range ({CRP_RANGE_MIN}~{CRP_RANGE_MAX})</Typography>
                             <Range 
                                 min={CRP_RANGE_MIN} max={CRP_RANGE_MAX}
                                 step={1}
@@ -471,7 +513,27 @@ class CrowdsaleForm extends Component {
                                 handleStyle={handleStyle}
                                 tipFormatter={(value) => { return `${value} CRP`; }}
                             />
-                            <Typography variant="subheading" gutterBottom align="right"> {item.crpRange.min} ~ {item.crpRange.max} CRP</Typography>
+                            <TextField
+                                id="crpRangeMin"
+                                type="number"
+                                value={item.crpRange.min}
+                                className="textfield tail-big"
+                                onChange={this.handleCrpRangeInputChange.bind(this, index, 'min')}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">CRP</InputAdornment>
+                                }}
+                            />
+                             ~
+                            <TextField
+                                id="crpRangeMax"
+                                type="number"
+                                value={item.crpRange.max}
+                                className="textfield tail-big"
+                                onChange={this.handleCrpRangeInputChange.bind(this, index, 'max')}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">CRP</InputAdornment>
+                                }}
+                            />
                         </div>
                     </div>
                 ))}

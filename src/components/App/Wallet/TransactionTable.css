@@ -1,37 +1,23 @@
 .transactions {
-    width: 99%;
     font-size: smaller;
+    text-align: right;
 }
 
-.transactions .transaction-table-search{
-    display: inline-block;
-    margin: 1em 0 0.5em 0.3em;
-    width: 95%;
+.transactions .transaction-table{
+    width: 99%;
+    table-layout: fixed;
 }
 
-.transactions .transaction-table-header{
-    text-align: center;
-    /* background-color: #f1f1f1;*/
-}
-
-.transactions .transaction-table-header-number{
-    text-align: center;
-    width: 10em;
-}
-
-.transactions .transaction-table-header-small{
-    text-align: center;
-    width: 3em;
-}
-
-.transactions .transaction-table-column{
-    text-align: center;
+.transactions .transaction-table-td{
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
+.transaction-table .table-cell-small{
+    width: 15em;
+}
 
-.transactions .transaction-table-btn-base{
-    width: 100%;
-    text-overflow: ellipsis;
+.transaction-table .table-cell-medium{
+    width: 30em;
 }
