@@ -152,20 +152,28 @@ async function getFirstCrowdsaleContract( mainAddress ){
 }
 
 /* @author. sena@soompay.net
- * @comment. get latest deployed crowdsale contract from main address 
+ * @comment. get all crowdsale contracts from main address.
+ *           index 0 is a main sale, others are additional crowdsales.
  * @param. mainAddress : main contract address
  */
-// async function getLatestCrowdsaleContract( mainAddress ){
-//     let main = await MainContract.at( mainAddress );
-//     let onSaleIndex = await main.getSaleContractNum();
-//     let crowdsaleAddress = await main.contract_list()[3][onSaleIndex - 1];
-//     if( crowdsaleAddress == 0x0 ){ return { address: 0x0 }; }
-// 
-//     let crowdsaleContract = await CrowdsaleContract.at( crowdsaleAddress );
-//     crowdsaleContrat.address = crowdsaleAddress;
-// 
-//     return crowdsaleContract;
-// }
+async function getCrowdsales( mainAddress ){
+    let main = await MainContract.at( mainAddress );
+    let crowdsaleCount = main.getPollSaleContractNum().toNumber();
+    let crowdsaleList = [];
+
+    for( var i = 0; i < crowdsaleCount; i++ ){
+        let address = await main.crowd_addrs(i, { from: main.owner() })
+        if( address == 0x0 || address == '0x' ) continue;
+
+        let crowdsale = await CrowdsaleContract.at( address );
+        crowdsale.address = address;
+        crowdsale.type = i == 0 ? 'main' : 'additional';
+
+        crowdsaleList.push( crowdsale );
+    }
+    console.log( crowdsaleList )
+    return crowdsaleList;
+}
 
 /* @author. sena@soompay.net
  * @comment. get roadmap contracts from main address.
@@ -237,7 +245,7 @@ async function getWithdrawPolls( address ){
 
         let poll = await api_withdraw.getObject( address );
         poll.isEnded = (moment.unix( poll.poll_ended() )).isBefore( moment() );
-        poll.isSettled = !poll.settle();
+        poll.isSettled = poll.settle();
 
         polls.push( poll );
     }
@@ -251,7 +259,7 @@ async function getWithdrawPolls( address ){
 async function getWithdrawPoll( address ){
     let poll = await api_withdraw.getObject( address );
     poll.isEnded = (moment.unix( poll.poll_ended() )).isBefore( moment() );
-
+    poll.isSettled = poll.settle();
     return poll;
 }
 
@@ -267,7 +275,7 @@ async function getCrowdsalePolls( address ){
         let address = await main.crowd_poll_addrs( i );
         let poll = await api_pollsale.getObject( address );
         poll.isEnded = (moment.unix( poll.poll_ended() )).isBefore( moment() );
-        poll.isSettled = !poll.settle();
+        poll.isSettled = poll.settle();
         polls.push( poll );
     }
     return polls;
@@ -280,7 +288,7 @@ async function getCrowdsalePolls( address ){
 async function getCrowdsalePoll( address ){
     let poll = await api_pollsale.getObject( address );
     poll.isEnded = (moment.unix( poll.poll_ended() )).isBefore( moment() );
-
+    poll.isSettled = poll.settle();
     return poll;
 }
 
@@ -1097,7 +1105,7 @@ async function voteToPoll( params ){
     if( params.type == "withdraw" ){
         api = api_withdraw.polling;
     } else if ( params.type == "crowdsale" ){
-        api = api_salead.polling;
+        api = api_pollsale.polling;
     } else if ( params.type == "refund" ){
         api = api_refund.polling;
     }
@@ -1126,12 +1134,116 @@ async function cancelVoteToPoll( params ){
     return true;
 }
 
-async function haltWithdrawPoll( params ){
-    console.log( params );
+async function haltPoll( params ){
     let contract = await getMainContract( params.address );
     let tokenContract = await getTokenContract( params.address );
 
-    console.log( contract, tokenContract )
+    let api = null;
+    if( params.type == "withdraw" ){
+        console.log( 'w' )
+        api = api_withdraw;
+    } else if ( params.type == "crowdsale" ){
+        api = api_pollsale;
+        console.log( 'c' )
+    } else if ( params.type == "refund" ){
+        api = api_refund;
+        console.log( 'r' )
+    }
+
+    // disable token
+    if( !await act.tryActions( api_token.disableToken, showProgress, false, 4, true, 
+        params.owner.account, params.owner.password, contract.token_addr() ) ){
+        logger.error( "Fail to disable token." );
+        return false;
+    }
+
+    let holders = tokenContract.holder();
+    let totalHoldersCount = holders[0];
+    let agreeWeight = 0;
+    let poll = await api.getObject( params.pollAddress );
+
+    let position = poll.head();
+    let voterCount = poll.voter_count().toNumber();
+    for(var i = 0; i < voterCount; i++ ){
+        let vote = poll.getVoteInfo( position );
+        let balance = await (tokenContract.balanceOf( position )).toNumber();
+
+        if( vote[2] ){ agreeWeight += balance; }
+        if( !await act.tryActions( api.setAmount, showProgress, false, 6, false,
+            params.owner.account, params.owner.password, params.pollAddress, position, balance ) ){
+            logger.error( "Fail to set token weight!");
+            return false;
+        }
+        position = vote[4];
+    }
+
+    await act.batchDeploy( showBatchDeploy, params.owner.account, params.owner.password );
+
+    if( !await act.tryActions( api.settlePoll, showProgress, false, 7, true,
+        params.owner.account, params.owner.password, params.pollAddress, totalHoldersCount, tokenContract.supply(), agreeWeight )){
+        logger.error("Fail to settle withdraw poll.");
+        return false;
+    }
+
+    let fund = await getFundContract( params.address );
+    let result = poll.result_poll();
+
+    if( result ){
+        if( params.type == "withdraw" ){
+            let withdrawal = poll.withdraw_crp();
+            if( !await act.tryActions( api_fund.withdraw, showProgress, false, 7, true, 
+                params.owner.account, params.owner.password, contract.fund_addr(), params.owner.account, withdrawal, 1) ){
+                logger.error("Fail to withdraw to owner from fund.");
+                return false;
+            }
+        } else if ( params.type == "crowdsale" ){
+            let crowdsaleCa = null;
+            let showProgressWithCa = function (_result, _count, _ca ){
+                showProgress( _result, _count );
+                if( _ca != undefined ) {
+                    crowdsaleCa = _ca;
+                }
+            };
+            let saleInfo = poll.sale_info();
+            if( !await act.tryActions( api_deploy.deployCrpSaleAd, showProgressWithCa, true, 12, true, params.owner.account, params.owner.password,
+                saleInfo[0], saleInfo[1], saleInfo[2], saleInfo[3], saleInfo[4], saleInfo[5], saleInfo[6], tokenContract.address, fund.address )){
+                throw new Error("Failed deploy CrpAdSale.")
+            }
+
+            if( crowdsaleCa == null ){
+                throw new Error("Failed deploy CrpAdSale. ca is null");
+            }
+
+            if( !await act.tryActions( api_main.addCrowdSaleAddress, showProgress, false, 5, true, 
+                params.owner.account, params.owner.password, params.address, crowdsaleCa )){
+                throw new Error("Fail to regist CrpPollSaleAd .")
+            }
+
+            if( !await act.tryActions( api_token.addAdmin, showProgress, false, 5, true, 
+                params.owner.account, params.owner.password, contract.token_addr(), crowdsaleCa )){
+                throw new Error("Fail to add Admin.")
+            }
+
+            if( !await act.tryActions( api_fund.addAdmin, showProgress, false, 5, true, 
+                params.owner.account, params.owner.password, contract.fund_addr(), crowdsaleCa )){
+                throw new Error("Fail to add Admin.")
+            }
+        } else if ( params.type == "refund" ){
+        }
+    }
+
+    if( !await act.tryActions( api_token.enableToken, showProgress, false, 4, true, 
+        params.owner.account, params.owner.password, contract.token_addr() ) ){
+        logger.error("Fail to enable token.");
+        return false;
+    }
+
+    return true;
+}
+
+async function haltWithdrawPoll( params ){
+    let contract = await getMainContract( params.address );
+    let tokenContract = await getTokenContract( params.address );
 
     // disable token
     if( !await act.tryActions( api_token.disableToken, showProgress, false, 4, true, 
@@ -1144,11 +1256,9 @@ async function haltWithdrawPoll( params ){
     let totalHoldersCount = holders[0];
     let agreeWeight = 0;
     let withdraw = await api_withdraw.getObject( params.pollAddress );
-    console.log( holders, totalHoldersCount, agreeWeight, withdraw )
 
     let position = withdraw.head();
     let voterCount = withdraw.voter_count().toNumber();
-    console.log( position, voterCount )
     for(var i = 0; i < voterCount; i++ ){
         let vote = withdraw.getVoteInfo( position );
         let balance = await (tokenContract.balanceOf( position )).toNumber();
@@ -1172,13 +1282,11 @@ async function haltWithdrawPoll( params ){
 
     let fund = await getFundContract( params.address );
     let result = withdraw.result_poll();
-    console.log( fund, result )
 
     if( result ){
         let withdrawal = withdraw.withdraw_crp();
-        console.log( withdrawal)
         if( !await act.tryActions( api_fund.withdraw, showProgress, false, 7, true, 
-            params.owner.account, params.owner.password, contract.fund_addr(), params.owenr.account, withdrawal, 1) ){
+            params.owner.account, params.owner.password, contract.fund_addr(), params.owner.account, withdrawal, 1) ){
             logger.error("Fail to withdraw to owner from fund.");
             return false;
         }
@@ -1193,6 +1301,7 @@ async function haltWithdrawPoll( params ){
     return true;
 }
 
+
 export const contractHandlers = {
     createProject,
     addWithdrawPoll,
@@ -1205,11 +1314,13 @@ export const contractHandlers = {
     getTokenContractWithAddress,
     getFundContract,
     getFirstCrowdsaleContract,
+    getCrowdsales,
     getRoadmaps,
     getWithdrawPolls,
     getWithdrawPoll,
-    getRefundPolls,
     getCrowdsalePolls,
+    getCrowdsalePoll,
+    getRefundPolls,
 
     // get status ( roadmap, crowdsale )
     onPolling,
@@ -1237,7 +1348,7 @@ export const contractHandlers = {
     voteToPoll,
     cancelVoteToPoll,
 
-    haltWithdrawPoll,
+    haltPoll,
 
     // staff info
     getStaffInfo,

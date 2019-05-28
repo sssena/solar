@@ -2,6 +2,7 @@
     display: grid;
     margin: 1em;
     text-align: center;
+    overflow-x: hidden;
 }
 
 .add-crowdsale-poll .date-slider{

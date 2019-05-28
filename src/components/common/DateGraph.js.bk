@@ -1,0 +1,86 @@
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import moment from 'moment';
+
+// material-ui components
+import Tooltip from '@material-ui/core/Tooltip';
+import LinearProgress from '@material-ui/core/LinearProgress';
+
+// icons
+
+// local import
+import './DateGraph.css';
+
+/*
+ * @author. sena@soompay.net
+ * @comment. 'DateGraph' draws graph with start/end date.
+ *
+ */
+class DateGraph extends Component {
+    state = {};
+    constructor( props ) {
+        super( props );
+    }
+
+    drawGraph(){
+        let startDate = this.props.startDate;
+        let endDate = this.props.endDate;
+        let today = moment().unix();
+        let dateClass = '';
+
+        let value = (today - startDate) / (endDate - startDate) * 100;
+        if( value > 100 ) { 
+            value = 100; 
+        }
+
+        if( startDate > today || !this.props.onRunning ){ // not started yet
+           dateClass = 'not-on-sale' ;
+        } else if ( endDate < today ){ // overed 
+            // dateClass = 'not-on-sale' ;
+        }
+
+        this.setState({ 
+            value: value,
+            startDate: startDate,
+            endDate: endDate,
+            today: today,
+            dateClass : dateClass,
+            startDateStr: moment.unix( startDate ).format('lll'),
+            endDateStr: moment.unix( endDate ).format('lll')
+        });
+    }
+
+    componentWillMount(){
+        this.drawGraph();
+    }
+
+    render() {
+        return (
+            <div className="date-graph">
+                <Tooltip title={this.state.startDateStr} aria-label="Start Date">
+                    <div className="date">
+                        <div className={this.state.startDate < this.state.today ? 
+                                "date passed " + this.state.dateClass : "date unpassed " + this.state.dateClass}> </div>
+                        <p className="date-string"> Start </p>
+                    </div>
+                </Tooltip>
+                <LinearProgress 
+                    className={"bar-graph " + this.state.dateClass}
+                    variant="determinate" 
+                    value={this.state.value} />
+                <Tooltip title={this.state.endDateStr} aria-label="End date">
+                    <div className="date">
+                        <div className={this.state.endDate < this.state.today ? 
+                                "date passed " + this.state.dateClass : "date unpassed " + this.state.dateClass}> </div>
+                        <p className="date-string"> End </p>
+                    </div>
+                </Tooltip>
+            </div>
+        );
+    }
+}
+
+function mapStateToProps( state ) {
+    return state.authentication;
+}
+export default connect(mapStateToProps)(DateGraph);

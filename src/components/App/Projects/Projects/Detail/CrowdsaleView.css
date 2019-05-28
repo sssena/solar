@@ -96,6 +96,9 @@
 #hardcap-achieve{
     width: 30%;
 }
+#hardcap-achieve-additional{
+    width: 100%;
+}
 
 /*.crowdsale-detail-contents .goal-info .crowdsale-funding-bar div{
     background-color: #35c7c7;

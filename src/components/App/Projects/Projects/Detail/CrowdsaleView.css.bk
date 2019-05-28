@@ -1,0 +1,63 @@
+.detail-crowdsale {
+    text-align: center;
+}
+
+.detail-crowdsale .label{
+    font-size: 0.6em;
+    color: gray;
+}
+
+.crowdsale-list {
+    text-align: center;
+    display: inline-block;
+    height: 70vh;
+    overflow: auto;
+}
+
+.crowdsale-list .substr {
+    color: gray;
+}
+
+.crowdsale-detail-contents {
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+.crowdsale-detail-contents-token {
+    text-align: center;
+}
+
+.crowdsale-detail-contents-token h2{
+    font-size: 3em;
+    font-weight: bold;
+}
+
+.crowdsale-detail-contents-token .exchange-ratio{
+    margin: 0em 0em 0em 0em;
+    color: gray;
+}
+
+.crowdsale-detail-contents-token table{
+    width: 80%;
+}
+
+.crowdsale-detail-contents-token table td{
+    text-align: right;
+    width: 60%;
+}
+
+.crowdsale-detail-contents-token td:first-child{
+    font-weight: 600;
+    width: 30% !important;
+}
+
+.crowdsale-funding-bar {
+    display: inline-block;
+    width: 50%;
+}
+
+#alert-dialog-title .label{
+    font-size: 0.8em;
+    color: #b2b2b2;
+}

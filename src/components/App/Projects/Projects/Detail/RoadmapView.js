@@ -319,7 +319,7 @@ class RoadmapView extends Component {
                         maxWidth="sm"
                         open={this.state.openDetail}
                         onClose={this.handleDetailClose}>
-                        <DialogTitle id="alert-dialog-title">Roadmap Detail</DialogTitle>
+                        <DialogTitle id="alert-dialog-title">Roadmap Detail<p className="label">{this.state.activateRoadmap.address}</p></DialogTitle>
                         <DialogContent>
                             <div className="roadmap-detail-contents">
                                 <DateGraph 

@@ -35,6 +35,7 @@ import DateGraph from '../../../../common/DateGraph';
 import ConfirmPassword from '../../../../common/ConfirmPassword';
 
 import DetailWithdrawPoll from './EventView/DetailWithdrawPoll';
+import DetailCrowdsalePoll from './EventView/DetailCrowdsalePoll';
 import AddWithdrawPoll from './EventView/AddWithdrawPoll';
 import AddCrowdsalePoll from './EventView/AddCrowdsalePoll';
 // import AddRefundPoll from './EventView/AddRefundPoll';
@@ -82,7 +83,7 @@ class EventView extends Component {
     }
 
     handleCreateFormClose = () => {
-        this.setState({ openCreateForm: false }, () => { this.loadData(); } );
+        this.setState({ openCreateForm: false, type: '' }, () => { this.loadData(); } );
     }
 
     handleConfirmPasswordOpen = () => {
@@ -118,8 +119,18 @@ class EventView extends Component {
     }
 
     async haltPoll(){
+        if( !this.state.authorized ) { return ; }
         this.props.dispatch( statusActions.start() );
+        let type = '';
+        if( this.state.activatePoll.type == "Additional Withdraw" ){
+            type = "withdraw";
+        } else if ( this.state.activatePoll.type == "Additional Crowdsale" ){
+            type = "crowdsale";
+        } else if ( this.state.actiavePoll.type == "Refund" ){
+            type = "refund";
+        }
         let params = {
+            type: type,
             address: this.props.mainContractAddress,
             owner:{
                 account: this.props.auth.address,
@@ -127,15 +138,16 @@ class EventView extends Component {
             },
             pollAddress: this.state.activatePoll.address
         };
-        let result =  await contractHandlers.haltWithdrawPoll( params )
+        let result =  await contractHandlers.haltPoll( params )
             .catch(( error ) => {
                 console.error( error );
                 result = false;
             });
         if( !result ){
-            alert("Fail to halt Withdraw poll.");
+            alert("Fail to halt poll.");
         }
 
+        this.loadData();
         this.props.dispatch( statusActions.done() );
     }
 
@@ -180,7 +192,6 @@ class EventView extends Component {
                 state = "On polling";
             }
 
-            console.log( poll )
             events.push({
                 type: "Additional Withdraw",
                 address: poll.address,
@@ -338,7 +349,10 @@ class EventView extends Component {
                             }
                             { 
                                 this.state.activePoll.type == 'Additional Crowdsale' ? ( 
-                                    <DetailCrowdsalePoll item={this.state.activePoll} closeAction={this.handleDetailClose}/>
+                                    <DetailCrowdsalePoll 
+                                        item={this.state.activePoll} 
+                                        address={this.props.mainContractAddress} 
+                                        closeAction={this.handleDetailClose}/>
                                 ) : <></> 
                             }
                         </DialogContent>

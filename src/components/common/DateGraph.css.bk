@@ -1,0 +1,47 @@
+.date-graph {
+    display: inline-block;
+    width: 60%;
+    margin: 2em 0em 2em 0em;
+}
+
+.date-graph .date{
+    border-radius: 50%;
+    width: 2em;
+    height: 2em;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.date-graph .date-string{
+    color: gray;
+    font-weight: 300;
+    font-size: 14px;
+}
+
+.date-graph .passed {
+    background-color: #239c8c;
+}
+
+.date-graph .unpassed {
+    background-color: #eafff4;
+}
+
+.date-graph .not-on-sale {
+    background-color: #b7b7b7 !important;
+}
+
+.date-graph .bar-graph {
+    background-color: #eafff4;
+    display: inline-block;
+    width: 80%;
+    vertical-align: middle;
+}
+
+.date-graph .bar-graph > div {
+    background-color: #239c8c !important;
+}
+
+.date-graph .not-on-sale > div {
+    background-color: #b7b7b7 !important;
+}

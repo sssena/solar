@@ -12,12 +12,16 @@ import Alert from 'react-bootstrap/Alert';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
 
 // icons
 import ErrorIcon from '@material-ui/icons/Error';
 
 // local components
-import './DetailWithdrawPoll.css';
+import './DetailCrowdsalePoll.css';
 import { web3 } from '../../../../../../web3';
 import { contractHandlers } from '../../../../../../helpers/contracts';
 import { statusActions } from '../../../../../../actions';
@@ -28,9 +32,9 @@ import ConfirmPassword from '../../../../../common/ConfirmPassword';
 
 /*
  * @author. sena
- * @comment. 'DetailWithdrawPoll' is a pop-up view of withdraw poll.
+ * @comment. 'DetailCrowdsalePoll' is a pop-up view of withdraw poll.
  */
-class DetailWithdrawPoll extends Component {
+class DetailCrowdsalePoll extends Component {
     state = {
         voteInfo:{
             variant: "info",
@@ -38,7 +42,8 @@ class DetailWithdrawPoll extends Component {
             header: ""
         },
         openConfirmPassword: false,
-
+        saleInfo:{},
+        resultData: {}
     };
 
     constructor(){
@@ -83,7 +88,7 @@ class DetailWithdrawPoll extends Component {
         if( this.state.symbol == 0 || this.state.symbol == 1 ){
             // vote
             result = await contractHandlers.voteToPoll({
-                type: 'withdraw',
+                type: 'crowdsale',
                 voter: {
                     account: this.props.auth.address,
                     password: this.state.passcode
@@ -97,7 +102,7 @@ class DetailWithdrawPoll extends Component {
         } else {
             // revoke
             result = await contractHandlers.cancelVoteToPoll({
-                type: 'withdraw',
+                type: 'crowdsale',
                 voter: {
                     account: this.props.auth.address,
                     password: this.state.passcode
@@ -126,8 +131,8 @@ class DetailWithdrawPoll extends Component {
             header = "Poll has been ended!";
             message += `\n You had voted to ` + (vote[2] ? "Agree" : "Disagree") + ". Check the result below.";
         } else if( vote[0].toNumber() == 0 ){ // if not voted yet
-            header = "Vote to additional withdraw";
-            message = "If more than 70% agree, the amount will be withdrawn. Vote to additional withdraw.";
+            header = "Vote to additional Crowdsale";
+            message = "If more than 70% agree, the new crowdsale will be created. Vote to additional crowdsale.";
         } else if( vote[0].toNumber() != 0 ){ // has voted
             header = "Check your vote";
             message = "You have already voted to '"
@@ -174,12 +179,13 @@ class DetailWithdrawPoll extends Component {
             agree: agree,
             agreeWeight: (agreeWeight/totalSupply).toFixed(2) * 100,
             disagree: disagree,
-            disagreeWeight: (disagreeWeight/totalSupply).toFixed(2) * 100
+            disagreeWeight: (disagreeWeight/totalSupply).toFixed(2) * 100,
+            symbol: tokenContract.symbol()
         };
     }
 
     async load(){
-        let poll = await contractHandlers.getWithdrawPoll( this.props.item.address );
+        let poll = await contractHandlers.getCrowdsalePoll( this.props.item.address );
         let state = "";
         let startDate = moment.unix( poll.poll_started() );
         let endDate = moment.unix( poll.poll_ended() );
@@ -196,9 +202,18 @@ class DetailWithdrawPoll extends Component {
         let canVote = await contractHandlers.isRelated( this.props.address, this.props.auth.address );
         let resultData = await this.getResultData( poll );
         let voteInfo = await this.getVoteInfo( poll );
+        let saleInfo = poll.sale_info();
 
         this.setState({ 
-            withdrawal: await web3._extend.utils.fromWei(poll.withdraw_crp().toNumber()),
+            saleInfo:{
+                startDate: saleInfo[0].toNumber(),
+                endDate: saleInfo[1].toNumber(),
+                premiumEndDate: saleInfo[2].toNumber(),
+                min: await web3._extend.utils.fromWei( saleInfo[3].toNumber() ),
+                max: await web3._extend.utils.fromWei( saleInfo[4].toNumber() ),
+                hardcap: await web3._extend.utils.fromWei( saleInfo[5].toNumber() ),
+                rate: saleInfo[6].toNumber()
+            },
             isEnded: poll.isEnded,
             isSettled: poll.isSettled,
             state: state,
@@ -215,14 +230,37 @@ class DetailWithdrawPoll extends Component {
 
     render() {
         return (
-            <div className="detail-withdraw-poll">
+            <div className="detail-crowdsale-poll">
                 <div className="poll-title">
                     <h3>Event Poll Detail</h3><span>{this.state.state}</span>
                     <p className="address">{this.props.item.address}</p>
                 </div>
                 <div className="poll-info">
                     <DateGraph startDate={this.props.item.startDate} endDate={this.props.item.endDate}/>
-                    <br/><span className="withdrawal">Withdrawal: {this.state.withdrawal} CRP</span><br/>
+                    <Table>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>Sale</TableCell>
+                                <TableCell> {moment.unix(this.state.saleInfo.startDate).format('lll')} ~ {moment.unix(this.state.saleInfo.endDate).format('lll')} </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Premium Sale</TableCell>
+                                <TableCell> {moment.unix(this.state.saleInfo.startDate).format('lll')} ~ {moment.unix(this.state.saleInfo.premiumEndDate).format('lll')} </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Hardcap</TableCell>
+                                <TableCell> {this.state.saleInfo.hardcap} CRP </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Min/Max</TableCell>
+                                <TableCell> {this.state.saleInfo.min} / {this.state.saleInfo.max} CRP </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Rate</TableCell>
+                                <TableCell> 1CRP : {this.state.saleInfo.rate}{this.state.resultData.symbol} </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
                 </div>
                 <Alert variant={this.state.voteInfo.variant} className="info-alert">
                     <Alert.Heading>{this.state.voteInfo.header}</Alert.Heading>
@@ -275,4 +313,4 @@ class DetailWithdrawPoll extends Component {
 function mapStateToProps( state ) {
     return state.authentication;
 }
-export default connect(mapStateToProps)(DetailWithdrawPoll);
+export default connect(mapStateToProps)(DetailCrowdsalePoll);

@@ -193,5 +193,7 @@ module.exports.tryActions = async function (_funcptr, _cbptr, _deploy, _arg_num,
             _cbptr(false, count);
         } while(count++ < conf.retry_count);
         return false; // 재전송 조차도 실패할 경우, false 반환
-    } catch(err) {}
+    } catch(err) {
+        console.log(err)
+    }
 }

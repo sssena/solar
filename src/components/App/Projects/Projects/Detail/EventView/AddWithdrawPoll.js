@@ -40,9 +40,15 @@ async function getWithdrawLimitation( mainAddress ){
     for( var roadmap of roadmaps ){
         totalWithdrawal += roadmap.withdrawal;
     }
-    totalWithdrawal = await web3._extend.utils.fromWei(totalWithdrawal);
 
-    //TODO additional withdrawal summary
+    // withdraw polls summary
+    let withdrawPolls = await contractHandlers.getWithdrawPolls( mainAddress );
+    for( var poll of withdrawPolls ){
+        totalWithdrawal += poll.withdraw_crp().toNumber();
+    }
+ 
+    // from wei
+    totalWithdrawal = await web3._extend.utils.fromWei(totalWithdrawal);
 
     return { softcap: softcap, totalWithdrawal: totalWithdrawal, amountLimit: (softcap - totalWithdrawal) };
 }
