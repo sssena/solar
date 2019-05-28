@@ -12,4 +12,5 @@ Solar is a native application for CRP. It needs station(CRP) to run on your loca
 Just run install script! 
 
 > sh install.sh
+>
 > npm run dev // starts solar
