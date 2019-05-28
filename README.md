@@ -1,10 +1,15 @@
-# crp-solar 
+# Solar 
+
+Solar is a native application for CRP. It needs station(CRP) to run on your localhost:8545.
+
+1. Create your own project.
+2. Start crowdsale funding.
+3. Once the crowd sale is completed successfully, the project will follow the roadmaps.
+4. Every investors can evaluate progress as the roadmap progresses.
+
 
 ## To Use
-sh install.sh
+Just run install script! 
 
-npm run dev
-
-## License
-
-[CC0 1.0 (Public Domain)](LICENSE.md)
+> sh install.sh
+> npm run dev // starts solar
