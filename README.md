@@ -1,6 +1,6 @@
 # Solar 
 
-Solar is a native application for CRP. It needs station(CRP) to run on your localhost:8545.
+Solar is a native application for *** . It needs station(like geth) to run on your localhost:8545.
 
 1. Create your own project.
 2. Start crowdsale funding.
