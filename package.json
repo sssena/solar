@@ -99,7 +99,7 @@
     "@material-ui/icons": "^3.0.2",
     "@material-ui/lab": "^3.0.0-alpha.30",
     "@trodi/electron-splashscreen": "^0.3.4",
-    "acorn": "^6.1.0",
+    "acorn": "^6.4.1",
     "axios": "^0.18.0",
     "bootstrap": "^4.0.0",
     "bootstrap-daterangepicker": "^3.0.3",
