@@ -100,7 +100,7 @@
     "@material-ui/lab": "^3.0.0-alpha.30",
     "@trodi/electron-splashscreen": "^0.3.4",
     "acorn": "^6.1.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.0.0",
     "bootstrap-daterangepicker": "^3.0.3",
     "chart.js": "^2.8.0",
